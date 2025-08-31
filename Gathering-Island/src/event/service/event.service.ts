@@ -1,7 +1,9 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { plainToInstance } from 'class-transformer';
 import { Event } from '../entity/event.entity';
+import { EventDto } from '../dto/event.dto';
 
 @Injectable()
 export class EventService {
@@ -12,27 +14,29 @@ export class EventService {
   ) {}
 
   /** 查詢所有的活動（SELECT * FROM event） */
-  async findAllEvent(): Promise<Event[]> {
-    return this.eventRepository.find();
+  async findAllEvent(): Promise<EventDto[]> {
+    const events = await this.eventRepository.find();
+    return EventDto.fromEntities(events);
   }
 
   /** 新增一筆活動（INSERT INTO event ...） */
-  async createEvent(event: Event): Promise<Event> {
-    return this.eventRepository.save(event);
+  async createEvent(event: Event): Promise<EventDto> {
+    const created = await this.eventRepository.save(event);
+    return plainToInstance(EventDto, created, { excludeExtraneousValues: true });
   }
 
   /** 根據 id 修改活動（UPDATE event SET ... WHERE id = ?） */ 
-  async updateEvent(id: number, event: Event): Promise<Event> {
+  async updateEvent(id: number, event: Event): Promise<EventDto> {
     // 更新這筆資料
     await this.eventRepository.update(id, event);
 
-    // 更新後再次查詢資料，確保它存在（有些情況可能更新失敗）
-    const updated = await this.eventRepository.findOne({ where: { event_id: id } });
+    // 更新後再次查詢資料，確保它存在
+    const updated = await this.eventRepository.findOne({where: { event_id: id },});
     if (!updated) {
       throw new NotFoundException(`找不到 id 為 ${id} 的活動`);
     }
 
-    return updated;
+    return EventDto.fromEntity(updated);
   }
 
   /** 根據 id 刪除活動（DELETE FROM event WHERE id = ?） */ 

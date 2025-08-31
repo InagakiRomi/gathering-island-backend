@@ -1,3 +1,4 @@
+-- 創建活動資料
 CREATE TABLE `events` (
     event_id INT AUTO_INCREMENT PRIMARY KEY,
     event_name VARCHAR(32) NOT NULL,
@@ -12,3 +13,9 @@ CREATE TABLE `events` (
     registration_deadline TIMESTAMP NULL DEFAULT NULL,
     created_at TIMESTAMP NULL DEFAULT NULL
 );
+
+-- 清除所有活動資料
+TRUNCATE TABLE `events`;
+
+-- ID 從1開始算
+ALTER TABLE `events` AUTO_INCREMENT = 1;
