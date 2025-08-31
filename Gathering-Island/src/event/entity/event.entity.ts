@@ -53,6 +53,6 @@ export class Event {
     registration_deadline: Date;
 
     /** 建立時間，自動填入目前時間 */
-    @Column({ type: 'timestamp' })
+    @Column({ type: 'timestamp', nullable: true })
     created_at: Date;
 }

@@ -21,6 +21,7 @@ export class EventService {
 
   /** 新增一筆活動（INSERT INTO event ...） */
   async createEvent(event: Event): Promise<EventDto> {
+    event.created_at = new Date();
     const created = await this.eventRepository.save(event);
     return plainToInstance(EventDto, created, { excludeExtraneousValues: true });
   }
