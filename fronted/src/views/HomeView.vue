@@ -10,15 +10,14 @@
 <script setup>
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
-import { ROUTES } from '@/constants/routes'
-import { useScaleToViewport } from '@/composables/useScaleToViewport'
+import { useScaleToViewport } from '@/composables/ui/useScaleToViewport'
 
 const scaleContainer = ref(null) // DOM 參考
 useScaleToViewport(scaleContainer) // 呼叫 composable，處理縮放邏輯
 
 // 路由跳轉
 const router = useRouter()
-const goToEvents = () => router.push(ROUTES.ALL_EVENTS)
+const goToEvents = () => router.push({ name: 'eventsPage' })
 </script>
 
 <style scoped>
