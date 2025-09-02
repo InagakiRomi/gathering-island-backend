@@ -4,10 +4,10 @@
     <div class="events-page__grid">
       <EventCard
         v-for="event in events"
-        :key="event.id"
-        :image="event.image"
-        :title="event.title"
-        :time="event.time"
+        :key="event.event_id"
+        :image_url="event.image_url"
+        :event_name="event.event_name"
+        :event_time="event.event_time"
       />
     </div>
   </div>
@@ -15,25 +15,25 @@
 
 <script setup>
 import EventCard from '../components/EventCard.vue'
-
+const base = import.meta.env.BASE_URL
 const events = [
   {
-    id: 1,
-    image: 'https://source.unsplash.com/random/400x300?event1',
-    title: '中秋烤肉大會',
-    time: '2025/09/10 18:00 - 21:00',
+    event_id: 1,
+    image_url: `${base}images/events/FOOD.jpg`,
+    event_name: '中秋烤肉大會',
+    event_time: '2025/09/10 18:00 - 21:00',
   },
   {
-    id: 2,
-    image: 'https://source.unsplash.com/random/400x300?event2',
-    title: 'Vue.js 開發者日',
-    time: '2025/09/15 14:00 - 17:00',
+    event_id: 2,
+    image_url: `${base}/images/events/PARTY.jpg`,
+    event_name: 'Vue.js 開發者日',
+    event_time: '2025/09/15 14:00 - 17:00',
   },
   {
-    id: 3,
-    image: 'https://source.unsplash.com/random/400x300?event3',
-    title: '創業交流會',
-    time: '2025/09/20 10:00 - 12:00',
+    event_id: 3,
+    image_url: `${base}/images/events/OTHER.jpg`,
+    event_name: '創業交流會',
+    event_time: '20250 10:00 - 12:00',
   },
 ]
 </script>

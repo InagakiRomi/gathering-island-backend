@@ -1,22 +1,22 @@
 <template>
   <div class="event-card">
     <img
-      class="event-card__image"
-      :src="image"
-      :alt="title"
+      class="event-card__image_url"
+      :src="image_url"
+      :alt="event_name"
     />
     <div class="event-card__content">
-      <h2 class="event-card__title">{{ title }}</h2>
-      <p class="event-card__time">{{ time }}</p>
+      <h2 class="event-card__title">{{ event_name }}</h2>
+      <p class="event-card__time">{{ event_time }}</p>
     </div>
   </div>
 </template>
 
 <script setup>
 defineProps({
-  image: String,
-  title: String,
-  time: String,
+  image_url: String,
+  event_name: String,
+  event_time: Date,
 })
 </script>
 
@@ -30,7 +30,7 @@ defineProps({
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
-.event-card__image {
+.event-card__image_url {
   width: 100%;
   height: 200px;
   object-fit: cover;
