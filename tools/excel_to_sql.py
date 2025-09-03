@@ -4,7 +4,6 @@ from datetime import datetime
 
 DATA_DIR = '../data'
 OUTPUT_DIR = '../backend/src/database/sql'
-OUTPUT_FILE = 'data.sql'
 
 def escape_sql(value):
     if pd.isna(value):

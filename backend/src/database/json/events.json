@@ -1,0 +1,58 @@
+[
+  {
+    "event_id": 1,
+    "event_name": "週末派對",
+    "event_description": "這是一場週末的歡樂派對",
+    "event_type": 1,
+    "event_location": "台北市信義區酒吧",
+    "image_url": null,
+    "max_participants": 50,
+    "event_price": 300,
+    "organizer_id": 1,
+    "event_time": "2037-09-10 19:00:00",
+    "registration_deadline": "2037-09-08 23:59:59",
+    "created_at": "2037-08-29 15:22:52"
+  },
+  {
+    "event_id": 2,
+    "event_name": "音樂會",
+    "event_description": "知名樂團現場表演",
+    "event_type": 2,
+    "event_location": "高雄巨蛋",
+    "image_url": null,
+    "max_participants": 2000,
+    "event_price": 1200,
+    "organizer_id": 1,
+    "event_time": "2037-09-20 18:30:00",
+    "registration_deadline": "2037-09-15 23:59:59",
+    "created_at": "2037-08-30 14:12:23"
+  },
+  {
+    "event_id": 3,
+    "event_name": "AI 開發者社群聚會",
+    "event_description": "AI 與開發者設計的網路社群活動，提供最新技術分享與討論",
+    "event_type": 3,
+    "event_location": "台北市信義區松仁路100號",
+    "image_url": null,
+    "max_participants": 100,
+    "event_price": 300,
+    "organizer_id": 42,
+    "event_time": "2037-10-01 18:00:00",
+    "registration_deadline": "2037-09-28 23:59:59",
+    "created_at": "2037-09-01 11:38:29"
+  },
+  {
+    "event_id": 4,
+    "event_name": "中秋烤肉大會",
+    "event_description": "一起享受烤肉、月餅與賞月的夜晚",
+    "event_type": 8,
+    "event_location": "台北大安森林公園",
+    "image_url": null,
+    "max_participants": 50,
+    "event_price": 200,
+    "organizer_id": 10,
+    "event_time": "2037-09-10 18:00:00",
+    "registration_deadline": "2037-09-05 23:59:59",
+    "created_at": "2037-09-01 12:17:38"
+  }
+]
