@@ -1,0 +1,24 @@
+{
+  "name": "gathering_island",
+  "version": "1.0.0",
+  "description": "本系統支援使用者新增、修改、刪除、查詢已建立的活動資訊，並社交活動結交新朋友。",
+  "main": "index.js",
+  "scripts": {
+    "dev": "concurrently \"npm run start:dev --prefix backend\" \"npm run dev --prefix frontend\"",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/InagakiRomi/Gathering_Island.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/InagakiRomi/Gathering_Island/issues"
+  },
+  "homepage": "https://github.com/InagakiRomi/Gathering_Island#readme",
+  "devDependencies": {
+    "concurrently": "^9.2.1"
+  }
+}
