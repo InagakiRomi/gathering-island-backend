@@ -1,6 +1,5 @@
-INSERT INTO events
-(event_id, event_name, event_description, event_type, event_location, image_url, max_participants, event_price, organizer_id, event_time, registration_deadline, created_at)
-VALUES
+INSERT INTO `events` 
+(event_id, event_name, event_description, event_type, event_location, image_url, max_participants, event_price, organizer_id, event_time, registration_deadline, created_at) VALUES
 (1, '週末派對', '這是一場週末的歡樂派對', 1, '台北市信義區酒吧', NULL, 50, 300, 1, '2037-09-10 19:00:00', '2037-09-08 23:59:59', '2037-08-29 15:22:52'),
 (2, '音樂會', '知名樂團現場表演', 2, '高雄巨蛋', NULL, 2000, 1200, 1, '2037-09-20 18:30:00', '2037-09-15 23:59:59', '2037-08-30 14:12:23'),
 (3, 'AI 開發者社群聚會', 'AI 與開發者設計的網路社群活動，提供最新技術分享與討論', 3, '台北市信義區松仁路100號', NULL, 100, 300, 42, '2037-10-01 18:00:00', '2037-09-28 23:59:59', '2037-09-01 11:38:29');

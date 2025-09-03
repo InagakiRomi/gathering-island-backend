@@ -19,7 +19,7 @@ def escape_sql(value):
 
 def df_to_insert_sql(df, table_name):
     columns = df.columns.tolist()
-    insert_sql = f"INSERT INTO {table_name} \n({', '.join(columns)}) VALUES\n"
+    insert_sql = f"INSERT INTO `{table_name}` \n({', '.join(columns)}) VALUES\n"
     values_list = []
     for _, row in df.iterrows():
         values = [escape_sql(row[col]) for col in columns]
@@ -28,24 +28,23 @@ def df_to_insert_sql(df, table_name):
 
 def main():
     os.makedirs(OUTPUT_DIR, exist_ok=True)
-    all_statements = []
 
     for filename in os.listdir(DATA_DIR):
         if filename.endswith('.xlsx'):
             filepath = os.path.join(DATA_DIR, filename)
             print(f'讀取檔案：{filepath}')
-            # 從第 2 行開始讀（跳過 index 0 的那一行）
+            
             df = pd.read_excel(filepath, header=1)
             table_name = os.path.splitext(filename)[0]
             sql = df_to_insert_sql(df, table_name)
-            all_statements.append(sql)
+            
+            output_filename = f"{table_name}.sql"
+            output_path = os.path.join(OUTPUT_DIR, output_filename)
+            
+            with open(output_path, 'w', encoding='utf-8') as f:
+                f.write(sql + '\n')
 
-    output_path = os.path.join(OUTPUT_DIR, OUTPUT_FILE)
-    with open(output_path, 'w', encoding='utf-8') as f:
-        for stmt in all_statements:
-            f.write(stmt + '\n\n')
-
-    print(f'SQL 已匯出至 {output_path}')
+            print(f'SQL 已匯出至 {output_path}')
 
 if __name__ == '__main__':
     main()
