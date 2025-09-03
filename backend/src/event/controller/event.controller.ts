@@ -1,6 +1,8 @@
 import { Controller, Get, Post, Put, Delete, Body, Param } from '@nestjs/common';
 import { EventService } from '../service/event.service';
 import { Event as EventEntity } from '../entity/event.entity';
+import { plainToInstance } from 'class-transformer';
+import { EventDto } from '../dto/event.dto';
 
 @Controller('events')
 export class EventController {
@@ -8,8 +10,9 @@ export class EventController {
 
     /** 查詢所有的活動（SELECT * FROM event） */
     @Get()
-    async findAllEvent(): Promise<EventEntity[]> {
-        return this.eventService.findAllEvent();
+    async findAllEvent(): Promise<EventDto[]> {
+        const events = await this.eventService.findAllEvent();
+        return plainToInstance(EventDto, events, { excludeExtraneousValues: true });
     }
 
     /** 新增一筆活動（INSERT INTO event ...） */

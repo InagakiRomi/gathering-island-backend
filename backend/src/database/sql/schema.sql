@@ -1,9 +1,12 @@
+-- 刪除活動 Table
+DROP TABLE `events`;
+
 -- 創建活動資料
 CREATE TABLE `events` (
     event_id INT AUTO_INCREMENT PRIMARY KEY,
     event_name VARCHAR(32) NOT NULL,
     event_description VARCHAR(512) NOT NULL,
-    event_type VARCHAR(16)  NOT NULL,
+    event_type SMALLINT  NOT NULL,
     event_location VARCHAR(128) NOT NULL,
     image_url VARCHAR(512),
     max_participants INT DEFAULT 2,

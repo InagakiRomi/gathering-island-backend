@@ -1,7 +1,7 @@
 import { Expose, Transform } from 'class-transformer';
-import dayjs from 'dayjs';
+import { EventType, EventTypeNameMap } from '../enums/event-type.enum';
 import { Event } from '../entity/event.entity';
-import { EventType } from '../enums/event-type.enum';
+import dayjs from 'dayjs';
 
 export class EventDto {
 
@@ -20,6 +20,10 @@ export class EventDto {
     /** 活動類型 */
     @Expose()
     event_type: EventType;
+
+    @Expose()
+    @Transform(({ obj }) => EventTypeNameMap[obj.type])
+    event_typeName: string; // 顯示用的中文名稱
 
     /** 活動地點 */
     @Expose()
