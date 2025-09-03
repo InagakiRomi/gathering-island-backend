@@ -3,6 +3,7 @@ import { EventService } from '../service/event.service';
 import { Event as EventEntity } from '../entity/event.entity';
 import { plainToInstance } from 'class-transformer';
 import { EventDto } from '../dto/event.dto';
+import { ParseIntPipe } from '@nestjs/common';
 
 @Controller('events')
 export class EventController {
@@ -13,6 +14,13 @@ export class EventController {
     async findAllEvent(): Promise<EventDto[]> {
         const events = await this.eventService.findAllEvent();
         return plainToInstance(EventDto, events, { excludeExtraneousValues: true });
+    }
+
+    /** 查詢指定 id 的活動（SELECT * FROM event） */
+    @Get(':id')
+    async findOneEvent(@Param('id', ParseIntPipe) id: number): Promise<EventDto> {
+        const event = await this.eventService.findOneEvent(id);
+        return plainToInstance(EventDto, event, { excludeExtraneousValues: true });
     }
 
     /** 新增一筆活動（INSERT INTO event ...） */

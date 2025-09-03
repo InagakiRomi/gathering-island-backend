@@ -13,10 +13,21 @@ export class EventService {
     private eventRepository: Repository<Event>, // 宣告一個屬性，用來執行資料庫操作
   ) {}
 
-  /** 查詢所有的活動（SELECT * FROM event） */
+  /** 查詢指定 id 的活動（SELECT * FROM event） */
   async findAllEvent(): Promise<EventDto[]> {
     const events = await this.eventRepository.find();
     return EventDto.fromEntities(events);
+  }
+
+  /** 查詢活動（SELECT * FROM event WHERE event_id） */
+  async findOneEvent(event_id: number): Promise<EventDto> {
+  const event = await this.eventRepository.findOne({ where: { event_id } });
+
+  if (!event) {
+    throw new NotFoundException(`Event with ID ${event_id} not found`);
+  }
+
+  return EventDto.fromEntity(event);
   }
 
   /** 新增一筆活動（INSERT INTO event ...） */
