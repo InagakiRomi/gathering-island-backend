@@ -14,28 +14,32 @@
 </template>
 
 <script setup>
+import { ref, onMounted } from 'vue'
 import EventCard from '../components/EventCard.vue'
+import api from '../lib/axios'
+import eventTypeToImage from '../utils/eventImageMap'
+
 const base = import.meta.env.BASE_URL
-const events = [
-  {
-    event_id: 1,
-    image_url: `${base}images/events/FOOD.jpg`,
-    event_name: '中秋烤肉大會',
-    event_time: '2025/09/10 18:00 - 21:00',
-  },
-  {
-    event_id: 2,
-    image_url: `${base}/images/events/PARTY.jpg`,
-    event_name: 'Vue.js 開發者日',
-    event_time: '2025/09/15 14:00 - 17:00',
-  },
-  {
-    event_id: 3,
-    image_url: `${base}/images/events/OTHER.jpg`,
-    event_name: '創業交流會',
-    event_time: '20250 10:00 - 12:00',
-  },
-]
+const events = ref([])
+
+const fetchEvents = async () => {
+  try {
+    const response = await api.get('/events')
+    events.value = response.data.map((event) => {
+      const imageFile = eventTypeToImage[event.event_type] || eventTypeToImage.default
+      return {
+        ...event,
+        image_url: `${base}images/events/${imageFile}`,
+      }
+    })
+  } catch (error) {
+    console.error('載入活動資料失敗', error)
+  }
+}
+
+onMounted(() => {
+  fetchEvents()
+})
 </script>
 
 <style scoped>
