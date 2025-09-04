@@ -1,4 +1,3 @@
-<!-- src/views/HomeView.vue -->
 <template>
   <div class="home-container">
     <div class="overlay">
@@ -10,13 +9,11 @@
 </template>
 
 <script setup>
-const base = import.meta.env.BASE_URL
-const backgroundImage = `${base}images/island-bg.jpg`;
 </script>
 
 <style scoped>
 .home-container {
-  background-image: url('/images/island-bg.jpg');
+  background-image: var(--background-image-url);
   background-size: cover;
   background-position: center;
   height: 100vh;
