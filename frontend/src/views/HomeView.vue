@@ -1,71 +1,63 @@
+<!-- src/views/HomeView.vue -->
 <template>
-  <div ref="scaleContainer" class="page-container">
-    <h1 class="page-title">聚會島</h1>
-    <div class="center">
-      <button @click="goToEvents" class="go-button">前往活動</button>
+  <div class="home-container">
+    <div class="overlay">
+      <h1>聚會島</h1>
+      <p>歡迎來到聚會島，開始探索島嶼吧！</p>
+      <button>開始探索</button>
     </div>
   </div>
 </template>
 
 <script setup>
-import { ref } from 'vue'
-import { useRouter } from 'vue-router'
-import { useScaleToViewport } from '@/composables/ui/useScaleToViewport'
-
-const scaleContainer = ref(null) // DOM 參考
-useScaleToViewport(scaleContainer) // 呼叫 composable，處理縮放邏輯
-
-// 路由跳轉
-const router = useRouter()
-const goToEvents = () => router.push({ name: 'eventsPage' })
+const base = import.meta.env.BASE_URL
+const backgroundImage = `${base}images/island-bg.jpg`;
 </script>
 
 <style scoped>
-
-/* 頁面內容容器 */
-.page-container {
-  transform-origin: top left; /* 搭配 JS 的 scale 使用 */
-  position: fixed;
-  top: 0;
-  left: 0;
-  display: flex;
-  align-items: center;
+.home-container {
   background-image: url('/images/island-bg.jpg');
   background-size: cover;
+  background-position: center;
+  height: 100vh;
+  width: 100vw;
+  position: relative;
 }
 
-/* 標題樣式 */
-.page-title {
+.overlay {
   position: absolute;
-  top: 40px;
-  left: 50%;
-  transform: translateX(-50%);
-  font-size: 48px;
-  font-weight: bold;
-  color: #363636ff;
-}
-
-/* 按鈕容器置中 */
-.center {
-  flex: 1;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  color: white;
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
+  text-align: center;
+  padding: 1rem;
 }
 
-/* 前往按鈕樣式 */
-.go-button {
-  font-size: 24px;
-  padding: 16px 32px;
-  background-color: #42b983;
+.overlay h1 {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+}
+
+.overlay p {
+  font-size: 1.2rem;
+  margin-bottom: 2rem;
+}
+
+.overlay button {
+  background-color: #2563eb;
   color: white;
+  padding: 0.75rem 2rem;
   border: none;
-  border-radius: 8px;
+  border-radius: 0.375rem;
   cursor: pointer;
-  transition: background-color 0.3s ease;
+  font-weight: bold;
 }
 
-.go-button:hover {
-  background-color: #369f75;
+.overlay button:hover {
+  background-color: #1d4ed8;
 }
 </style>
