@@ -13,7 +13,7 @@ export class EventController {
     @Get()
     async findAllEvent(
         @Query('search') query: string,
-        @Query('sort') sortParam: string = 'created_at:DESC',
+        @Query('sort') sortParam: string = 'event_time:ASC',
     ): Promise<EventDto[]> {
         const sortObj: Record<string, 'ASC' | 'DESC'> = {};
 

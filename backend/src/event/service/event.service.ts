@@ -16,7 +16,7 @@ export class EventService {
   /** 查詢指定 id 的活動（SELECT * FROM event） */
   async findAllEvent(
     keyword: string,
-    order: Record<string, 'ASC' | 'DESC'> = { created_at: 'DESC' },
+    order: Record<string, 'ASC' | 'DESC'> = { event_time: 'ASC' },
   ): Promise<EventDto[]> {
     const qb = this.eventRepository.createQueryBuilder('event');
 
