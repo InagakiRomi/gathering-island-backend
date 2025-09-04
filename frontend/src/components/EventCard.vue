@@ -12,12 +12,13 @@
   </div>
 </template>
 
-<script setup>
-defineProps({
-  image_url: String,
-  event_name: String,
-  event_time: Date,
-})
+<script setup lang="ts">
+interface Props {
+  image_url: string
+  event_name: string
+  event_time: string | Date
+}
+const props = defineProps<Props>()
 </script>
 
 <style scoped>
