@@ -14,13 +14,23 @@ export class EventService {
   ) {}
 
   /** 查詢指定 id 的活動（SELECT * FROM event） */
-  async findAllEvent(keyword: string): Promise<EventDto[]> {
-    const events = await this.eventRepository.find({
-      where: [
-        {event_name: Like(`%${keyword}%`)},
-        {event_description: Like(`%${keyword}%`)},
-      ],
+  async findAllEvent(
+    keyword: string,
+    order: Record<string, 'ASC' | 'DESC'> = { created_at: 'DESC' },
+  ): Promise<EventDto[]> {
+    const qb = this.eventRepository.createQueryBuilder('event');
+
+    if (keyword) {
+    qb.where('event.event_name LIKE :keyword', { keyword: `%${keyword}%` })
+      .orWhere('event.event_description LIKE :keyword', { keyword: `%${keyword}%` });
+    }
+
+    Object.entries(order).forEach(([field, direction]) => {
+      qb.addOrderBy(`event.${field}`, direction);
     });
+
+    const events = await qb.getMany();
+    
     return EventDto.fromEntities(events);
   }
 
