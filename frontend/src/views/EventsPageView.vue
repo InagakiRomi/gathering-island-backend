@@ -44,10 +44,14 @@ onMounted(() => {
 
 <style scoped>
 .events-page {
+  width: 100%;
+  max-width: 100%;
   padding: 24px;
   background-color: #f3f4f6;
   min-height: 100vh;
+  box-sizing: border-box;
 }
+
 
 .events-page__title {
   font-size: 2rem;
@@ -58,6 +62,12 @@ onMounted(() => {
 .events-page__grid {
   display: grid;
   gap: 24px;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  grid-template-columns: repeat(4, 1fr);
+}
+
+@media (max-width: 768px) {
+  .events-page__grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
 }
 </style>
