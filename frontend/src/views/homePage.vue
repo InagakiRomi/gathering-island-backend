@@ -3,12 +3,22 @@
     <div class="overlay">
       <h1>聚會島</h1>
       <p>歡迎來到聚會島，開始探索島嶼吧！</p>
-      <button>開始探索</button>
+      <button @click="goToEventsPage">開始探索</button>
     </div>
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
+
+// 跳轉 eventsPage 頁面
+import { useRouter } from 'vue-router'
+
+const router = useRouter()
+
+const goToEventsPage = () => {
+  router.push({ name: 'eventsPage' })
+}
+
 </script>
 
 <style scoped>
@@ -45,7 +55,7 @@
 }
 
 .overlay button {
-  background-color: #2563eb;
+  background-color: #369f75;
   color: white;
   padding: 0.75rem 2rem;
   border: none;
@@ -55,6 +65,6 @@
 }
 
 .overlay button:hover {
-  background-color: #1d4ed8;
+  background-color: #2b8561ff;
 }
 </style>
