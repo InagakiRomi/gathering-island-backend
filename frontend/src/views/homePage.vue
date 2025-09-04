@@ -9,16 +9,17 @@
 </template>
 
 <script setup lang="ts">
+  // 跳轉 eventsPage 頁面
+  import { RouteName } from '../router/index';
+    import { useRouter } from 'vue-router';
 
-// 跳轉 eventsPage 頁面
-import { useRouter } from 'vue-router'
+  const router = useRouter();
 
-const router = useRouter()
-
-const goToEventsPage = () => {
-  router.push({ name: 'eventsPage' })
-}
-
+  function goToEventsPage() {
+    router.push({
+      name: RouteName.EVENTS_PAGE
+    });
+  }
 </script>
 
 <style scoped>

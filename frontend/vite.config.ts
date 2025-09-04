@@ -6,7 +6,7 @@ import vueDevTools from 'vite-plugin-vue-devtools'
 
 // 定義 Vite 的設定
 export default defineConfig({
-  base: '/GatheringIsland/',  // base: 網站的根目錄
+  base: '/gatheringIsland/',  // base: 網站的根目錄
   plugins: [
     vue(),
     vueDevTools(),

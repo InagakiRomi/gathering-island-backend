@@ -1,15 +1,20 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import type { RouteRecordRaw } from 'vue-router';
 
+export enum RouteName {
+  HOME = 'home',
+  EVENTS_PAGE = 'eventsPage',
+}
+
 const routes: RouteRecordRaw[] = [
   {
     path: '/',
-    name: 'home',
+    name: RouteName.HOME,
     component: () => import('@/views/homePage.vue'),
   },
   {
     path: '/eventsPage',
-    name: 'eventsPage',
+    name: RouteName.EVENTS_PAGE,
     component: () => import('@/views/eventsPage.vue'),
   },
 ]
