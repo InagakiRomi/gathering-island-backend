@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Like, Repository } from 'typeorm';
 import { plainToInstance } from 'class-transformer';
 import { Event } from '../entity/event.entity';
 import { EventDto } from '../dto/event.dto';
@@ -14,8 +14,13 @@ export class EventService {
   ) {}
 
   /** 查詢指定 id 的活動（SELECT * FROM event） */
-  async findAllEvent(): Promise<EventDto[]> {
-    const events = await this.eventRepository.find();
+  async findAllEvent(keyword: string): Promise<EventDto[]> {
+    const events = await this.eventRepository.find({
+      where: [
+        {event_name: Like(`%${keyword}%`)},
+        {event_description: Like(`%${keyword}%`)},
+      ],
+    });
     return EventDto.fromEntities(events);
   }
 

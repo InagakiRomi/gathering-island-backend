@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Put, Delete, Body, Param } from '@nestjs/common';
+import { Controller, Get, Post, Put, Delete, Body, Param, Query } from '@nestjs/common';
 import { EventService } from '../service/event.service';
 import { Event as EventEntity } from '../entity/event.entity';
 import { plainToInstance } from 'class-transformer';
@@ -11,8 +11,8 @@ export class EventController {
 
     /** 查詢所有的活動（SELECT * FROM event） */
     @Get()
-    async findAllEvent(): Promise<EventDto[]> {
-        const events = await this.eventService.findAllEvent();
+    async findAllEvent(@Query('search') query: string): Promise<EventDto[]> {
+        const events = await this.eventService.findAllEvent(query);
         return plainToInstance(EventDto, events, { excludeExtraneousValues: true });
     }
 
