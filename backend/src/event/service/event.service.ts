@@ -26,6 +26,15 @@ export class EventService {
     offset: number = 0,                                            // 跳過前 X 筆資料
   ): Promise<EventDto[]> {
 
+    // 自動更新：若報名截止時間已過且 is_ended 為 false，就設為 true
+    await this.eventRepository
+      .createQueryBuilder()
+      .update(Event)
+      .set({ is_ended: true })
+      .where('registration_deadline < :now', { now: new Date() })
+      .andWhere('is_ended = false')
+      .execute();
+
     // 建立一個 QueryBuilder，來動態產生 SQL 查詢
     const qb = this.eventRepository.createQueryBuilder('event');
 
@@ -76,6 +85,13 @@ export class EventService {
     // 查無資料就拋出 404 例外
     if (!event) {
       this.throwEventNotFound(event_id);
+    }
+
+    
+    // 若活動過期但尚未更新為 is_ended = true
+    if (!event.is_ended && event.registration_deadline < new Date()) {
+      event.is_ended = true;
+      await this.eventRepository.save(event);
     }
 
     // 將查到的資料轉成 DTO 格式
