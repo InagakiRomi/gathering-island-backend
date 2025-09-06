@@ -1,4 +1,5 @@
 import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+import { Min } from 'class-validator';
 import { EventType } from '../enums/event-type.enum';
 
 @Entity('events')
@@ -32,7 +33,8 @@ export class Event {
     max_participants: number;
 
     /** 活動費用 */
-    @Column({ default: 0 })
+    @Min(0)
+    @Column({ type: 'int', default: 0, unsigned: true })
     event_price: number;
 
     /** 主辦人 ID */
