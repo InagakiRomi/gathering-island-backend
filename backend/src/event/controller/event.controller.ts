@@ -15,6 +15,7 @@ export class EventController {
         @Query('search') query: string,
         @Query('sort') sortParam: string = 'event_time:ASC',
         @Query('eventType') eventType?: EventType,
+        @Query('isEnded') isEndedRaw?: string,
     ): Promise<EventDto[]> {
         const sortObj: Record<string, 'ASC' | 'DESC'> = {};
 
@@ -26,7 +27,16 @@ export class EventController {
             }
         });
 
-        const events = await this.eventService.findAllEvent(query, sortObj, eventType);
+        let isEnded: boolean | undefined = undefined;
+        if (typeof isEndedRaw === 'string') {
+            if (isEndedRaw.toLowerCase() === 'true') {
+            isEnded = true;
+            } else if (isEndedRaw.toLowerCase() === 'false') {
+            isEnded = false;
+            }
+        }
+
+        const events = await this.eventService.findAllEvent(query, sortObj, eventType, isEnded);
         return plainToInstance(EventDto, events, { excludeExtraneousValues: true });
     }
 

@@ -4,7 +4,7 @@ import json
 from datetime import datetime
 
 DATA_DIR = '../data'
-OUTPUT_DIR = '../backend/src/database/json'
+OUTPUT_DIR = '../database/json'
 
 def convert_value(value):
     if isinstance(value, (datetime, pd.Timestamp)):

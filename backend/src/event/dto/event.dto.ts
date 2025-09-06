@@ -60,6 +60,11 @@ export class EventDto {
     @Transform(({ value }) => dayjs(value).format('YYYY/MM/DD HH:mm:ss'))
     created_at: Date;
 
+    /** 活動報名是否截止 */
+    @Expose()
+    @Transform(({ value }) => value === '1' || value === 1 || value === true)
+    is_ended: boolean;
+
     /**
      * 將一個 Event Entity（從資料庫撈出來的物件）
      * 轉換成 EventDto（前端要看的格式）

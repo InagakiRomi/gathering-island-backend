@@ -14,7 +14,8 @@ CREATE TABLE `events` (
     organizer_id INT NOT NULL,
     event_time TIMESTAMP NULL DEFAULT NULL,
     registration_deadline TIMESTAMP NULL DEFAULT NULL,
-    created_at TIMESTAMP NULL DEFAULT NULL
+    created_at TIMESTAMP NULL DEFAULT NULL,
+    is_ended BOOLEAN DEFAULT 0
 );
 
 -- 清除所有活動資料

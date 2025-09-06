@@ -50,4 +50,8 @@ export class Event {
     /** 建立時間，自動填入目前時間 */
     @Column({ type: 'timestamp', nullable: true })
     created_at: Date;
+
+    /** 活動報名是否截止 */
+    @Column({ default: false })
+    is_ended: boolean;
 }

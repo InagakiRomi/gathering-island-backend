@@ -3,7 +3,7 @@ import pandas as pd
 from datetime import datetime
 
 DATA_DIR = '../data'
-OUTPUT_DIR = '../backend/src/database/sql'
+OUTPUT_DIR = '../database/sql'
 
 def escape_sql(value):
     if pd.isna(value):

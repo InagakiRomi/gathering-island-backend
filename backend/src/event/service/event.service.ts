@@ -19,9 +19,9 @@ export class EventService {
     keyword: string,
     order: Record<string, 'ASC' | 'DESC'> = { event_time: 'ASC' },
     eventType?: EventType,
+    isEnded?: boolean,
   ): Promise<EventDto[]> {
     const qb = this.eventRepository.createQueryBuilder('event');
-    const where: any = {};
 
     if (keyword) {
     qb.where('event.event_name LIKE :keyword', { keyword: `%${keyword}%` })
@@ -33,7 +33,11 @@ export class EventService {
     });
 
     if (eventType) {
-        qb.andWhere('event.event_type = :eventType', { eventType });
+      qb.andWhere('event.event_type = :eventType', { eventType });
+    }
+
+    if (typeof isEnded === 'boolean') {
+      qb.andWhere('event.is_ended = :isEnded', { isEnded });
     }
 
     const events = await qb.getMany();
