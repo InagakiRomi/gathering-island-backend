@@ -44,9 +44,7 @@
     width: 100%;
     max-width: 100%;
     padding-top: 24px;
-    padding-right: 48px;
     padding-bottom: 48px;
-    padding-left: 48px;
     background-color: #f3f4f6;
     min-height: 100vh;
     box-sizing: border-box;
@@ -57,23 +55,31 @@
     font-weight: bold;
     margin-bottom: 24px;
   }
+</style>
 
+<style scoped lang="scss">
+  /*電腦版 */
   .events-page__grid {
+    padding-right: $padding-desktop;
+    padding-left: $padding-desktop;
     display: grid;
     gap: 24px;
-    grid-template-columns: repeat(6, 1fr); /* 預設電腦版顯示 6 個 */
+    grid-template-columns: repeat(4, 1fr);
   }
 
-  /* 平板版：寬度介於 768px 到 1024px */
-  @media (max-width: 1024px) {
+  /* 平板版 */
+  @media (max-width: $breakpoint-tablet) {
     .events-page__grid {
-      grid-template-columns: repeat(4, 1fr);
+      padding-right: $padding-tablet;
+      padding-left: $padding-tablet;
     }
   }
 
-  /* 手機版：寬度小於 768px */
-  @media (max-width: 768px) {
+  /* 手機版 */
+  @media (max-width: $breakpoint-mobile) {
     .events-page__grid {
+      padding-right: $padding-mobile;
+      padding-left: $padding-mobile;
       grid-template-columns: repeat(2, 1fr);
     }
   }

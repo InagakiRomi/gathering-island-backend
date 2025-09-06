@@ -19,6 +19,7 @@
   },
   "homepage": "https://github.com/InagakiRomi/Gathering_Island#readme",
   "devDependencies": {
-    "concurrently": "^9.2.1"
+    "concurrently": "^9.2.1",
+    "sass": "^1.92.1"
   }
 }

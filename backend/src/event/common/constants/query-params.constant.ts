@@ -10,7 +10,7 @@ export const QueryParams = {
 };
 
 export const DefaultQueryValues = {
-  SORT: 'created_at:ASC',
+  SORT: 'event_time:ASC',
   PAGE: '1',
   LIMIT: '20',
 };
