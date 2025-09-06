@@ -1,7 +1,7 @@
 import { ParseIntPipe, Controller, Get, Post, Put, Delete, Body, Param, Query } from '@nestjs/common';
+import { plainToInstance } from 'class-transformer';
 import { EventService } from '../service/event.service';
 import { Event as EventEntity } from '../entity/event.entity';
-import { plainToInstance } from 'class-transformer';
 import { EventDto } from '../dto/event.dto';
 import { EventType } from '../enums/event-type.enum';
 
@@ -28,9 +28,19 @@ export class EventController {
         @Query('minPrice') minPriceRaw?: string,
         @Query('maxPrice') maxPriceRaw?: string,
     ): Promise<EventDto[]> {
+        // 處理排序參數，轉為物件格式
         const sortObj: Record<string, 'ASC' | 'DESC'> = {};
 
-        const allowedSortFields = ['created_at', 'max_participants', 'event_price', 'event_time', 'registration_deadline'];
+        // 允許排序的欄位
+        const allowedSortFields = [
+            'created_at',
+            'max_participants',
+            'event_price',
+            'event_time',
+            'registration_deadline'
+        ];
+
+        // 將多個排序條件轉為物件格式
         sortParam.split(',').forEach(pair => {
             const [field, direction] = pair.split(':');
             if (field && allowedSortFields.includes(field) && ['ASC', 'DESC'].includes(direction?.toUpperCase())) {
@@ -38,6 +48,7 @@ export class EventController {
             }
         });
 
+        // 將 isEndedRaw 字串轉為 boolean
         let isEnded: boolean | undefined = undefined;
         if (typeof isEndedRaw === 'string') {
             if (isEndedRaw.toLowerCase() === 'true') {
@@ -47,10 +58,21 @@ export class EventController {
             }
         }
 
+        // 轉換價格為數字型別（若未填寫則為 undefined）
         const minPrice = minPriceRaw ? parseInt(minPriceRaw, 10) : undefined;
         const maxPrice = maxPriceRaw ? parseInt(maxPriceRaw, 10) : undefined;
 
-        const events = await this.eventService.findAllEvent(query, sortObj, eventType, isEnded, minPrice, maxPrice);
+        // 呼叫服務層查詢資料
+        const events = await this.eventService.findAllEvent(
+            query,
+            sortObj,
+            eventType,
+            isEnded,
+            minPrice,
+            maxPrice
+        );
+
+        // 將結果轉為 DTO，排除不必要欄位
         return plainToInstance(EventDto, events, { excludeExtraneousValues: true });
     }
 
