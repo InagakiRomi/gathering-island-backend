@@ -1,4 +1,5 @@
 import { ParseIntPipe, Controller, Get, Post, Put, Delete, Body, Param, Query } from '@nestjs/common';
+import { QueryParams, DefaultQueryValues } from 'src/event/common/constants/query-params.constant';
 import { plainToInstance } from 'class-transformer';
 import { EventService } from '../service/event.service';
 import { Event as EventEntity } from '../entity/event.entity';
@@ -13,20 +14,25 @@ export class EventController {
     @Get()
     async findAllEvent(
         // 模糊查詢
-        @Query('search') query: string,
+        @Query(QueryParams.SEARCH) query: string,
 
         // 排序
-        @Query('sort') sortParam: string = 'event_time:ASC',
+        @Query(QueryParams.SORT) sortParam: string = DefaultQueryValues.SORT,
 
-        // 篩選活動類型
-        @Query('eventType') eventType?: EventType,
+        // 活動類型
+        @Query(QueryParams.EVENT_TYPE) eventType?: EventType,
 
-        // 篩選活動是否報名截止
-        @Query('isEnded') isEndedRaw?: string,
+        // 是否報名截止
+        @Query(QueryParams.IS_ENDED) isEndedRaw?: string,
 
         // 價格區間
-        @Query('minPrice') minPriceRaw?: string,
-        @Query('maxPrice') maxPriceRaw?: string,
+        @Query(QueryParams.MIN_PRICE) minPriceRaw?: string,
+        @Query(QueryParams.MAX_PRICE) maxPriceRaw?: string,
+
+        // 分頁
+        @Query(QueryParams.PAGE) pageRaw: string = DefaultQueryValues.PAGE,
+        @Query(QueryParams.LIMIT) limitRaw: string = DefaultQueryValues.LIMIT,
+        
     ): Promise<EventDto[]> {
         // 處理排序參數，轉為物件格式
         const sortObj: Record<string, 'ASC' | 'DESC'> = {};
@@ -62,6 +68,10 @@ export class EventController {
         const minPrice = minPriceRaw ? parseInt(minPriceRaw, 10) : undefined;
         const maxPrice = maxPriceRaw ? parseInt(maxPriceRaw, 10) : undefined;
 
+        const page = Math.max(1, parseInt(pageRaw, 10));
+        const limit = Math.max(1, parseInt(limitRaw, 10));
+        const offset = (page - 1) * limit;
+
         // 呼叫服務層查詢資料
         const events = await this.eventService.findAllEvent(
             query,
@@ -69,7 +79,9 @@ export class EventController {
             eventType,
             isEnded,
             minPrice,
-            maxPrice
+            maxPrice,
+            limit,
+            offset
         );
 
         // 將結果轉為 DTO，排除不必要欄位

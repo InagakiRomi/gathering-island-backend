@@ -22,6 +22,8 @@ export class EventService {
     isEnded?: boolean,                                             // 篩選是否報名截止
     minPrice?: number,                                             // 最小價格
     maxPrice?: number,                                             // 最大價格
+    limit: number = 10,                                            // 一次幾筆
+    offset: number = 0,                                            // 跳過前 X 筆資料
   ): Promise<EventDto[]> {
 
     // 建立一個 QueryBuilder，來動態產生 SQL 查詢
@@ -55,6 +57,9 @@ export class EventService {
     if (typeof maxPrice === 'number') {
       qb.andWhere('event.event_price <= :maxPrice', { maxPrice });
     }
+
+    // 分頁邏輯
+    qb.skip(offset).take(limit);
 
     // 執行查詢並回傳資料陣列
     const events = await qb.getMany();
