@@ -1,9 +1,10 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Like, Repository } from 'typeorm';
+import { Repository } from 'typeorm';
 import { plainToInstance } from 'class-transformer';
 import { Event } from '../entity/event.entity';
 import { EventDto } from '../dto/event.dto';
+import { EventType } from '../enums/event-type.enum';
 
 @Injectable()
 export class EventService {
@@ -17,8 +18,10 @@ export class EventService {
   async findAllEvent(
     keyword: string,
     order: Record<string, 'ASC' | 'DESC'> = { event_time: 'ASC' },
+    eventType?: EventType,
   ): Promise<EventDto[]> {
     const qb = this.eventRepository.createQueryBuilder('event');
+    const where: any = {};
 
     if (keyword) {
     qb.where('event.event_name LIKE :keyword', { keyword: `%${keyword}%` })
@@ -28,6 +31,10 @@ export class EventService {
     Object.entries(order).forEach(([field, direction]) => {
       qb.addOrderBy(`event.${field}`, direction);
     });
+
+    if (eventType) {
+        qb.andWhere('event.event_type = :eventType', { eventType });
+    }
 
     const events = await qb.getMany();
     

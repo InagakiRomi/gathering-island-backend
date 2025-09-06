@@ -1,9 +1,9 @@
-import { Controller, Get, Post, Put, Delete, Body, Param, Query } from '@nestjs/common';
+import { ParseIntPipe, Controller, Get, Post, Put, Delete, Body, Param, Query } from '@nestjs/common';
 import { EventService } from '../service/event.service';
 import { Event as EventEntity } from '../entity/event.entity';
 import { plainToInstance } from 'class-transformer';
 import { EventDto } from '../dto/event.dto';
-import { ParseIntPipe } from '@nestjs/common';
+import { EventType } from '../enums/event-type.enum';
 
 @Controller('events')
 export class EventController {
@@ -14,6 +14,7 @@ export class EventController {
     async findAllEvent(
         @Query('search') query: string,
         @Query('sort') sortParam: string = 'event_time:ASC',
+        @Query('eventType') eventType?: EventType,
     ): Promise<EventDto[]> {
         const sortObj: Record<string, 'ASC' | 'DESC'> = {};
 
@@ -25,7 +26,7 @@ export class EventController {
             }
         });
 
-        const events = await this.eventService.findAllEvent(query, sortObj);
+        const events = await this.eventService.findAllEvent(query, sortObj, eventType);
         return plainToInstance(EventDto, events, { excludeExtraneousValues: true });
     }
 
