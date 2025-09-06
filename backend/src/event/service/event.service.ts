@@ -16,10 +16,21 @@ export class EventService {
 
   /** 查詢指定 id 的活動（SELECT * FROM event） */
   async findAllEvent(
+    // 模糊查詢
     keyword: string,
+
+    // 排序
     order: Record<string, 'ASC' | 'DESC'> = { event_time: 'ASC' },
+
+    // 篩選活動類型
     eventType?: EventType,
+
+    // 篩選活動是否報名截止
     isEnded?: boolean,
+
+    // 價格區間
+    minPrice?: number,
+    maxPrice?: number,
   ): Promise<EventDto[]> {
     const qb = this.eventRepository.createQueryBuilder('event');
 
@@ -38,6 +49,14 @@ export class EventService {
 
     if (typeof isEnded === 'boolean') {
       qb.andWhere('event.is_ended = :isEnded', { isEnded });
+    }
+
+    if (typeof minPrice === 'number') {
+      qb.andWhere('event.event_price >= :minPrice', { minPrice });
+    }
+
+    if (typeof maxPrice === 'number') {
+      qb.andWhere('event.event_price <= :maxPrice', { maxPrice });
     }
 
     const events = await qb.getMany();

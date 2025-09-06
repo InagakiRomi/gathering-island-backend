@@ -12,10 +12,21 @@ export class EventController {
     /** 查詢所有的活動（SELECT * FROM event） */
     @Get()
     async findAllEvent(
+        // 模糊查詢
         @Query('search') query: string,
+
+        // 排序
         @Query('sort') sortParam: string = 'event_time:ASC',
+
+        // 篩選活動類型
         @Query('eventType') eventType?: EventType,
+
+        // 篩選活動是否報名截止
         @Query('isEnded') isEndedRaw?: string,
+
+        // 價格區間
+        @Query('minPrice') minPriceRaw?: string,
+        @Query('maxPrice') maxPriceRaw?: string,
     ): Promise<EventDto[]> {
         const sortObj: Record<string, 'ASC' | 'DESC'> = {};
 
@@ -36,7 +47,10 @@ export class EventController {
             }
         }
 
-        const events = await this.eventService.findAllEvent(query, sortObj, eventType, isEnded);
+        const minPrice = minPriceRaw ? parseInt(minPriceRaw, 10) : undefined;
+        const maxPrice = maxPriceRaw ? parseInt(maxPriceRaw, 10) : undefined;
+
+        const events = await this.eventService.findAllEvent(query, sortObj, eventType, isEnded, minPrice, maxPrice);
         return plainToInstance(EventDto, events, { excludeExtraneousValues: true });
     }
 
