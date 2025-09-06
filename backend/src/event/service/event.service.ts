@@ -50,7 +50,7 @@ export class EventService {
   const event = await this.eventRepository.findOne({ where: { event_id } });
 
   if (!event) {
-    throw new NotFoundException(`Event with ID ${event_id} not found`);
+    this.throwEventNotFound(event_id);
   }
 
   return EventDto.fromEntity(event);
@@ -64,14 +64,14 @@ export class EventService {
   }
 
   /** 根據 id 修改活動（UPDATE event SET ... WHERE id = ?） */ 
-  async updateEvent(id: number, event: Event): Promise<EventDto> {
+  async updateEvent(event_id: number, event: Event): Promise<EventDto> {
     // 更新這筆資料
-    await this.eventRepository.update(id, event);
+    await this.eventRepository.update(event_id, event);
 
     // 更新後再次查詢資料，確保它存在
-    const updated = await this.eventRepository.findOne({where: { event_id: id },});
+    const updated = await this.eventRepository.findOne({where: { event_id: event_id },});
     if (!updated) {
-      throw new NotFoundException(`找不到 id 為 ${id} 的活動`);
+      this.throwEventNotFound(event_id);
     }
 
     return EventDto.fromEntity(updated);
@@ -80,5 +80,9 @@ export class EventService {
   /** 根據 id 刪除活動（DELETE FROM event WHERE id = ?） */ 
   async deleteEvent(id: number): Promise<void> {
     await this.eventRepository.delete(id);
+  }
+
+  private throwEventNotFound(event_id: number): never {
+    throw new NotFoundException(`Event with ID ${event_id} not found`);
   }
 }
