@@ -33,6 +33,7 @@ const formattedTime = computed(() => {
     weekday: 'long',
     hour: '2-digit',
     minute: '2-digit',
+    year: 'numeric',
     month: 'short',
     day: 'numeric',
   })
@@ -46,13 +47,16 @@ const formattedTime = computed(() => {
   width: 100%;
   max-width: 420px;
   height: 340px;
-  background-color: #fffef9;
   border-radius: 12px;
-  border: 1px solid #e8d9c1;
+  border: 4px solid transparent;
+  background-image: 
+    linear-gradient(#fffef9, #fffef9), 
+    linear-gradient(to right, #ffcf99, #c77f23);
+  background-origin: border-box;
+  background-clip: content-box, border-box;
   box-shadow: 4px 6px 16px rgba(0, 0, 0, 0.08);
   overflow: hidden;
   transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1), box-shadow 0.4s ease;
-  font-family: 'Segoe UI', 'PingFang SC', 'Helvetica Neue', sans-serif;
   display: flex;
   flex-direction: column;
   cursor: pointer;

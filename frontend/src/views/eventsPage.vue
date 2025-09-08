@@ -40,21 +40,23 @@
 </script>
 
 <style scoped>
-  .events-page {
-    width: 100%;
-    max-width: 100%;
-    padding-top: 24px;
-    padding-bottom: 48px;
-    background-color: #f3f4f6;
-    min-height: 100vh;
-    box-sizing: border-box;
-  }
+.events-page {
+  width: 100%;
+  padding: 48px 0;
+  background: linear-gradient(to bottom, #fef9f4, #f5e8d5);
+  min-height: 100vh;
+  box-sizing: border-box;
+}
 
-  .events-page__title {
-    font-size: 2rem;
-    font-weight: bold;
-    margin-bottom: 24px;
-  }
+.events-page__title {
+  font-size: 2.4rem;
+  font-weight: 600;
+  text-align: center;
+  color: #4e342e;
+  margin-bottom: 40px;
+  font-family: 'Segoe UI', 'PingFang SC', 'Helvetica Neue', sans-serif;
+  text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+}
 </style>
 
 <style scoped lang="scss">
