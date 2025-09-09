@@ -162,14 +162,34 @@
     border-color: #e76f51;
   }
 
-  @media (max-width: 600px) {
+  select,
+  input,
+  .search-button {
+    flex: 1 1 180px; // 每個元素的最小寬度
+    max-width: 240px;
+  }
+
+  .search-button {
+    max-width: 160px;
+  }
+
+  @media (max-width: 880px) {
     flex-direction: column;
     align-items: stretch;
+
+    select,
+    input,
+    .search-button {
+      flex: none;
+      width: 100%;
+      max-width: 100%;
+    }
+
+    gap: 12px;
   }
 }
 
-// 下拉選單樣式
-
+// 下拉選單與搜尋欄位通用樣式
 .dropdown,
 .search-input {
   padding: 0.6rem 1rem;
@@ -179,7 +199,6 @@
   font-size: 1rem;
   color: #4e342e;
   font-family: 'Segoe UI', 'PingFang SC', 'Helvetica Neue', sans-serif;
-  min-width: 150px;
   transition: all 0.3s ease;
 
   &:focus,
@@ -190,7 +209,7 @@
   }
 }
 
-// 搜尋按鈕
+// 搜尋按鈕樣式
 .search-button {
   background-color: #ffb347;
   color: #fff;
@@ -234,6 +253,7 @@
   .events-page__grid {
     padding-right: $padding-tablet;
     padding-left: $padding-tablet;
+    grid-template-columns: repeat(3, 1fr);
   }
 }
 
@@ -245,4 +265,5 @@
     grid-template-columns: repeat(2, 1fr);
   }
 }
+
 </style>
