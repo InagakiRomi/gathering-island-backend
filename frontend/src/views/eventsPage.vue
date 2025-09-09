@@ -9,6 +9,13 @@
         <!-- 活動類型 -->
         <select v-model="selectedEventType" class="dropdown">
           <option value="ALL">所有類型</option>
+          <option
+            v-for="type in eventTypes"
+            :key="type.value"
+            :value="type.value"
+          >
+            {{ type.label }}
+          </option>
         </select>
 
         <!-- 排序 -->
@@ -43,11 +50,11 @@
 </template>
 
 <script setup lang="ts">
-  import { ref, onMounted } from 'vue'
-  import EventCard from '@/components/EventCard.vue'
-  import api from '@/lib/api'
+  import { ref, onMounted, watch } from 'vue'
   import { getEventImageUrl } from '@/utils/eventImage'
   import type { Event } from '@/types/Event'
+  import EventCard from '@/components/EventCard.vue'
+  import api from '@/lib/api'
 
   const events = ref<Event[]>([])
   const searchQuery = ref('')
@@ -56,6 +63,9 @@
   const selectedEventType = ref('ALL')
   const selectedIsEnded = ref('eventTimeASC') // 預設顯示最新
 
+  // 儲存活動分類項目
+  const eventTypes = ref<{ value: number; label: string }[]>([])
+
   // 封裝 enrichEvents 處理
   const enrichEvents = (raw: Event[]) =>
     raw.map((event) => ({
@@ -63,9 +73,29 @@
       image_url: getEventImageUrl(event.event_type),
     }))
 
+  // 取得活動分類項目
+  const fetchEventTypes = async () => {
+    try {
+      const response = await api.get('/events/types')
+      eventTypes.value = response.data
+    } catch (error) {
+      console.error('取得活動類型失敗', error)
+    }
+  }
+
+  // 活動資料一覽
   const fetchEvents = async (query?: string) => {
     try {
-      const params = query ? { search: query } : {}
+      const params: Record<string, any> = {}
+
+      if (query) {
+        params.search = query
+      }
+
+      if (selectedEventType.value !== 'ALL') {
+        params.type = selectedEventType.value
+      }
+
       const response = await api.get<Event[]>('/events', { params })
       events.value = enrichEvents(response.data)
     } catch (error) {
@@ -73,11 +103,12 @@
     }
   }
 
-  const search = () => {
+  watch(selectedEventType, () => {
     fetchEvents(searchQuery.value.trim())
-  }
+  })
 
   onMounted(() => {
+    fetchEventTypes()
     fetchEvents()
   })
 </script>
