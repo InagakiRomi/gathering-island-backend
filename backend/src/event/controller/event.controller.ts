@@ -5,6 +5,7 @@ import { EventService } from '../service/event.service';
 import { Event as EventEntity } from '../entity/event.entity';
 import { EventDto } from '../dto/event.dto';
 import { EventType } from '../enums/event-type.enum';
+import { eventTypeOptions } from '../utils/event-type-options';
 
 @Controller('events')
 export class EventController {
@@ -86,6 +87,12 @@ export class EventController {
 
         // 將結果轉為 DTO，排除不必要欄位
         return plainToInstance(EventDto, events, { excludeExtraneousValues: true });
+    }
+    
+    /** 取得所有活動類型選項 */
+    @Get('types')
+    getEventTypes() {
+        return eventTypeOptions;
     }
 
     /** 查詢指定 id 的活動（SELECT * FROM event） */
