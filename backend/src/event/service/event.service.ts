@@ -106,6 +106,9 @@ export class EventService {
     // 設定建立時間
     event.created_at = new Date();
 
+    // 設定修改時間
+    event.updated_at = new Date();
+
     // 寫入資料庫
     const created = await this.eventRepository.save(event);
 
