@@ -115,6 +115,10 @@ export class EventService {
 
   /** 根據 id 修改活動（UPDATE event SET ... WHERE id = ?） */ 
   async updateEvent(event_id: number, event: Event): Promise<EventDto> {
+
+    // 更新修改時間
+    event.updated_at = new Date();
+
     // 驗證價格必須是正數
     this.validateEventPrice(event.event_price);
     

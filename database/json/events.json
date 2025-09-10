@@ -9,10 +9,11 @@
     "max_participants": 170,
     "event_price": 500,
     "organizer_id": 78,
+    "is_ended": 0,
     "event_time": "2026-04-24 11:00:00",
     "registration_deadline": "2026-04-14 11:00:00",
     "created_at": "2026-03-01 11:00:00",
-    "is_ended": 0
+    "updated_at": "2026-03-01 11:00:00"
   },
   {
     "event_id": 2,
@@ -24,10 +25,11 @@
     "max_participants": 30,
     "event_price": 35000,
     "organizer_id": 5,
+    "is_ended": 0,
     "event_time": "2026-01-12 13:00:00",
     "registration_deadline": "2026-01-08 13:00:00",
     "created_at": "2026-12-19 13:00:00",
-    "is_ended": 0
+    "updated_at": "2026-12-19 13:00:00"
   },
   {
     "event_id": 3,
@@ -39,10 +41,11 @@
     "max_participants": 250,
     "event_price": 0,
     "organizer_id": 65,
+    "is_ended": 0,
     "event_time": "2026-03-15 10:00:00",
     "registration_deadline": "2026-03-11 00:00:00",
     "created_at": "2026-01-05 14:30:00",
-    "is_ended": 0
+    "updated_at": "2026-01-05 14:30:00"
   },
   {
     "event_id": 4,
@@ -54,10 +57,11 @@
     "max_participants": 70,
     "event_price": 0,
     "organizer_id": 2,
+    "is_ended": 0,
     "event_time": "2026-01-22 12:00:00",
     "registration_deadline": "2026-01-19 12:00:00",
     "created_at": "2026-01-09 12:00:00",
-    "is_ended": 0
+    "updated_at": "2026-01-09 12:00:00"
   },
   {
     "event_id": 5,
@@ -69,10 +73,11 @@
     "max_participants": 65,
     "event_price": 0,
     "organizer_id": 48,
+    "is_ended": 0,
     "event_time": "2026-02-11 11:00:00",
     "registration_deadline": "2026-02-08 11:00:00",
     "created_at": "2026-01-19 11:00:00",
-    "is_ended": 0
+    "updated_at": "2026-01-19 11:00:00"
   },
   {
     "event_id": 6,
@@ -84,10 +89,11 @@
     "max_participants": 1100,
     "event_price": 0,
     "organizer_id": 12,
+    "is_ended": 0,
     "event_time": "2026-03-12 16:00:00",
     "registration_deadline": "2026-03-09 16:00:00",
     "created_at": "2026-02-16 16:00:00",
-    "is_ended": 0
+    "updated_at": "2026-02-16 16:00:00"
   },
   {
     "event_id": 7,
@@ -99,10 +105,11 @@
     "max_participants": 226,
     "event_price": 200,
     "organizer_id": 57,
+    "is_ended": 0,
     "event_time": "2026-04-09 17:00:00",
     "registration_deadline": "2026-03-26 17:00:00",
     "created_at": "2026-03-06 17:00:00",
-    "is_ended": 0
+    "updated_at": "2026-03-06 17:00:00"
   },
   {
     "event_id": 8,
@@ -114,10 +121,11 @@
     "max_participants": 55,
     "event_price": 700,
     "organizer_id": 20,
+    "is_ended": 0,
     "event_time": "2026-04-09 19:00:00",
     "registration_deadline": "2026-04-08 19:00:00",
     "created_at": "2026-03-24 19:00:00",
-    "is_ended": 0
+    "updated_at": "2026-03-24 19:00:00"
   },
   {
     "event_id": 9,
@@ -129,10 +137,11 @@
     "max_participants": 1900,
     "event_price": 700,
     "organizer_id": 37,
+    "is_ended": 0,
     "event_time": "2026-05-08 18:00:00",
     "registration_deadline": "2026-05-04 18:00:00",
     "created_at": "2026-04-12 18:00:00",
-    "is_ended": 0
+    "updated_at": "2026-04-12 18:00:00"
   },
   {
     "event_id": 10,
@@ -144,10 +153,11 @@
     "max_participants": 1000,
     "event_price": 700,
     "organizer_id": 21,
+    "is_ended": 0,
     "event_time": "2026-04-29 18:00:00",
     "registration_deadline": "2026-04-28 18:00:00",
     "created_at": "2026-04-14 18:00:00",
-    "is_ended": 0
+    "updated_at": "2026-04-14 18:00:00"
   },
   {
     "event_id": 11,
@@ -159,10 +169,11 @@
     "max_participants": 1000,
     "event_price": 800,
     "organizer_id": 27,
+    "is_ended": 1,
     "event_time": "2024-05-16 22:00:00",
     "registration_deadline": "2024-05-14 22:00:00",
     "created_at": "2024-04-19 22:00:00",
-    "is_ended": 1
+    "updated_at": "2024-04-19 22:00:00"
   },
   {
     "event_id": 12,
@@ -174,10 +185,11 @@
     "max_participants": 800,
     "event_price": 0,
     "organizer_id": 16,
+    "is_ended": 1,
     "event_time": "2024-05-23 10:00:00",
     "registration_deadline": "2024-05-19 10:00:00",
     "created_at": "2024-05-06 10:00:00",
-    "is_ended": 1
+    "updated_at": "2024-05-06 10:00:00"
   },
   {
     "event_id": 13,
@@ -189,10 +201,11 @@
     "max_participants": 1600,
     "event_price": 0,
     "organizer_id": 12,
+    "is_ended": 1,
     "event_time": "2024-06-13 12:00:00",
     "registration_deadline": "2024-06-12 12:00:00",
     "created_at": "2024-05-19 12:00:00",
-    "is_ended": 1
+    "updated_at": "2024-05-19 12:00:00"
   },
   {
     "event_id": 14,
@@ -204,10 +217,11 @@
     "max_participants": 60,
     "event_price": 600,
     "organizer_id": 12,
+    "is_ended": 1,
     "event_time": "2024-08-18 13:00:00",
     "registration_deadline": "2024-08-10 18:00:00",
     "created_at": "2024-06-05 13:00:00",
-    "is_ended": 1
+    "updated_at": "2024-06-05 13:00:00"
   },
   {
     "event_id": 15,
@@ -219,10 +233,11 @@
     "max_participants": 406,
     "event_price": 100,
     "organizer_id": 75,
+    "is_ended": 1,
     "event_time": "2024-08-08 11:00:00",
     "registration_deadline": "2024-08-01 11:00:00",
     "created_at": "2024-06-17 11:00:00",
-    "is_ended": 1
+    "updated_at": "2024-06-17 11:00:00"
   },
   {
     "event_id": 16,
@@ -234,10 +249,11 @@
     "max_participants": 500,
     "event_price": 0,
     "organizer_id": 44,
+    "is_ended": 1,
     "event_time": "2024-07-17 20:00:00",
     "registration_deadline": "2024-07-12 20:00:00",
     "created_at": "2024-06-23 20:00:00",
-    "is_ended": 1
+    "updated_at": "2024-06-23 20:00:00"
   },
   {
     "event_id": 17,
@@ -249,10 +265,11 @@
     "max_participants": 200,
     "event_price": 4500,
     "organizer_id": 20,
+    "is_ended": 1,
     "event_time": "2024-07-25 18:00:00",
     "registration_deadline": "2024-07-23 18:00:00",
     "created_at": "2024-06-26 18:00:00",
-    "is_ended": 1
+    "updated_at": "2024-06-26 18:00:00"
   },
   {
     "event_id": 18,
@@ -264,10 +281,11 @@
     "max_participants": 1900,
     "event_price": 200,
     "organizer_id": 7,
+    "is_ended": 1,
     "event_time": "2024-07-18 08:00:00",
     "registration_deadline": "2024-07-13 08:00:00",
     "created_at": "2024-07-07 08:00:00",
-    "is_ended": 1
+    "updated_at": "2024-07-07 08:00:00"
   },
   {
     "event_id": 19,
@@ -279,10 +297,11 @@
     "max_participants": 1500,
     "event_price": 1400,
     "organizer_id": 49,
+    "is_ended": 1,
     "event_time": "2024-09-14 19:00:00",
     "registration_deadline": "2024-09-13 19:00:00",
     "created_at": "2024-09-01 19:00:00",
-    "is_ended": 1
+    "updated_at": "2024-09-01 19:00:00"
   },
   {
     "event_id": 20,
@@ -294,10 +313,11 @@
     "max_participants": 1000,
     "event_price": 300,
     "organizer_id": 42,
+    "is_ended": 1,
     "event_time": "2024-09-20 17:00:00",
     "registration_deadline": "2024-09-16 17:00:00",
     "created_at": "2024-09-03 17:00:00",
-    "is_ended": 1
+    "updated_at": "2024-09-03 17:00:00"
   },
   {
     "event_id": 21,
@@ -309,10 +329,11 @@
     "max_participants": 600,
     "event_price": 0,
     "organizer_id": 19,
+    "is_ended": 1,
     "event_time": "2024-09-17 18:00:00",
     "registration_deadline": "2024-09-15 18:00:00",
     "created_at": "2024-09-06 18:00:00",
-    "is_ended": 1
+    "updated_at": "2024-09-06 18:00:00"
   },
   {
     "event_id": 22,
@@ -324,10 +345,11 @@
     "max_participants": 1400,
     "event_price": 1400,
     "organizer_id": 50,
+    "is_ended": 1,
     "event_time": "2024-10-03 17:00:00",
     "registration_deadline": "2024-09-30 17:00:00",
     "created_at": "2024-09-23 17:00:00",
-    "is_ended": 1
+    "updated_at": "2024-09-23 17:00:00"
   },
   {
     "event_id": 23,
@@ -339,10 +361,11 @@
     "max_participants": 1000,
     "event_price": 200,
     "organizer_id": 7,
+    "is_ended": 1,
     "event_time": "2024-11-06 18:00:00",
     "registration_deadline": "2024-11-03 18:00:00",
     "created_at": "2024-10-20 18:00:00",
-    "is_ended": 1
+    "updated_at": "2024-10-20 18:00:00"
   },
   {
     "event_id": 24,
@@ -354,10 +377,11 @@
     "max_participants": 200,
     "event_price": 0,
     "organizer_id": 9,
+    "is_ended": 1,
     "event_time": "2024-12-04 15:00:00",
     "registration_deadline": "2024-11-30 15:00:00",
     "created_at": "2024-11-16 15:00:00",
-    "is_ended": 1
+    "updated_at": "2024-11-16 15:00:00"
   },
   {
     "event_id": 25,
@@ -369,10 +393,11 @@
     "max_participants": 1800,
     "event_price": 1100,
     "organizer_id": 29,
+    "is_ended": 1,
     "event_time": "2024-12-15 17:00:00",
     "registration_deadline": "2024-12-11 17:00:00",
     "created_at": "2024-11-18 17:00:00",
-    "is_ended": 1
+    "updated_at": "2024-11-18 17:00:00"
   },
   {
     "event_id": 26,
@@ -384,10 +409,11 @@
     "max_participants": 50,
     "event_price": 300,
     "organizer_id": 1,
+    "is_ended": 1,
     "event_time": "2024-12-28 10:00:00",
     "registration_deadline": "2024-12-26 10:00:00",
     "created_at": "2024-11-30 10:00:00",
-    "is_ended": 1
+    "updated_at": "2024-11-30 10:00:00"
   },
   {
     "event_id": 27,
@@ -399,10 +425,11 @@
     "max_participants": 600,
     "event_price": 0,
     "organizer_id": 14,
+    "is_ended": 1,
     "event_time": "2024-12-29 17:00:00",
     "registration_deadline": "2024-12-28 17:00:00",
     "created_at": "2024-12-10 17:00:00",
-    "is_ended": 1
+    "updated_at": "2024-12-10 17:00:00"
   },
   {
     "event_id": 28,
@@ -414,10 +441,11 @@
     "max_participants": 500,
     "event_price": 300,
     "organizer_id": 4,
+    "is_ended": 1,
     "event_time": "2025-01-05 10:00:00",
     "registration_deadline": "2025-01-04 10:00:00",
     "created_at": "2024-12-14 10:00:00",
-    "is_ended": 1
+    "updated_at": "2024-12-14 10:00:00"
   },
   {
     "event_id": 29,
@@ -429,10 +457,11 @@
     "max_participants": 85,
     "event_price": 7300,
     "organizer_id": 40,
+    "is_ended": 1,
     "event_time": "2025-02-02 20:00:00",
     "registration_deadline": "2025-01-29 20:00:00",
     "created_at": "2025-01-21 20:00:00",
-    "is_ended": 1
+    "updated_at": "2025-01-21 20:00:00"
   },
   {
     "event_id": 30,
@@ -444,10 +473,11 @@
     "max_participants": 2000,
     "event_price": 1200,
     "organizer_id": 1,
+    "is_ended": 1,
     "event_time": "2025-03-04 18:00:00",
     "registration_deadline": "2025-03-02 18:00:00",
     "created_at": "2025-02-06 18:00:00",
-    "is_ended": 1
+    "updated_at": "2025-02-06 18:00:00"
   },
   {
     "event_id": 31,
@@ -459,10 +489,11 @@
     "max_participants": 15,
     "event_price": 1000,
     "organizer_id": 61,
+    "is_ended": 1,
     "event_time": "2025-04-12 15:00:00",
     "registration_deadline": "2025-04-01 20:00:00",
     "created_at": "2025-02-20 12:00:00",
-    "is_ended": 1
+    "updated_at": "2025-02-20 12:00:00"
   },
   {
     "event_id": 32,
@@ -474,10 +505,11 @@
     "max_participants": 20,
     "event_price": 4000,
     "organizer_id": 99,
+    "is_ended": 1,
     "event_time": "2025-05-01 08:00:00",
     "registration_deadline": "2025-04-20 17:00:00",
     "created_at": "2025-03-01 10:00:00",
-    "is_ended": 1
+    "updated_at": "2025-03-01 10:00:00"
   },
   {
     "event_id": 33,
@@ -489,10 +521,11 @@
     "max_participants": 5000,
     "event_price": 800,
     "organizer_id": 6,
+    "is_ended": 1,
     "event_time": "2025-04-28 21:00:00",
     "registration_deadline": "2025-04-27 21:00:00",
     "created_at": "2025-04-11 21:00:00",
-    "is_ended": 1
+    "updated_at": "2025-04-11 21:00:00"
   },
   {
     "event_id": 34,
@@ -504,10 +537,11 @@
     "max_participants": 300,
     "event_price": 0,
     "organizer_id": 2,
+    "is_ended": 1,
     "event_time": "2025-05-29 18:00:00",
     "registration_deadline": "2025-05-25 18:00:00",
     "created_at": "2025-04-29 18:00:00",
-    "is_ended": 1
+    "updated_at": "2025-04-29 18:00:00"
   },
   {
     "event_id": 35,
@@ -519,10 +553,11 @@
     "max_participants": 1900,
     "event_price": 0,
     "organizer_id": 42,
+    "is_ended": 1,
     "event_time": "2025-07-12 18:00:00",
     "registration_deadline": "2025-07-09 18:00:00",
     "created_at": "2025-06-19 18:00:00",
-    "is_ended": 1
+    "updated_at": "2025-06-19 18:00:00"
   },
   {
     "event_id": 36,
@@ -534,10 +569,11 @@
     "max_participants": 1600,
     "event_price": 0,
     "organizer_id": 34,
+    "is_ended": 1,
     "event_time": "2025-08-03 12:00:00",
     "registration_deadline": "2025-07-30 12:00:00",
     "created_at": "2025-07-17 12:00:00",
-    "is_ended": 1
+    "updated_at": "2025-07-17 12:00:00"
   },
   {
     "event_id": 37,
@@ -549,10 +585,11 @@
     "max_participants": 1000,
     "event_price": 150,
     "organizer_id": 8,
+    "is_ended": 0,
     "event_time": "2025-09-11 15:00:00",
     "registration_deadline": "2025-09-10 15:00:00",
     "created_at": "2025-08-12 15:00:00",
-    "is_ended": 0
+    "updated_at": "2025-08-12 15:00:00"
   },
   {
     "event_id": 38,
@@ -564,10 +601,11 @@
     "max_participants": 50,
     "event_price": 300,
     "organizer_id": 1,
+    "is_ended": 1,
     "event_time": "2025-09-04 17:00:00",
     "registration_deadline": "2025-08-31 17:00:00",
     "created_at": "2025-08-14 17:00:00",
-    "is_ended": 1
+    "updated_at": "2025-08-14 17:00:00"
   },
   {
     "event_id": 39,
@@ -579,10 +617,11 @@
     "max_participants": 300,
     "event_price": 7600,
     "organizer_id": 4,
+    "is_ended": 1,
     "event_time": "2025-09-08 22:00:00",
     "registration_deadline": "2025-09-04 22:00:00",
     "created_at": "2025-08-16 22:00:00",
-    "is_ended": 1
+    "updated_at": "2025-08-16 22:00:00"
   },
   {
     "event_id": 40,
@@ -594,10 +633,11 @@
     "max_participants": 200,
     "event_price": 0,
     "organizer_id": 30,
+    "is_ended": 0,
     "event_time": "2025-09-28 16:00:00",
     "registration_deadline": "2025-09-23 16:00:00",
     "created_at": "2025-09-04 16:00:00",
-    "is_ended": 0
+    "updated_at": "2025-09-04 16:00:00"
   },
   {
     "event_id": 41,
@@ -609,10 +649,11 @@
     "max_participants": 80,
     "event_price": 200,
     "organizer_id": 35,
+    "is_ended": 0,
     "event_time": "2025-11-10 14:00:00",
     "registration_deadline": "2025-11-01 18:00:00",
     "created_at": "2025-09-10 09:00:00",
-    "is_ended": 0
+    "updated_at": "2025-09-10 09:00:00"
   },
   {
     "event_id": 42,
@@ -624,10 +665,11 @@
     "max_participants": 1500,
     "event_price": 700,
     "organizer_id": 8,
+    "is_ended": 0,
     "event_time": "2025-10-05 18:30:00",
     "registration_deadline": "2025-09-30 18:30:00",
     "created_at": "2025-09-18 18:30:00",
-    "is_ended": 0
+    "updated_at": "2025-09-18 18:30:00"
   },
   {
     "event_id": 43,
@@ -639,10 +681,11 @@
     "max_participants": 121,
     "event_price": 2000,
     "organizer_id": 43,
+    "is_ended": 0,
     "event_time": "2025-11-29 12:00:00",
     "registration_deadline": "2025-11-12 12:00:00",
     "created_at": "2025-10-05 12:00:00",
-    "is_ended": 0
+    "updated_at": "2025-10-05 12:00:00"
   },
   {
     "event_id": 44,
@@ -654,10 +697,11 @@
     "max_participants": 50,
     "event_price": 200,
     "organizer_id": 10,
+    "is_ended": 0,
     "event_time": "2025-10-17 21:00:00",
     "registration_deadline": "2025-10-12 21:00:00",
     "created_at": "2025-10-05 21:00:00",
-    "is_ended": 0
+    "updated_at": "2025-10-05 21:00:00"
   },
   {
     "event_id": 45,
@@ -669,10 +713,11 @@
     "max_participants": 2000,
     "event_price": 0,
     "organizer_id": 15,
+    "is_ended": 0,
     "event_time": "2025-11-14 22:00:00",
     "registration_deadline": "2025-11-13 22:00:00",
     "created_at": "2025-11-04 22:00:00",
-    "is_ended": 0
+    "updated_at": "2025-11-04 22:00:00"
   },
   {
     "event_id": 46,
@@ -684,10 +729,11 @@
     "max_participants": 400,
     "event_price": 0,
     "organizer_id": 35,
+    "is_ended": 0,
     "event_time": "2025-12-07 10:00:00",
     "registration_deadline": "2025-12-06 10:00:00",
     "created_at": "2025-11-16 10:00:00",
-    "is_ended": 0
+    "updated_at": "2025-11-16 10:00:00"
   },
   {
     "event_id": 47,
@@ -699,10 +745,11 @@
     "max_participants": 2000,
     "event_price": 1200,
     "organizer_id": 2,
+    "is_ended": 0,
     "event_time": "2025-12-10 14:00:00",
     "registration_deadline": "2025-12-09 14:00:00",
     "created_at": "2025-11-21 14:00:00",
-    "is_ended": 0
+    "updated_at": "2025-11-21 14:00:00"
   },
   {
     "event_id": 48,
@@ -714,10 +761,11 @@
     "max_participants": 85,
     "event_price": 0,
     "organizer_id": 30,
+    "is_ended": 0,
     "event_time": "2026-01-22 21:00:00",
     "registration_deadline": "2026-01-17 21:00:00",
     "created_at": "2026-01-04 21:00:00",
-    "is_ended": 0
+    "updated_at": "2026-01-04 21:00:00"
   },
   {
     "event_id": 49,
@@ -729,10 +777,11 @@
     "max_participants": 150,
     "event_price": 350,
     "organizer_id": 21,
+    "is_ended": 0,
     "event_time": "2026-03-22 06:30:00",
     "registration_deadline": "2026-03-16 00:00:00",
     "created_at": "2026-02-01 11:00:00",
-    "is_ended": 0
+    "updated_at": "2026-02-01 11:00:00"
   },
   {
     "event_id": 50,
@@ -744,10 +793,11 @@
     "max_participants": 394,
     "event_price": 1000,
     "organizer_id": 5,
+    "is_ended": 0,
     "event_time": "2026-04-09 16:00:00",
     "registration_deadline": "2026-03-23 16:00:00",
     "created_at": "2026-03-03 16:00:00",
-    "is_ended": 0
+    "updated_at": "2026-03-03 16:00:00"
   },
   {
     "event_id": 51,
@@ -759,10 +809,11 @@
     "max_participants": 200,
     "event_price": 4000,
     "organizer_id": 14,
+    "is_ended": 0,
     "event_time": "2026-04-05 12:00:00",
     "registration_deadline": "2026-04-01 12:00:00",
     "created_at": "2026-03-12 12:00:00",
-    "is_ended": 0
+    "updated_at": "2026-03-12 12:00:00"
   },
   {
     "event_id": 52,
@@ -774,10 +825,11 @@
     "max_participants": 1500,
     "event_price": 0,
     "organizer_id": 42,
+    "is_ended": 0,
     "event_time": "2026-04-09 20:00:00",
     "registration_deadline": "2026-04-07 20:00:00",
     "created_at": "2026-03-18 20:00:00",
-    "is_ended": 0
+    "updated_at": "2026-03-18 20:00:00"
   },
   {
     "event_id": 53,
@@ -789,10 +841,11 @@
     "max_participants": 215,
     "event_price": 200,
     "organizer_id": 50,
+    "is_ended": 0,
     "event_time": "2026-05-22 09:00:00",
     "registration_deadline": "2026-05-07 09:00:00",
     "created_at": "2026-03-24 09:00:00",
-    "is_ended": 0
+    "updated_at": "2026-03-24 09:00:00"
   },
   {
     "event_id": 54,
@@ -804,10 +857,11 @@
     "max_participants": 500,
     "event_price": 0,
     "organizer_id": 4,
+    "is_ended": 0,
     "event_time": "2026-05-04 17:00:00",
     "registration_deadline": "2026-05-03 17:00:00",
     "created_at": "2026-04-07 17:00:00",
-    "is_ended": 0
+    "updated_at": "2026-04-07 17:00:00"
   },
   {
     "event_id": 55,
@@ -819,10 +873,11 @@
     "max_participants": 150,
     "event_price": 7200,
     "organizer_id": 19,
+    "is_ended": 0,
     "event_time": "2026-05-05 17:10:00",
     "registration_deadline": "2026-05-01 17:10:00",
     "created_at": "2026-04-07 17:12:13",
-    "is_ended": 0
+    "updated_at": "2026-04-07 17:12:13"
   },
   {
     "event_id": 56,
@@ -834,10 +889,11 @@
     "max_participants": 290,
     "event_price": 200,
     "organizer_id": 41,
+    "is_ended": 0,
     "event_time": "2026-06-10 15:00:00",
     "registration_deadline": "2026-05-27 15:00:00",
     "created_at": "2026-04-24 15:00:00",
-    "is_ended": 0
+    "updated_at": "2026-04-24 15:00:00"
   },
   {
     "event_id": 57,
@@ -849,10 +905,11 @@
     "max_participants": 75,
     "event_price": 0,
     "organizer_id": 22,
+    "is_ended": 0,
     "event_time": "2026-06-11 11:00:00",
     "registration_deadline": "2026-06-10 11:00:00",
     "created_at": "2026-05-18 11:00:00",
-    "is_ended": 0
+    "updated_at": "2026-05-18 11:00:00"
   },
   {
     "event_id": 58,
@@ -864,10 +921,11 @@
     "max_participants": 1200,
     "event_price": 0,
     "organizer_id": 10,
+    "is_ended": 0,
     "event_time": "2026-06-12 13:30:00",
     "registration_deadline": "2026-06-09 13:30:00",
     "created_at": "2026-05-25 13:29:26",
-    "is_ended": 0
+    "updated_at": "2026-05-25 13:29:26"
   },
   {
     "event_id": 59,
@@ -879,10 +937,11 @@
     "max_participants": 100,
     "event_price": 500,
     "organizer_id": 87,
+    "is_ended": 0,
     "event_time": "2026-08-20 18:00:00",
     "registration_deadline": "2026-08-16 00:00:00",
     "created_at": "2026-06-01 12:00:00",
-    "is_ended": 0
+    "updated_at": "2026-06-01 12:00:00"
   },
   {
     "event_id": 60,
@@ -894,10 +953,11 @@
     "max_participants": 150,
     "event_price": 0,
     "organizer_id": 38,
+    "is_ended": 0,
     "event_time": "2026-08-01 13:00:00",
     "registration_deadline": "2026-07-27 13:00:00",
     "created_at": "2026-07-11 13:00:00",
-    "is_ended": 0
+    "updated_at": "2026-07-11 13:00:00"
   },
   {
     "event_id": 61,
@@ -909,10 +969,11 @@
     "max_participants": 80,
     "event_price": 6000,
     "organizer_id": 3,
+    "is_ended": 0,
     "event_time": "2026-08-16 08:00:00",
     "registration_deadline": "2026-08-14 08:00:00",
     "created_at": "2026-07-30 08:00:00",
-    "is_ended": 0
+    "updated_at": "2026-07-30 08:00:00"
   },
   {
     "event_id": 62,
@@ -924,10 +985,11 @@
     "max_participants": 1000,
     "event_price": 1700,
     "organizer_id": 20,
+    "is_ended": 0,
     "event_time": "2026-08-25 20:00:00",
     "registration_deadline": "2026-08-23 20:00:00",
     "created_at": "2026-08-03 20:00:00",
-    "is_ended": 0
+    "updated_at": "2026-08-03 20:00:00"
   },
   {
     "event_id": 63,
@@ -939,10 +1001,11 @@
     "max_participants": 1800,
     "event_price": 0,
     "organizer_id": 46,
+    "is_ended": 0,
     "event_time": "2026-09-08 09:00:00",
     "registration_deadline": "2026-09-05 09:00:00",
     "created_at": "2026-08-26 09:00:00",
-    "is_ended": 0
+    "updated_at": "2026-08-26 09:00:00"
   },
   {
     "event_id": 64,
@@ -954,10 +1017,11 @@
     "max_participants": 355,
     "event_price": 0,
     "organizer_id": 7,
+    "is_ended": 0,
     "event_time": "2026-10-10 15:00:00",
     "registration_deadline": "2026-10-01 15:00:00",
     "created_at": "2026-09-08 15:00:00",
-    "is_ended": 0
+    "updated_at": "2026-09-08 15:00:00"
   },
   {
     "event_id": 65,
@@ -969,10 +1033,11 @@
     "max_participants": 1600,
     "event_price": 0,
     "organizer_id": 35,
+    "is_ended": 0,
     "event_time": "2026-10-09 18:50:00",
     "registration_deadline": "2026-10-07 18:50:00",
     "created_at": "2026-09-15 18:51:54",
-    "is_ended": 0
+    "updated_at": "2026-09-15 18:51:54"
   },
   {
     "event_id": 66,
@@ -984,10 +1049,11 @@
     "max_participants": 40,
     "event_price": 2000,
     "organizer_id": 10,
+    "is_ended": 0,
     "event_time": "2026-11-05 14:00:00",
     "registration_deadline": "2026-11-04 14:00:00",
     "created_at": "2026-10-16 14:00:00",
-    "is_ended": 0
+    "updated_at": "2026-10-16 14:00:00"
   },
   {
     "event_id": 67,
@@ -999,10 +1065,11 @@
     "max_participants": 1500,
     "event_price": 0,
     "organizer_id": 20,
+    "is_ended": 0,
     "event_time": "2026-11-15 06:00:00",
     "registration_deadline": "2026-11-11 06:00:00",
     "created_at": "2026-10-26 06:00:00",
-    "is_ended": 0
+    "updated_at": "2026-10-26 06:00:00"
   },
   {
     "event_id": 68,
@@ -1014,10 +1081,11 @@
     "max_participants": 90,
     "event_price": 1100,
     "organizer_id": 49,
+    "is_ended": 0,
     "event_time": "2026-12-06 22:30:00",
     "registration_deadline": "2026-12-01 22:30:00",
     "created_at": "2026-11-09 22:32:21",
-    "is_ended": 0
+    "updated_at": "2026-11-09 22:32:21"
   },
   {
     "event_id": 69,
@@ -1029,10 +1097,11 @@
     "max_participants": 500,
     "event_price": 1300,
     "organizer_id": 2,
+    "is_ended": 0,
     "event_time": "2026-11-30 20:00:00",
     "registration_deadline": "2026-11-29 20:00:00",
     "created_at": "2026-11-19 20:00:00",
-    "is_ended": 0
+    "updated_at": "2026-11-19 20:00:00"
   },
   {
     "event_id": 70,
@@ -1044,10 +1113,11 @@
     "max_participants": 30,
     "event_price": 1800,
     "organizer_id": 55,
+    "is_ended": 0,
     "event_time": "2027-02-10 10:00:00",
     "registration_deadline": "2027-01-30 18:00:00",
     "created_at": "2026-12-01 16:30:00",
-    "is_ended": 0
+    "updated_at": "2026-12-01 16:30:00"
   },
   {
     "event_id": 71,
@@ -1059,10 +1129,11 @@
     "max_participants": 1400,
     "event_price": 1600,
     "organizer_id": 6,
+    "is_ended": 0,
     "event_time": "2026-12-23 14:00:00",
     "registration_deadline": "2026-12-22 14:00:00",
     "created_at": "2026-12-07 14:00:00",
-    "is_ended": 0
+    "updated_at": "2026-12-07 14:00:00"
   },
   {
     "event_id": 72,
@@ -1074,10 +1145,11 @@
     "max_participants": 100,
     "event_price": 100,
     "organizer_id": 9,
+    "is_ended": 0,
     "event_time": "2026-12-26 22:00:00",
     "registration_deadline": "2026-12-23 22:00:00",
     "created_at": "2026-12-13 22:00:00",
-    "is_ended": 0
+    "updated_at": "2026-12-13 22:00:00"
   },
   {
     "event_id": 73,
@@ -1089,10 +1161,11 @@
     "max_participants": 300,
     "event_price": 200,
     "organizer_id": 1,
+    "is_ended": 0,
     "event_time": "2027-01-15 02:55:00",
     "registration_deadline": "2027-01-11 02:55:00",
     "created_at": "2026-12-16 02:53:22",
-    "is_ended": 0
+    "updated_at": "2026-12-16 02:53:22"
   },
   {
     "event_id": 74,
@@ -1104,10 +1177,11 @@
     "max_participants": 300,
     "event_price": 500,
     "organizer_id": 41,
+    "is_ended": 0,
     "event_time": "2027-07-03 08:20:00",
     "registration_deadline": "2027-06-28 08:20:00",
     "created_at": "2027-06-03 08:21:52",
-    "is_ended": 0
+    "updated_at": "2027-06-03 08:21:52"
   },
   {
     "event_id": 75,
@@ -1119,10 +1193,11 @@
     "max_participants": 1000,
     "event_price": 0,
     "organizer_id": 49,
+    "is_ended": 0,
     "event_time": "2027-06-26 12:45:00",
     "registration_deadline": "2027-06-23 12:45:00",
     "created_at": "2027-06-15 12:42:52",
-    "is_ended": 0
+    "updated_at": "2027-06-15 12:42:52"
   },
   {
     "event_id": 76,
@@ -1134,10 +1209,11 @@
     "max_participants": 327,
     "event_price": 2000,
     "organizer_id": 99,
+    "is_ended": 0,
     "event_time": "2027-08-06 09:00:00",
     "registration_deadline": "2027-07-27 09:00:00",
     "created_at": "2027-07-01 09:00:00",
-    "is_ended": 0
+    "updated_at": "2027-07-01 09:00:00"
   },
   {
     "event_id": 77,
@@ -1149,10 +1225,11 @@
     "max_participants": 300,
     "event_price": 750,
     "organizer_id": 42,
+    "is_ended": 0,
     "event_time": "2027-10-01 18:00:00",
     "registration_deadline": "2027-09-20 20:00:00",
     "created_at": "2027-07-10 10:00:00",
-    "is_ended": 0
+    "updated_at": "2027-07-10 10:00:00"
   },
   {
     "event_id": 78,
@@ -1164,10 +1241,11 @@
     "max_participants": 75,
     "event_price": 2300,
     "organizer_id": 40,
+    "is_ended": 0,
     "event_time": "2027-09-10 19:00:00",
     "registration_deadline": "2027-09-08 19:00:00",
     "created_at": "2027-08-24 19:00:00",
-    "is_ended": 0
+    "updated_at": "2027-08-24 19:00:00"
   },
   {
     "event_id": 79,
@@ -1179,10 +1257,11 @@
     "max_participants": 200,
     "event_price": 5700,
     "organizer_id": 9,
+    "is_ended": 0,
     "event_time": "2027-11-08 10:40:00",
     "registration_deadline": "2027-11-05 10:40:00",
     "created_at": "2027-10-12 10:42:20",
-    "is_ended": 0
+    "updated_at": "2027-10-12 10:42:20"
   },
   {
     "event_id": 80,
@@ -1194,10 +1273,11 @@
     "max_participants": 110,
     "event_price": 6800,
     "organizer_id": 26,
+    "is_ended": 0,
     "event_time": "2027-11-21 19:40:00",
     "registration_deadline": "2027-11-18 19:40:00",
     "created_at": "2027-11-11 19:39:34",
-    "is_ended": 0
+    "updated_at": "2027-11-11 19:39:34"
   },
   {
     "event_id": 81,
@@ -1209,10 +1289,11 @@
     "max_participants": 900,
     "event_price": 700,
     "organizer_id": 41,
+    "is_ended": 0,
     "event_time": "2027-12-27 12:20:00",
     "registration_deadline": "2027-12-23 12:20:00",
     "created_at": "2027-11-27 12:18:18",
-    "is_ended": 0
+    "updated_at": "2027-11-27 12:18:18"
   },
   {
     "event_id": 82,
@@ -1224,10 +1305,11 @@
     "max_participants": 10,
     "event_price": 2100,
     "organizer_id": 39,
+    "is_ended": 0,
     "event_time": "2028-05-26 22:25:00",
     "registration_deadline": "2028-05-23 22:25:00",
     "created_at": "2028-05-07 22:27:40",
-    "is_ended": 0
+    "updated_at": "2028-05-07 22:27:40"
   },
   {
     "event_id": 83,
@@ -1239,10 +1321,11 @@
     "max_participants": 260,
     "event_price": 6000,
     "organizer_id": 4,
+    "is_ended": 0,
     "event_time": "2028-06-09 08:00:00",
     "registration_deadline": "2028-06-06 08:00:00",
     "created_at": "2028-05-19 07:57:01",
-    "is_ended": 0
+    "updated_at": "2028-05-19 07:57:01"
   },
   {
     "event_id": 84,
@@ -1254,10 +1337,11 @@
     "max_participants": 105,
     "event_price": 6000,
     "organizer_id": 14,
+    "is_ended": 0,
     "event_time": "2028-09-20 18:30:00",
     "registration_deadline": "2028-09-18 18:30:00",
     "created_at": "2028-08-21 18:30:00",
-    "is_ended": 0
+    "updated_at": "2028-08-21 18:30:00"
   },
   {
     "event_id": 85,
@@ -1269,10 +1353,11 @@
     "max_participants": 165,
     "event_price": 7700,
     "organizer_id": 45,
+    "is_ended": 0,
     "event_time": "2028-09-29 14:10:00",
     "registration_deadline": "2028-09-26 14:10:00",
     "created_at": "2028-08-31 14:09:24",
-    "is_ended": 0
+    "updated_at": "2028-08-31 14:09:24"
   },
   {
     "event_id": 86,
@@ -1284,10 +1369,11 @@
     "max_participants": 250,
     "event_price": 1000,
     "organizer_id": 83,
+    "is_ended": 0,
     "event_time": "2028-10-27 14:00:00",
     "registration_deadline": "2028-10-12 14:00:00",
     "created_at": "2028-09-01 14:00:00",
-    "is_ended": 0
+    "updated_at": "2028-09-01 14:00:00"
   },
   {
     "event_id": 87,
@@ -1299,10 +1385,11 @@
     "max_participants": 339,
     "event_price": 0,
     "organizer_id": 69,
+    "is_ended": 0,
     "event_time": "2029-01-20 18:00:00",
     "registration_deadline": "2029-01-05 18:00:00",
     "created_at": "2028-12-02 18:00:00",
-    "is_ended": 0
+    "updated_at": "2028-12-02 18:00:00"
   },
   {
     "event_id": 88,
@@ -1314,10 +1401,11 @@
     "max_participants": 123,
     "event_price": 500,
     "organizer_id": 38,
+    "is_ended": 0,
     "event_time": "2029-03-16 17:00:00",
     "registration_deadline": "2029-03-07 17:00:00",
     "created_at": "2029-01-28 17:00:00",
-    "is_ended": 0
+    "updated_at": "2029-01-28 17:00:00"
   },
   {
     "event_id": 89,
@@ -1329,10 +1417,11 @@
     "max_participants": 111,
     "event_price": 0,
     "organizer_id": 53,
+    "is_ended": 0,
     "event_time": "2029-05-13 15:00:00",
     "registration_deadline": "2029-05-03 15:00:00",
     "created_at": "2029-04-11 15:00:00",
-    "is_ended": 0
+    "updated_at": "2029-04-11 15:00:00"
   },
   {
     "event_id": 90,
@@ -1344,10 +1433,11 @@
     "max_participants": 70,
     "event_price": 8000,
     "organizer_id": 4,
+    "is_ended": 0,
     "event_time": "2029-05-12 10:00:00",
     "registration_deadline": "2029-05-08 10:00:00",
     "created_at": "2029-04-14 10:00:00",
-    "is_ended": 0
+    "updated_at": "2029-04-14 10:00:00"
   },
   {
     "event_id": 91,
@@ -1359,10 +1449,11 @@
     "max_participants": 30,
     "event_price": 1000,
     "organizer_id": 43,
+    "is_ended": 0,
     "event_time": "2029-08-29 12:00:00",
     "registration_deadline": "2029-08-19 12:00:00",
     "created_at": "2029-07-30 12:00:00",
-    "is_ended": 0
+    "updated_at": "2029-07-30 12:00:00"
   },
   {
     "event_id": 92,
@@ -1374,10 +1465,11 @@
     "max_participants": 110,
     "event_price": 6400,
     "organizer_id": 47,
+    "is_ended": 0,
     "event_time": "2029-12-23 08:00:00",
     "registration_deadline": "2029-12-20 08:00:00",
     "created_at": "2029-12-12 08:01:38",
-    "is_ended": 0
+    "updated_at": "2029-12-12 08:01:38"
   },
   {
     "event_id": 93,
@@ -1389,10 +1481,11 @@
     "max_participants": 250,
     "event_price": 2300,
     "organizer_id": 21,
+    "is_ended": 0,
     "event_time": "2030-01-25 10:50:00",
     "registration_deadline": "2030-01-24 10:50:00",
     "created_at": "2030-01-04 10:51:27",
-    "is_ended": 0
+    "updated_at": "2030-01-04 10:51:27"
   },
   {
     "event_id": 94,
@@ -1404,10 +1497,11 @@
     "max_participants": 1165,
     "event_price": 180,
     "organizer_id": 2,
+    "is_ended": 0,
     "event_time": "2030-03-05 09:00:00",
     "registration_deadline": "2030-03-04 09:00:00",
     "created_at": "2030-02-17 09:00:00",
-    "is_ended": 0
+    "updated_at": "2030-02-17 09:00:00"
   },
   {
     "event_id": 95,
@@ -1419,10 +1513,11 @@
     "max_participants": 1265,
     "event_price": 0,
     "organizer_id": 40,
+    "is_ended": 0,
     "event_time": "2030-03-19 10:50:00",
     "registration_deadline": "2030-03-14 10:50:00",
     "created_at": "2030-02-26 10:49:09",
-    "is_ended": 0
+    "updated_at": "2030-02-26 10:49:09"
   },
   {
     "event_id": 96,
@@ -1434,10 +1529,11 @@
     "max_participants": 1740,
     "event_price": 0,
     "organizer_id": 21,
+    "is_ended": 0,
     "event_time": "2030-03-30 00:25:00",
     "registration_deadline": "2030-03-25 00:25:00",
     "created_at": "2030-03-09 00:26:12",
-    "is_ended": 0
+    "updated_at": "2030-03-09 00:26:12"
   },
   {
     "event_id": 97,
@@ -1449,10 +1545,11 @@
     "max_participants": 25,
     "event_price": 2500,
     "organizer_id": 90,
+    "is_ended": 0,
     "event_time": "2030-09-28 09:00:00",
     "registration_deadline": "2030-09-15 12:00:00",
     "created_at": "2030-08-01 11:45:00",
-    "is_ended": 0
+    "updated_at": "2030-08-01 11:45:00"
   },
   {
     "event_id": 98,
@@ -1464,10 +1561,11 @@
     "max_participants": 325,
     "event_price": 100,
     "organizer_id": 79,
+    "is_ended": 0,
     "event_time": "2030-12-09 11:00:00",
     "registration_deadline": "2030-11-23 11:00:00",
     "created_at": "2030-10-13 11:00:00",
-    "is_ended": 0
+    "updated_at": "2030-10-13 11:00:00"
   },
   {
     "event_id": 99,
@@ -1479,10 +1577,11 @@
     "max_participants": 386,
     "event_price": 200,
     "organizer_id": 65,
+    "is_ended": 0,
     "event_time": "2031-02-22 09:00:00",
     "registration_deadline": "2031-02-08 09:00:00",
     "created_at": "2030-12-23 09:00:00",
-    "is_ended": 0
+    "updated_at": "2030-12-23 09:00:00"
   },
   {
     "event_id": 100,
@@ -1494,10 +1593,11 @@
     "max_participants": 369,
     "event_price": 350,
     "organizer_id": 89,
+    "is_ended": 0,
     "event_time": "2031-03-09 10:00:00",
     "registration_deadline": "2031-03-04 10:00:00",
     "created_at": "2031-01-27 10:00:00",
-    "is_ended": 0
+    "updated_at": "2031-01-27 10:00:00"
   },
   {
     "event_id": 101,
@@ -1509,10 +1609,11 @@
     "max_participants": 462,
     "event_price": 0,
     "organizer_id": 30,
+    "is_ended": 0,
     "event_time": "2031-03-28 10:00:00",
     "registration_deadline": "2031-03-18 10:00:00",
     "created_at": "2031-03-03 10:00:00",
-    "is_ended": 0
+    "updated_at": "2031-03-03 10:00:00"
   },
   {
     "event_id": 102,
@@ -1524,10 +1625,11 @@
     "max_participants": 291,
     "event_price": 100,
     "organizer_id": 74,
+    "is_ended": 0,
     "event_time": "2031-05-12 19:00:00",
     "registration_deadline": "2031-05-07 19:00:00",
     "created_at": "2031-03-22 19:00:00",
-    "is_ended": 0
+    "updated_at": "2031-03-22 19:00:00"
   },
   {
     "event_id": 103,
@@ -1539,10 +1641,11 @@
     "max_participants": 95,
     "event_price": 1900,
     "organizer_id": 31,
+    "is_ended": 0,
     "event_time": "2031-04-25 11:25:00",
     "registration_deadline": "2031-04-20 11:25:00",
     "created_at": "2031-03-26 11:27:29",
-    "is_ended": 0
+    "updated_at": "2031-03-26 11:27:29"
   },
   {
     "event_id": 104,
@@ -1554,10 +1657,11 @@
     "max_participants": 280,
     "event_price": 4300,
     "organizer_id": 11,
+    "is_ended": 0,
     "event_time": "2031-04-18 11:00:00",
     "registration_deadline": "2031-04-17 11:00:00",
     "created_at": "2031-04-05 11:00:00",
-    "is_ended": 0
+    "updated_at": "2031-04-05 11:00:00"
   },
   {
     "event_id": 105,
@@ -1569,10 +1673,11 @@
     "max_participants": 243,
     "event_price": 2000,
     "organizer_id": 98,
+    "is_ended": 0,
     "event_time": "2031-06-08 09:00:00",
     "registration_deadline": "2031-05-28 09:00:00",
     "created_at": "2031-04-26 09:00:00",
-    "is_ended": 0
+    "updated_at": "2031-04-26 09:00:00"
   },
   {
     "event_id": 106,
@@ -1584,10 +1689,11 @@
     "max_participants": 65,
     "event_price": 7400,
     "organizer_id": 11,
+    "is_ended": 0,
     "event_time": "2031-11-09 08:00:00",
     "registration_deadline": "2031-11-08 08:00:00",
     "created_at": "2031-10-25 07:56:01",
-    "is_ended": 0
+    "updated_at": "2031-10-25 07:56:01"
   },
   {
     "event_id": 107,
@@ -1599,10 +1705,11 @@
     "max_participants": 246,
     "event_price": 350,
     "organizer_id": 32,
+    "is_ended": 0,
     "event_time": "2032-04-21 18:00:00",
     "registration_deadline": "2032-04-10 18:00:00",
     "created_at": "2032-03-01 18:00:00",
-    "is_ended": 0
+    "updated_at": "2032-03-01 18:00:00"
   },
   {
     "event_id": 108,
@@ -1614,10 +1721,11 @@
     "max_participants": 525,
     "event_price": 0,
     "organizer_id": 4,
+    "is_ended": 0,
     "event_time": "2032-05-21 12:45:00",
     "registration_deadline": "2032-05-19 12:45:00",
     "created_at": "2032-04-27 12:43:02",
-    "is_ended": 0
+    "updated_at": "2032-04-27 12:43:02"
   },
   {
     "event_id": 109,
@@ -1629,10 +1737,11 @@
     "max_participants": 255,
     "event_price": 2100,
     "organizer_id": 46,
+    "is_ended": 0,
     "event_time": "2032-06-13 12:10:00",
     "registration_deadline": "2032-06-08 12:10:00",
     "created_at": "2032-05-16 12:09:23",
-    "is_ended": 0
+    "updated_at": "2032-05-16 12:09:23"
   },
   {
     "event_id": 110,
@@ -1644,10 +1753,11 @@
     "max_participants": 143,
     "event_price": 2000,
     "organizer_id": 37,
+    "is_ended": 0,
     "event_time": "2032-06-16 19:00:00",
     "registration_deadline": "2032-06-07 19:00:00",
     "created_at": "2032-05-19 19:00:00",
-    "is_ended": 0
+    "updated_at": "2032-05-19 19:00:00"
   },
   {
     "event_id": 111,
@@ -1659,10 +1769,11 @@
     "max_participants": 120,
     "event_price": 0,
     "organizer_id": 22,
+    "is_ended": 0,
     "event_time": "2032-12-01 07:00:00",
     "registration_deadline": "2032-11-30 07:00:00",
     "created_at": "2032-11-11 07:00:00",
-    "is_ended": 0
+    "updated_at": "2032-11-11 07:00:00"
   },
   {
     "event_id": 112,
@@ -1674,10 +1785,11 @@
     "max_participants": 95,
     "event_price": 7200,
     "organizer_id": 12,
+    "is_ended": 0,
     "event_time": "2033-07-10 23:50:00",
     "registration_deadline": "2033-07-07 23:50:00",
     "created_at": "2033-06-24 23:50:00",
-    "is_ended": 0
+    "updated_at": "2033-06-24 23:50:00"
   },
   {
     "event_id": 113,
@@ -1689,10 +1801,11 @@
     "max_participants": 125,
     "event_price": 2700,
     "organizer_id": 17,
+    "is_ended": 0,
     "event_time": "2033-09-22 06:30:00",
     "registration_deadline": "2033-09-20 06:30:00",
     "created_at": "2033-08-27 06:30:45",
-    "is_ended": 0
+    "updated_at": "2033-08-27 06:30:45"
   },
   {
     "event_id": 114,
@@ -1704,10 +1817,11 @@
     "max_participants": 362,
     "event_price": 3000,
     "organizer_id": 49,
+    "is_ended": 0,
     "event_time": "2033-11-24 12:00:00",
     "registration_deadline": "2033-11-13 12:00:00",
     "created_at": "2033-10-05 12:00:00",
-    "is_ended": 0
+    "updated_at": "2033-10-05 12:00:00"
   },
   {
     "event_id": 115,
@@ -1719,10 +1833,11 @@
     "max_participants": 134,
     "event_price": 2000,
     "organizer_id": 45,
+    "is_ended": 0,
     "event_time": "2034-03-14 19:00:00",
     "registration_deadline": "2034-03-07 19:00:00",
     "created_at": "2034-01-21 19:00:00",
-    "is_ended": 0
+    "updated_at": "2034-01-21 19:00:00"
   },
   {
     "event_id": 116,
@@ -1734,10 +1849,11 @@
     "max_participants": 230,
     "event_price": 7400,
     "organizer_id": 12,
+    "is_ended": 0,
     "event_time": "2034-07-01 12:15:00",
     "registration_deadline": "2034-06-27 12:15:00",
     "created_at": "2034-06-15 12:13:25",
-    "is_ended": 0
+    "updated_at": "2034-06-15 12:13:25"
   },
   {
     "event_id": 117,
@@ -1749,10 +1865,11 @@
     "max_participants": 230,
     "event_price": 1500,
     "organizer_id": 24,
+    "is_ended": 0,
     "event_time": "2034-10-21 08:45:00",
     "registration_deadline": "2034-10-16 08:45:00",
     "created_at": "2034-10-03 08:47:17",
-    "is_ended": 0
+    "updated_at": "2034-10-03 08:47:17"
   },
   {
     "event_id": 118,
@@ -1764,10 +1881,11 @@
     "max_participants": 845,
     "event_price": 0,
     "organizer_id": 21,
+    "is_ended": 0,
     "event_time": "2034-12-17 07:10:00",
     "registration_deadline": "2034-12-16 07:10:00",
     "created_at": "2034-12-05 07:10:20",
-    "is_ended": 0
+    "updated_at": "2034-12-05 07:10:20"
   },
   {
     "event_id": 119,
@@ -1779,10 +1897,11 @@
     "max_participants": 339,
     "event_price": 500,
     "organizer_id": 62,
+    "is_ended": 0,
     "event_time": "2035-01-23 08:00:00",
     "registration_deadline": "2035-01-14 08:00:00",
     "created_at": "2034-12-10 08:00:00",
-    "is_ended": 0
+    "updated_at": "2034-12-10 08:00:00"
   },
   {
     "event_id": 120,
@@ -1794,10 +1913,11 @@
     "max_participants": 275,
     "event_price": 500,
     "organizer_id": 30,
+    "is_ended": 0,
     "event_time": "2035-02-20 10:00:00",
     "registration_deadline": "2035-02-03 10:00:00",
     "created_at": "2034-12-18 10:00:00",
-    "is_ended": 0
+    "updated_at": "2034-12-18 10:00:00"
   },
   {
     "event_id": 121,
@@ -1809,10 +1929,11 @@
     "max_participants": 345,
     "event_price": 350,
     "organizer_id": 82,
+    "is_ended": 0,
     "event_time": "2035-04-04 17:00:00",
     "registration_deadline": "2035-03-15 17:00:00",
     "created_at": "2035-02-11 17:00:00",
-    "is_ended": 0
+    "updated_at": "2035-02-11 17:00:00"
   },
   {
     "event_id": 122,
@@ -1824,10 +1945,11 @@
     "max_participants": 285,
     "event_price": 4500,
     "organizer_id": 40,
+    "is_ended": 0,
     "event_time": "2035-07-22 13:00:00",
     "registration_deadline": "2035-07-20 13:00:00",
     "created_at": "2035-06-22 13:00:00",
-    "is_ended": 0
+    "updated_at": "2035-06-22 13:00:00"
   },
   {
     "event_id": 123,
@@ -1839,10 +1961,11 @@
     "max_participants": 130,
     "event_price": 7100,
     "organizer_id": 20,
+    "is_ended": 0,
     "event_time": "2035-10-18 01:40:00",
     "registration_deadline": "2035-10-13 01:40:00",
     "created_at": "2035-09-25 01:38:36",
-    "is_ended": 0
+    "updated_at": "2035-09-25 01:38:36"
   },
   {
     "event_id": 124,
@@ -1854,10 +1977,11 @@
     "max_participants": 375,
     "event_price": 2000,
     "organizer_id": 49,
+    "is_ended": 0,
     "event_time": "2036-08-25 09:30:00",
     "registration_deadline": "2036-08-22 09:30:00",
     "created_at": "2036-08-13 09:30:00",
-    "is_ended": 0
+    "updated_at": "2036-08-13 09:30:00"
   },
   {
     "event_id": 125,
@@ -1869,10 +1993,11 @@
     "max_participants": 181,
     "event_price": 500,
     "organizer_id": 18,
+    "is_ended": 0,
     "event_time": "2036-12-03 15:00:00",
     "registration_deadline": "2036-11-15 15:00:00",
     "created_at": "2036-10-01 15:00:00",
-    "is_ended": 0
+    "updated_at": "2036-10-01 15:00:00"
   },
   {
     "event_id": 126,
@@ -1884,10 +2009,11 @@
     "max_participants": 255,
     "event_price": 230,
     "organizer_id": 39,
+    "is_ended": 0,
     "event_time": "2036-10-18 12:35:00",
     "registration_deadline": "2036-10-14 12:35:00",
     "created_at": "2036-10-04 12:33:07",
-    "is_ended": 0
+    "updated_at": "2036-10-04 12:33:07"
   },
   {
     "event_id": 127,
@@ -1899,10 +2025,11 @@
     "max_participants": 1790,
     "event_price": 300,
     "organizer_id": 16,
+    "is_ended": 0,
     "event_time": "2037-05-07 21:20:00",
     "registration_deadline": "2037-05-03 21:20:00",
     "created_at": "2037-04-24 21:21:13",
-    "is_ended": 0
+    "updated_at": "2037-04-24 21:21:13"
   },
   {
     "event_id": 128,
@@ -1914,10 +2041,11 @@
     "max_participants": 447,
     "event_price": 500,
     "organizer_id": 56,
+    "is_ended": 0,
     "event_time": "2037-09-21 10:00:00",
     "registration_deadline": "2037-09-11 10:00:00",
     "created_at": "2037-08-01 10:00:00",
-    "is_ended": 0
+    "updated_at": "2037-08-01 10:00:00"
   },
   {
     "event_id": 129,
@@ -1929,10 +2057,11 @@
     "max_participants": 230,
     "event_price": 3000,
     "organizer_id": 12,
+    "is_ended": 0,
     "event_time": "2037-09-10 18:00:00",
     "registration_deadline": "2037-09-05 18:00:00",
     "created_at": "2037-08-21 18:00:00",
-    "is_ended": 0
+    "updated_at": "2037-08-21 18:00:00"
   },
   {
     "event_id": 130,
@@ -1944,10 +2073,11 @@
     "max_participants": 470,
     "event_price": 0,
     "organizer_id": 13,
+    "is_ended": 0,
     "event_time": "2037-09-20 18:30:00",
     "registration_deadline": "2037-09-19 18:30:00",
     "created_at": "2037-08-22 18:30:00",
-    "is_ended": 0
+    "updated_at": "2037-08-22 18:30:00"
   },
   {
     "event_id": 131,
@@ -1959,10 +2089,11 @@
     "max_participants": 95,
     "event_price": 1900,
     "organizer_id": 48,
+    "is_ended": 0,
     "event_time": "2037-09-18 22:45:00",
     "registration_deadline": "2037-09-17 22:45:00",
     "created_at": "2037-08-24 22:44:04",
-    "is_ended": 0
+    "updated_at": "2037-08-24 22:44:04"
   },
   {
     "event_id": 132,
@@ -1974,10 +2105,11 @@
     "max_participants": 1980,
     "event_price": 1400,
     "organizer_id": 32,
+    "is_ended": 0,
     "event_time": "2037-09-10 19:00:00",
     "registration_deadline": "2037-09-07 19:00:00",
     "created_at": "2037-08-25 19:00:00",
-    "is_ended": 0
+    "updated_at": "2037-08-25 19:00:00"
   },
   {
     "event_id": 133,
@@ -1989,9 +2121,10 @@
     "max_participants": 400,
     "event_price": 0,
     "organizer_id": 2,
+    "is_ended": 0,
     "event_time": "2037-10-01 18:00:00",
     "registration_deadline": "2037-09-28 18:00:00",
     "created_at": "2037-09-07 18:00:00",
-    "is_ended": 0
+    "updated_at": "2037-09-07 18:00:00"
   }
 ]

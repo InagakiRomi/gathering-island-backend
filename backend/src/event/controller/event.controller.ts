@@ -1,4 +1,4 @@
-import { ParseIntPipe, Controller, Get, Post, Put, Delete, Body, Param, Query } from '@nestjs/common';
+import { ParseIntPipe, Controller, Get, Post, Patch, Delete, Body, Param, Query } from '@nestjs/common';
 import { QueryParams, DefaultQueryValues } from 'src/event/common/constants/query-params.constant';
 import { plainToInstance } from 'class-transformer';
 import { EventService } from '../service/event.service';
@@ -109,7 +109,7 @@ export class EventController {
     }
 
     /** 根據 id 修改活動（UPDATE event SET ... WHERE id = ?） */ 
-    @Put(':id')
+    @Patch(':id')
     async updateEvent(@Param('id') id: number, @Body() event: EventEntity): Promise<EventEntity> {
         return this.eventService.updateEvent(id, event);
     }

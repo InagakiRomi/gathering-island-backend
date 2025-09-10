@@ -41,6 +41,10 @@ export class Event {
     @Column()
     organizer_id: number;
 
+    /** 活動報名是否截止 */
+    @Column({ default: false })
+    is_ended: boolean;
+
     /** 活動開始時間 */
     @Column({ type: 'timestamp' })
     event_time: Date;
@@ -53,7 +57,7 @@ export class Event {
     @Column({ type: 'timestamp', nullable: true })
     created_at: Date;
 
-    /** 活動報名是否截止 */
-    @Column({ default: false })
-    is_ended: boolean;
+    /** 最後更新資料時間 */
+    @Column({ type: 'timestamp' })
+    updated_at: Date;
 }
