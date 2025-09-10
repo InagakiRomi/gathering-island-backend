@@ -3,20 +3,20 @@ DROP TABLE `events`;
 
 -- 創建活動資料
 CREATE TABLE `events` (
-    event_id INT AUTO_INCREMENT PRIMARY KEY,             -- 活動ID（主鍵，自動遞增）
-    event_name VARCHAR(32) NOT NULL,                     -- 活動名稱
-    event_description VARCHAR(512) NOT NULL,             -- 活動描述 / 詳細資訊
-    event_type SMALLINT NOT NULL,                        -- 活動類型代碼（可對應活動類型表）
-    event_location VARCHAR(128) NOT NULL,                -- 活動地點
-    image_url VARCHAR(512),                              -- 活動圖片的URL
-    max_participants INT DEFAULT 2,                      -- 最大參加人數，預設為2人
-    event_price INT DEFAULT 0,                           -- 活動費用，預設為0（免費）
-    organizer_id INT NOT NULL,                           -- 主辦人ID（對應members.member_id）
-    is_ended BOOLEAN DEFAULT 0                           -- 活動是否已結束（0=進行中，1=已結束）
-    event_time TIMESTAMP NULL DEFAULT NULL,              -- 活動舉辦時間
-    registration_deadline TIMESTAMP NULL DEFAULT NULL,   -- 活動報名截止時間
-    created_at TIMESTAMP NULL DEFAULT NULL,              -- 活動建立時間
-    updated_at TIMESTAMP NULL DEFAULT NULL,              -- 最後更新資料時間
+    event_id INT AUTO_INCREMENT PRIMARY KEY,
+    event_name VARCHAR(32) NOT NULL,
+    event_description VARCHAR(512) NOT NULL,
+    event_type SMALLINT NOT NULL,
+    event_location VARCHAR(128) NOT NULL,
+    image_url VARCHAR(512),
+    max_participants INT DEFAULT 2,
+    event_price INT DEFAULT 0,
+    organizer_id INT NOT NULL,
+    is_ended BOOLEAN DEFAULT 0,
+    event_time TIMESTAMP NULL DEFAULT NULL,
+    registration_deadline TIMESTAMP NULL DEFAULT NULL,
+    created_at TIMESTAMP NULL DEFAULT NULL,
+    updated_at TIMESTAMP NULL DEFAULT NULL
 );
 
 -- 清除所有活動資料
@@ -42,7 +42,7 @@ CREATE TABLE `members` (
     avatar_url VARCHAR(512) DEFAULT NULL,               -- 大頭照連結
     is_organizer BOOLEAN DEFAULT FALSE,                 -- 是否為主辦者
     created_at TIMESTAMP NULL DEFAULT NULL,             -- 註冊時間
-    updated_at TIMESTAMP NULL DEFAULT NULL,             -- 最後更新時間
+    updated_at TIMESTAMP NULL DEFAULT NULL              -- 最後更新時間
 );
 
 -- 清除所有活動資料
