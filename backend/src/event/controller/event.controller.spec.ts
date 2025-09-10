@@ -20,10 +20,11 @@ describe('EventController', () => {
     max_participants : 177,
     event_price: 100,
     organizer_id: 78,
+    is_ended: false,
     event_time: new Date(),
     registration_deadline: new Date(Date.now() + 100000),
     created_at: new Date(),
-    is_ended: false,
+    updated_at: new Date(),
   };
 
   const mockService = {
