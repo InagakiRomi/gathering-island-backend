@@ -8,7 +8,7 @@
 
         <!-- 活動類型 -->
         <select v-model="selectedEventType" class="dropdown">
-          <option value="ALL">所有類型</option>
+          <option value="">所有類型</option>
           <option
             v-for="type in eventTypes"
             :key="type.value"
@@ -19,9 +19,14 @@
         </select>
 
         <!-- 排序 -->
-        <select v-model="selectedIsEnded" class="dropdown">
-          <option value="eventTimeASC">活動時間-最新</option>
-          <option value="eventTimeDESC">活動時間-最舊</option>
+        <select v-model="selectedSort" class="dropdown">
+          <option
+            v-for="opt in sortOptions"
+            :key="opt.value"
+            :value="opt.value"
+          >
+            {{ opt.label }}
+          </option>
         </select>
 
         <!-- 關鍵字搜尋 -->
@@ -55,58 +60,82 @@
   import type { Event } from '@/types/Event'
   import EventCard from '@/components/EventCard.vue'
   import api from '@/lib/api'
+  import { useSortOptions } from '@/composables/useSortOptions'
 
+  // 排序選項
+  const { selectedSort, sortOptions, sortMap } = useSortOptions()
+
+  // 活動列表資料
   const events = ref<Event[]>([])
+
+  // 搜尋關鍵字
   const searchQuery = ref('')
 
-  // 新增下拉選單預設值
-  const selectedEventType = ref('ALL')
-  const selectedIsEnded = ref('eventTimeASC') // 預設顯示最新
+  // 使用者選擇的活動類型（空字串表示「所有類型」）
+  const selectedEventType = ref('')
 
-  // 儲存活動分類項目
+  // 活動類型選單資料（從 API 載入）
   const eventTypes = ref<{ value: number; label: string }[]>([])
 
-  // 封裝 enrichEvents 處理
+  // 處理原始活動資料，加入圖片 URL 欄位
   const enrichEvents = (raw: Event[]) =>
     raw.map((event) => ({
       ...event,
-      image_url: getEventImageUrl(event.event_type),
+      image_url: getEventImageUrl(event.event_type), // 根據類型加上圖片
     }))
 
-  // 取得活動分類項目
+  // 從後端取得活動類型列表（填充下拉選單）
   const fetchEventTypes = async () => {
     try {
-      const response = await api.get('/events/types')
+      const response = await api.get('/events/eventType')
       eventTypes.value = response.data
     } catch (error) {
       console.error('取得活動類型失敗', error)
     }
   }
 
-  // 活動資料一覽
+  // 根據目前篩選條件取得活動清單
   const fetchEvents = async (query?: string) => {
     try {
       const params: Record<string, any> = {}
 
+      // 加入關鍵字搜尋條件（如果有）
       if (query) {
         params.search = query
       }
 
-      if (selectedEventType.value !== 'ALL') {
-        params.type = selectedEventType.value
+      // 如果使用者有選擇活動類型，加入條件
+      if (selectedEventType.value !== '') {
+        params.eventType = selectedEventType.value
       }
 
+      // 使用 composable 裡的完整 sortMap
+      const sortParam = sortMap[selectedSort.value]
+      if (sortParam) {
+        params.sort = sortParam
+      }
+
+      // 發送 API 請求，取得活動資料
       const response = await api.get<Event[]>('/events', { params })
+
+      // 補上圖片並存入狀態
       events.value = enrichEvents(response.data)
     } catch (error) {
       console.error('載入活動資料失敗', error)
     }
   }
 
-  watch(selectedEventType, () => {
+  // 模糊搜尋方法
+  const search = () => {
+    fetchEvents(searchQuery.value.trim())
+  }
+
+  // 監聽排序與活動類型的變化，自動重新撈資料
+  watch([selectedEventType, selectedSort], () => {
     fetchEvents(searchQuery.value.trim())
   })
 
+  // 首次載入時，載入分類與活動資料
   onMounted(() => {
     fetchEventTypes()
     fetchEvents()
@@ -232,10 +261,6 @@
 
   &:active {
     transform: scale(0.98);
-  }
-
-  &::after {
-    content: '🎈';
   }
 }
 

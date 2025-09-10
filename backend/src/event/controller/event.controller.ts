@@ -90,7 +90,7 @@ export class EventController {
     }
     
     /** 取得所有活動類型選項 */
-    @Get('types')
+    @Get('eventType')
     getEventTypes() {
         return eventTypeOptions;
     }
