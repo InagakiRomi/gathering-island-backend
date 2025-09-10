@@ -1,0 +1,10 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "outDir": "./dist",
+    "module": "CommonJS",
+    "target": "ES2019",
+    "types": ["jest", "node"]
+  },
+  "include": ["**/*.spec.ts", "**/*.test.ts", "**/__tests__/**/*.ts"]
+}
