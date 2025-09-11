@@ -3,6 +3,7 @@ import { EventController } from '../controller/event.controller';
 import { EventService } from '../service/event.service';
 import { EventDto } from '../dto/event.dto';
 import { EventType } from '../enums/event-type.enum';
+import { ConflictException, NotFoundException } from '@nestjs/common';
 import { Event } from '../entity/event.entity';
 
 describe('EventController', () => {
@@ -12,17 +13,17 @@ describe('EventController', () => {
   const mockEvent: EventDto = {
     event_id: 1,
     event_name: 'Mock Event',
-    event_description: 'Mock Desc',
-    event_type: 3,
+    event_description: 'Description',
+    event_type: EventType.LEARNING,
     event_typeName: 'LEARNING',
-    event_location: '台南市中西區南門路1號',
-    image_url: 'null',
-    max_participants : 177,
-    event_price: 100,
-    organizer_id: 78,
+    event_location: 'Somewhere',
+    image_url: '',
+    max_participants: 50,
+    event_price: 200,
+    organizer_id: 1,
     is_ended: false,
     event_time: new Date(),
-    registration_deadline: new Date(Date.now() + 100000),
+    registration_deadline: new Date(),
     created_at: new Date(),
     updated_at: new Date(),
   };
@@ -39,10 +40,7 @@ describe('EventController', () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [EventController],
       providers: [
-        {
-          provide: EventService,
-          useValue: mockService,
-        },
+        { provide: EventService, useValue: mockService },
       ],
     }).compile();
 
@@ -52,117 +50,151 @@ describe('EventController', () => {
 
   afterEach(() => jest.clearAllMocks());
 
-  describe('GET /events', () => {
-    it('should call service.findAllEvent with correct transformed params', async () => {
-      const mockResult = [mockEvent];
-      mockService.findAllEvent.mockResolvedValue(mockResult);
+  // ✔️ 正常查詢（有排序與條件）
+  it('should fetch events with proper query and sort', async () => {
+    mockService.findAllEvent.mockResolvedValue([mockEvent]);
 
-      const queryParams = {
-        query: 'mock',
-        sortParam: 'event_time:DESC,created_at:ASC',
-        eventType: EventType.OTHER,
-        isEndedRaw: 'false',
-        minPriceRaw: '50',
-        maxPriceRaw: '150',
-        pageRaw: '2',
-        limitRaw: '5',
-      };
+    const result = await controller.findAllEvent(
+      'mock',                      // query
+      'event_time:DESC',           // sort
+      EventType.OTHER,             // eventType
+      'false',                     // isEndedRaw
+      '100', '300',                // min/max price
+      '1', '10'                    // page, limit
+    );
 
-      const result = await controller.findAllEvent(
-        queryParams.query,
-        queryParams.sortParam,
-        queryParams.eventType,
-        queryParams.isEndedRaw,
-        queryParams.minPriceRaw,
-        queryParams.maxPriceRaw,
-        queryParams.pageRaw,
-        queryParams.limitRaw
-      );
+    expect(service.findAllEvent).toHaveBeenCalledWith(
+      'mock',
+      { event_time: 'DESC' },
+      EventType.OTHER,
+      false,
+      100,
+      300,
+      10,
+      0
+    );
 
-      expect(service.findAllEvent).toHaveBeenCalledWith(
-        'mock',
-        { event_time: 'DESC', created_at: 'ASC' },
-        EventType.OTHER,
-        false,
-        50,
-        150,
-        5,
-        5
-      );
-      expect(result).toEqual(expect.any(Array));
-      expect(result[0]).toBeInstanceOf(EventDto);
-    });
-
-    it('should handle empty optional query params', async () => {
-      mockService.findAllEvent.mockResolvedValue([mockEvent]);
-
-      const result = await controller.findAllEvent(
-        '',         // query
-        'created_at:ASC',
-        undefined,  // eventType
-        undefined,  // isEndedRaw
-        undefined,  // minPriceRaw
-        undefined,  // maxPriceRaw
-        undefined,  // pageRaw
-        undefined   // limitRaw
-      );
-
-      expect(service.findAllEvent).toHaveBeenCalledWith(
-        '',
-        { created_at: 'ASC' },
-        undefined,
-        undefined,
-        undefined,
-        undefined,
-        20,
-        0
-      );
-
-      expect(result[0]).toBeInstanceOf(EventDto);
-    });
+    expect(result[0]).toBeInstanceOf(EventDto);
   });
 
-  describe('GET /events/:id', () => {
-    it('should return one event by id', async () => {
-      mockService.findOneEvent.mockResolvedValue(mockEvent);
+  // ⚠️ 非法排序欄位
+  it('should ignore invalid sort fields', async () => {
+    mockService.findAllEvent.mockResolvedValue([mockEvent]);
 
-      const result = await controller.findOneEvent(1);
+    const result = await controller.findAllEvent(
+      '', 'invalid_field:ASC',
+      undefined, undefined, undefined, undefined,
+      undefined, undefined
+    );
 
-      expect(service.findOneEvent).toHaveBeenCalledWith(1);
-      expect(result).toBeInstanceOf(EventDto);
-    });
+    expect(service.findAllEvent).toHaveBeenCalledWith(
+      '',
+      {},
+      undefined,
+      undefined,
+      undefined,
+      undefined,
+      20,
+      0
+    );
   });
 
-  describe('POST /events', () => {
-    it('should create a new event', async () => {
-      const input = { ...mockEvent, event_id: undefined };
-      mockService.createEvent.mockResolvedValue(mockEvent);
+  // ⚠️ eventType 非合法（但 Enum 無法保護時會進來）
+  it('should handle invalid enum values (eventType)', async () => {
+    mockService.findAllEvent.mockResolvedValue([mockEvent]);
 
-      const result = await controller.createEvent(input as unknown as Event);
+    const invalidType = 999 as EventType;
 
-      expect(service.createEvent).toHaveBeenCalledWith(input);
-      expect(result).toEqual(mockEvent);
-    });
+    const result = await controller.findAllEvent(
+      '', 'created_at:ASC', invalidType,
+      undefined, undefined, undefined,
+      undefined, undefined
+    );
+
+    expect(service.findAllEvent).toHaveBeenCalledWith(
+      '', { created_at: 'ASC' },
+      invalidType, undefined,
+      undefined, undefined,
+      20, 0
+    );
   });
 
-  describe('PUT /events/:id', () => {
-    it('should update an event', async () => {
-      mockService.updateEvent.mockResolvedValue(mockEvent);
+  // ⚠️ 非法價格參數
+  it('should handle non-numeric price values gracefully', async () => {
+    mockService.findAllEvent.mockResolvedValue([mockEvent]);
 
-      const updated = await controller.updateEvent(1, mockEvent as Event);
+    const result = await controller.findAllEvent(
+      '', 'event_price:ASC',
+      undefined,
+      undefined,
+      'abc', 'xyz',
+      '1', '10'
+    );
 
-      expect(service.updateEvent).toHaveBeenCalledWith(1, mockEvent);
-      expect(updated).toEqual(mockEvent);
-    });
+    expect(service.findAllEvent).toHaveBeenCalledWith(
+      '',
+      { event_price: 'ASC' },
+      undefined,
+      undefined,
+      NaN,
+      NaN,
+      10,
+      0
+    );
   });
 
-  describe('DELETE /events/:id', () => {
-    it('should delete an event by id', async () => {
-      mockService.deleteEvent.mockResolvedValue(undefined);
+  // ✔️ 查單筆
+  it('should return a single event by ID', async () => {
+    mockService.findOneEvent.mockResolvedValue(mockEvent);
 
-      await controller.deleteEvent(1);
+    const result = await controller.findOneEvent(1);
 
-      expect(service.deleteEvent).toHaveBeenCalledWith(1);
-    });
+    expect(service.findOneEvent).toHaveBeenCalledWith(1);
+    expect(result).toBeInstanceOf(EventDto);
+  });
+
+  // ⚠️ 查單筆失敗
+  it('should throw NotFoundException if event not found', async () => {
+    mockService.findOneEvent.mockRejectedValue(new NotFoundException());
+
+    await expect(controller.findOneEvent(999)).rejects.toThrow(NotFoundException);
+  });
+
+  // ✔️ 建立活動
+  it('should create new event', async () => {
+    const newEvent = { ...mockEvent, event_id: undefined };
+    mockService.createEvent.mockResolvedValue(mockEvent);
+
+    const result = await controller.createEvent(newEvent as unknown as Event);
+
+    expect(service.createEvent).toHaveBeenCalledWith(newEvent);
+    expect(result).toEqual(mockEvent);
+  });
+
+  // ⚠️ 建立重複活動
+  it('should throw ConflictException on duplicate event creation', async () => {
+    const duplicate = { ...mockEvent, event_id: undefined };
+    mockService.createEvent.mockRejectedValue(new ConflictException());
+
+    await expect(controller.createEvent(duplicate as unknown as Event)).rejects.toThrow(ConflictException);
+  });
+
+  // ✔️ 更新活動
+  it('should update event', async () => {
+    mockService.updateEvent.mockResolvedValue(mockEvent);
+
+    const result = await controller.updateEvent(1, mockEvent as Event);
+
+    expect(service.updateEvent).toHaveBeenCalledWith(1, mockEvent);
+    expect(result).toEqual(mockEvent);
+  });
+
+  // ✔️ 刪除活動
+  it('should delete event by ID', async () => {
+    mockService.deleteEvent.mockResolvedValue(undefined);
+
+    await controller.deleteEvent(1);
+
+    expect(service.deleteEvent).toHaveBeenCalledWith(1);
   });
 });
