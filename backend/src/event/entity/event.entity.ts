@@ -9,11 +9,11 @@ export class Event {
     event_id: number;
 
     /** 活動標題 */
-    @Column({ length: 32 })
+    @Column()
     event_name: string;
 
     /** 活動描述 */
-    @Column({ length: 512 })
+    @Column()
     event_description: string;
 
     /** 活動類型 */
@@ -21,20 +21,20 @@ export class Event {
     event_type: EventType;
 
     /** 活動地點 */
-    @Column({ length: 128 })
+    @Column()
     event_location: string;
 
     /** 封面圖片 URL */
-    @Column({ length: 512, nullable: true })
+    @Column({ nullable: true })
     image_url: string;
 
     /** 活動人數上限 */
-    @Column({ default: 2 })
+    @Column()
     max_participants: number;
 
     /** 活動費用 */
     @Min(0)
-    @Column({ default: 0, unsigned: true })
+    @Column({ unsigned: true })
     event_price: number;
 
     /** 主辦人 ID */
@@ -42,7 +42,7 @@ export class Event {
     organizer_id: number;
 
     /** 活動報名是否截止 */
-    @Column({ default: false })
+    @Column()
     is_ended: boolean;
 
     /** 活動開始時間 */
