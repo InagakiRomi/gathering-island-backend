@@ -70,18 +70,13 @@ export class EventDto {
     @Transform(({ value }) => dayjs(value).format('YYYY/MM/DD HH:mm:ss'))
     updated_at: Date;
 
-    /**
-     * 將一個 Event Entity（從資料庫撈出來的物件）
-     * 轉換成 EventDto（前端要看的格式）
-     */
+    /** 將後端的資料轉成前端 */
     static fromEntity(event: Event): EventDto {
         // Object.assign 把 event 的屬性值複製到一個新的 EventDto 實體上
         return Object.assign(new EventDto(), event);
     }
 
-    /**
-     * 將多個 Event Entity（陣列）轉換成多個 EventDto（陣列）
-     */
+    /** 將多個後端的資料轉成前端 */
     static fromEntities(events: Event[]): EventDto[] {
         // 用 map 一筆一筆轉換成 EventDto
         return events.map(e => EventDto.fromEntity(e));

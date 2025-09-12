@@ -58,6 +58,6 @@ export class Event {
     created_at: Date;
 
     /** 最後更新資料時間 */
-    @Column()
+    @Column({ nullable: true })
     updated_at: Date;
 }
