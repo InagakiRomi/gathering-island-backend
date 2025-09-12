@@ -36,11 +36,9 @@ CREATE TABLE `members` (
     username VARCHAR(32) NOT NULL UNIQUE,               -- 使用者帳號名稱
     password_hash VARCHAR(256) NOT NULL,                -- 密碼加密後的字串
     email VARCHAR(128) UNIQUE,                          -- 信箱
-    phone_number VARCHAR(16),                           -- 電話
-    gender ENUM('male', 'female') DEFAULT NULL,         -- 性別
+    gender SMALLINT NOT NULL,                           -- 性別
+    avatar_url VARCHAR(512) DEFAULT NULL,               -- 大頭照 URL
     birthday DATE DEFAULT NULL,                         -- 出生日期
-    avatar_url VARCHAR(512) DEFAULT NULL,               -- 大頭照連結
-    is_organizer BOOLEAN DEFAULT FALSE,                 -- 是否為主辦者
     created_at TIMESTAMP NULL DEFAULT NULL,             -- 註冊時間
     updated_at TIMESTAMP NULL DEFAULT NULL              -- 最後更新時間
 );
