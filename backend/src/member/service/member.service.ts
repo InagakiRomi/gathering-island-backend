@@ -25,24 +25,12 @@ export class MemberService {
     member.member_password = await bcrypt.hash(member.member_password, 10);
 
     // 設定建立時間與修改時間
-    const now = new Date();
-    member.created_at = now;
-    member.updated_at = now;
-
-    // 寫入資料庫
-    const entity = this.memberRepository.create({
-        username: member.username,
-        member_password: member.member_password,
-        email: member.email,
-        gender: member.gender as Gender,
-        avatar_url: member.avatar_url,
-        birthday: new Date(member.birthday),
-        created_at: now,
-        updated_at: now,
-    });
+    member.created_at = new Date();
+    member.updated_at = new Date();
 
     try {
-        const saved = await this.memberRepository.save(entity);
+        const memberEntity = plainToInstance(Member, member);
+        const saved = await this.memberRepository.save(memberEntity);
 
         // 回傳 DTO 格式的結果
         return plainToInstance(MemberDto, saved, { excludeExtraneousValues: true });
@@ -59,5 +47,4 @@ export class MemberService {
         throw new HttpException('Account already exists', HttpStatus.CONFLICT);
     }
     }
-
 }
