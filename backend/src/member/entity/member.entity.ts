@@ -5,7 +5,7 @@ import { Gender } from '../enums/gender.enum';
 export class Member{
     
     /** 主鍵，自動遞增的會員 ID */
-    @PrimaryGeneratedColumn('uuid')
+    @PrimaryGeneratedColumn()
     member_id: string;
 
     /** 使用者帳號名稱 */
@@ -14,7 +14,7 @@ export class Member{
 
     /** 密碼加密後的字串 */
     @Column()
-    password_hash: string;
+    member_password: string;
     
     /** 信箱 */
     @Column({ unique: true })

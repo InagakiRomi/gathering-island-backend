@@ -2,7 +2,7 @@
   {
     "member_id": 1,
     "username": "super",
-    "password_hash": 123,
+    "member_password": "aa123",
     "email": "super@test.com",
     "gender": 1,
     "avatar_url": null,
@@ -13,7 +13,7 @@
   {
     "member_id": 2,
     "username": "Adam",
-    "password_hash": 123,
+    "member_password": "aa123",
     "email": "test2@test.com",
     "gender": 1,
     "avatar_url": null,
@@ -24,7 +24,7 @@
   {
     "member_id": 3,
     "username": "Alex",
-    "password_hash": 123,
+    "member_password": "aa123",
     "email": "test3@test.com",
     "gender": 1,
     "avatar_url": null,
@@ -35,7 +35,7 @@
   {
     "member_id": 4,
     "username": "Andrew",
-    "password_hash": 123,
+    "member_password": "aa123",
     "email": "test4@test.com",
     "gender": 1,
     "avatar_url": null,
@@ -46,7 +46,7 @@
   {
     "member_id": 5,
     "username": "Anthony",
-    "password_hash": 123,
+    "member_password": "aa123",
     "email": "test5@test.com",
     "gender": 1,
     "avatar_url": null,
@@ -57,7 +57,7 @@
   {
     "member_id": 6,
     "username": "Arthur",
-    "password_hash": 123,
+    "member_password": "aa123",
     "email": "test6@test.com",
     "gender": 1,
     "avatar_url": null,
@@ -68,7 +68,7 @@
   {
     "member_id": 7,
     "username": "Benjamin",
-    "password_hash": 123,
+    "member_password": "aa123",
     "email": "test7@test.com",
     "gender": 1,
     "avatar_url": null,
@@ -79,7 +79,7 @@
   {
     "member_id": 8,
     "username": "Blake",
-    "password_hash": 123,
+    "member_password": "aa123",
     "email": "test8@test.com",
     "gender": 1,
     "avatar_url": null,
@@ -90,7 +90,7 @@
   {
     "member_id": 9,
     "username": "Brandon",
-    "password_hash": 123,
+    "member_password": "aa123",
     "email": "test9@test.com",
     "gender": 1,
     "avatar_url": null,
@@ -101,7 +101,7 @@
   {
     "member_id": 10,
     "username": "Brian",
-    "password_hash": 123,
+    "member_password": "aa123",
     "email": "test10@test.com",
     "gender": 1,
     "avatar_url": null,
@@ -112,7 +112,7 @@
   {
     "member_id": 11,
     "username": "Caleb",
-    "password_hash": 123,
+    "member_password": "aa123",
     "email": "test11@test.com",
     "gender": 1,
     "avatar_url": null,
@@ -123,7 +123,7 @@
   {
     "member_id": 12,
     "username": "Carl",
-    "password_hash": 123,
+    "member_password": "aa123",
     "email": "test12@test.com",
     "gender": 1,
     "avatar_url": null,
@@ -134,7 +134,7 @@
   {
     "member_id": 13,
     "username": "Charles",
-    "password_hash": 123,
+    "member_password": "aa123",
     "email": "test13@test.com",
     "gender": 1,
     "avatar_url": null,
@@ -145,7 +145,7 @@
   {
     "member_id": 14,
     "username": "Chris",
-    "password_hash": 123,
+    "member_password": "aa123",
     "email": "test14@test.com",
     "gender": 1,
     "avatar_url": null,
@@ -156,7 +156,7 @@
   {
     "member_id": 15,
     "username": "Christopher",
-    "password_hash": 123,
+    "member_password": "aa123",
     "email": "test15@test.com",
     "gender": 1,
     "avatar_url": null,
@@ -167,7 +167,7 @@
   {
     "member_id": 16,
     "username": "Daniel",
-    "password_hash": 123,
+    "member_password": "aa123",
     "email": "test16@test.com",
     "gender": 1,
     "avatar_url": null,
@@ -178,7 +178,7 @@
   {
     "member_id": 17,
     "username": "David",
-    "password_hash": 123,
+    "member_password": "aa123",
     "email": "test17@test.com",
     "gender": 1,
     "avatar_url": null,
@@ -189,7 +189,7 @@
   {
     "member_id": 18,
     "username": "Derek",
-    "password_hash": 123,
+    "member_password": "aa123",
     "email": "test18@test.com",
     "gender": 1,
     "avatar_url": null,
@@ -200,7 +200,7 @@
   {
     "member_id": 19,
     "username": "Dominic",
-    "password_hash": 123,
+    "member_password": "aa123",
     "email": "test19@test.com",
     "gender": 1,
     "avatar_url": null,
@@ -211,7 +211,7 @@
   {
     "member_id": 20,
     "username": "Dylan",
-    "password_hash": 123,
+    "member_password": "aa123",
     "email": "test20@test.com",
     "gender": 1,
     "avatar_url": null,
@@ -222,7 +222,7 @@
   {
     "member_id": 21,
     "username": "Edward",
-    "password_hash": 123,
+    "member_password": "aa123",
     "email": "test21@test.com",
     "gender": 1,
     "avatar_url": null,
@@ -233,7 +233,7 @@
   {
     "member_id": 22,
     "username": "Ethan",
-    "password_hash": 123,
+    "member_password": "aa123",
     "email": "test22@test.com",
     "gender": 1,
     "avatar_url": null,
@@ -244,7 +244,7 @@
   {
     "member_id": 23,
     "username": "Eric",
-    "password_hash": 123,
+    "member_password": "aa123",
     "email": "test23@test.com",
     "gender": 1,
     "avatar_url": null,
@@ -255,7 +255,7 @@
   {
     "member_id": 24,
     "username": "Frank",
-    "password_hash": 123,
+    "member_password": "aa123",
     "email": "test24@test.com",
     "gender": 1,
     "avatar_url": null,
@@ -266,7 +266,7 @@
   {
     "member_id": 25,
     "username": "Gabriel",
-    "password_hash": 123,
+    "member_password": "aa123",
     "email": "test25@test.com",
     "gender": 1,
     "avatar_url": null,
@@ -277,7 +277,7 @@
   {
     "member_id": 26,
     "username": "George",
-    "password_hash": 123,
+    "member_password": "aa123",
     "email": "test26@test.com",
     "gender": 1,
     "avatar_url": null,
@@ -288,7 +288,7 @@
   {
     "member_id": 27,
     "username": "Grant",
-    "password_hash": 123,
+    "member_password": "aa123",
     "email": "test27@test.com",
     "gender": 1,
     "avatar_url": null,
@@ -299,7 +299,7 @@
   {
     "member_id": 28,
     "username": "Henry",
-    "password_hash": 123,
+    "member_password": "aa123",
     "email": "test28@test.com",
     "gender": 1,
     "avatar_url": null,
@@ -310,7 +310,7 @@
   {
     "member_id": 29,
     "username": "Howard",
-    "password_hash": 123,
+    "member_password": "aa123",
     "email": "test29@test.com",
     "gender": 1,
     "avatar_url": null,
@@ -321,7 +321,7 @@
   {
     "member_id": 30,
     "username": "Hunter",
-    "password_hash": 123,
+    "member_password": "aa123",
     "email": "test30@test.com",
     "gender": 1,
     "avatar_url": null,
@@ -332,7 +332,7 @@
   {
     "member_id": 31,
     "username": "Ian",
-    "password_hash": 123,
+    "member_password": "aa123",
     "email": "test31@test.com",
     "gender": 1,
     "avatar_url": null,
@@ -343,7 +343,7 @@
   {
     "member_id": 32,
     "username": "Jack",
-    "password_hash": 123,
+    "member_password": "aa123",
     "email": "test32@test.com",
     "gender": 1,
     "avatar_url": null,
@@ -354,7 +354,7 @@
   {
     "member_id": 33,
     "username": "Jacob",
-    "password_hash": 123,
+    "member_password": "aa123",
     "email": "test33@test.com",
     "gender": 1,
     "avatar_url": null,
@@ -365,7 +365,7 @@
   {
     "member_id": 34,
     "username": "James",
-    "password_hash": 123,
+    "member_password": "aa123",
     "email": "test34@test.com",
     "gender": 1,
     "avatar_url": null,
@@ -376,7 +376,7 @@
   {
     "member_id": 35,
     "username": "Jason",
-    "password_hash": 123,
+    "member_password": "aa123",
     "email": "test35@test.com",
     "gender": 1,
     "avatar_url": null,
@@ -387,7 +387,7 @@
   {
     "member_id": 36,
     "username": "John",
-    "password_hash": 123,
+    "member_password": "aa123",
     "email": "test36@test.com",
     "gender": 1,
     "avatar_url": null,
@@ -398,7 +398,7 @@
   {
     "member_id": 37,
     "username": "Jonathan",
-    "password_hash": 123,
+    "member_password": "aa123",
     "email": "test37@test.com",
     "gender": 1,
     "avatar_url": null,
@@ -409,7 +409,7 @@
   {
     "member_id": 38,
     "username": "Joseph",
-    "password_hash": 123,
+    "member_password": "aa123",
     "email": "test38@test.com",
     "gender": 1,
     "avatar_url": null,
@@ -420,7 +420,7 @@
   {
     "member_id": 39,
     "username": "Kevin",
-    "password_hash": 123,
+    "member_password": "aa123",
     "email": "test39@test.com",
     "gender": 1,
     "avatar_url": null,
@@ -431,7 +431,7 @@
   {
     "member_id": 40,
     "username": "Kyle",
-    "password_hash": 123,
+    "member_password": "aa123",
     "email": "test40@test.com",
     "gender": 1,
     "avatar_url": null,
@@ -442,7 +442,7 @@
   {
     "member_id": 41,
     "username": "Liam",
-    "password_hash": 123,
+    "member_password": "aa123",
     "email": "test41@test.com",
     "gender": 1,
     "avatar_url": null,
@@ -453,7 +453,7 @@
   {
     "member_id": 42,
     "username": "Logan",
-    "password_hash": 123,
+    "member_password": "aa123",
     "email": "test42@test.com",
     "gender": 1,
     "avatar_url": null,
@@ -464,7 +464,7 @@
   {
     "member_id": 43,
     "username": "Lucas",
-    "password_hash": 123,
+    "member_password": "aa123",
     "email": "test43@test.com",
     "gender": 1,
     "avatar_url": null,
@@ -475,7 +475,7 @@
   {
     "member_id": 44,
     "username": "Mark",
-    "password_hash": 123,
+    "member_password": "aa123",
     "email": "test44@test.com",
     "gender": 1,
     "avatar_url": null,
@@ -486,7 +486,7 @@
   {
     "member_id": 45,
     "username": "Matthew",
-    "password_hash": 123,
+    "member_password": "aa123",
     "email": "test45@test.com",
     "gender": 1,
     "avatar_url": null,
@@ -497,7 +497,7 @@
   {
     "member_id": 46,
     "username": "Michael",
-    "password_hash": 123,
+    "member_password": "aa123",
     "email": "test46@test.com",
     "gender": 1,
     "avatar_url": null,
@@ -508,7 +508,7 @@
   {
     "member_id": 47,
     "username": "Nathan",
-    "password_hash": 123,
+    "member_password": "aa123",
     "email": "test47@test.com",
     "gender": 1,
     "avatar_url": null,
@@ -519,7 +519,7 @@
   {
     "member_id": 48,
     "username": "Nicholas",
-    "password_hash": 123,
+    "member_password": "aa123",
     "email": "test48@test.com",
     "gender": 1,
     "avatar_url": null,
@@ -530,7 +530,7 @@
   {
     "member_id": 49,
     "username": "Noah",
-    "password_hash": 123,
+    "member_password": "aa123",
     "email": "test49@test.com",
     "gender": 1,
     "avatar_url": null,
@@ -541,7 +541,7 @@
   {
     "member_id": 50,
     "username": "Oliver",
-    "password_hash": 123,
+    "member_password": "aa123",
     "email": "test50@test.com",
     "gender": 1,
     "avatar_url": null,
@@ -552,7 +552,7 @@
   {
     "member_id": 51,
     "username": "Abigail",
-    "password_hash": 123,
+    "member_password": "aa123",
     "email": "test51@test.com",
     "gender": 2,
     "avatar_url": null,
@@ -563,7 +563,7 @@
   {
     "member_id": 52,
     "username": "Alice",
-    "password_hash": 123,
+    "member_password": "aa123",
     "email": "test52@test.com",
     "gender": 2,
     "avatar_url": null,
@@ -574,7 +574,7 @@
   {
     "member_id": 53,
     "username": "Alyssa",
-    "password_hash": 123,
+    "member_password": "aa123",
     "email": "test53@test.com",
     "gender": 2,
     "avatar_url": null,
@@ -585,7 +585,7 @@
   {
     "member_id": 54,
     "username": "Amanda",
-    "password_hash": 123,
+    "member_password": "aa123",
     "email": "test54@test.com",
     "gender": 2,
     "avatar_url": null,
@@ -596,7 +596,7 @@
   {
     "member_id": 55,
     "username": "Amber",
-    "password_hash": 123,
+    "member_password": "aa123",
     "email": "test55@test.com",
     "gender": 2,
     "avatar_url": null,
@@ -607,7 +607,7 @@
   {
     "member_id": 56,
     "username": "Amelia",
-    "password_hash": 123,
+    "member_password": "aa123",
     "email": "test56@test.com",
     "gender": 2,
     "avatar_url": null,
@@ -618,7 +618,7 @@
   {
     "member_id": 57,
     "username": "Amy",
-    "password_hash": 123,
+    "member_password": "aa123",
     "email": "test57@test.com",
     "gender": 2,
     "avatar_url": null,
@@ -629,7 +629,7 @@
   {
     "member_id": 58,
     "username": "Angela",
-    "password_hash": 123,
+    "member_password": "aa123",
     "email": "test58@test.com",
     "gender": 2,
     "avatar_url": null,
@@ -640,7 +640,7 @@
   {
     "member_id": 59,
     "username": "Anna",
-    "password_hash": 123,
+    "member_password": "aa123",
     "email": "test59@test.com",
     "gender": 2,
     "avatar_url": null,
@@ -651,7 +651,7 @@
   {
     "member_id": 60,
     "username": "Ashley",
-    "password_hash": 123,
+    "member_password": "aa123",
     "email": "test60@test.com",
     "gender": 2,
     "avatar_url": null,
@@ -662,7 +662,7 @@
   {
     "member_id": 61,
     "username": "Ava",
-    "password_hash": 123,
+    "member_password": "aa123",
     "email": "test61@test.com",
     "gender": 2,
     "avatar_url": null,
@@ -673,7 +673,7 @@
   {
     "member_id": 62,
     "username": "Barbara",
-    "password_hash": 123,
+    "member_password": "aa123",
     "email": "test62@test.com",
     "gender": 2,
     "avatar_url": null,
@@ -684,7 +684,7 @@
   {
     "member_id": 63,
     "username": "Bella",
-    "password_hash": 123,
+    "member_password": "aa123",
     "email": "test63@test.com",
     "gender": 2,
     "avatar_url": null,
@@ -695,7 +695,7 @@
   {
     "member_id": 64,
     "username": "Bethany",
-    "password_hash": 123,
+    "member_password": "aa123",
     "email": "test64@test.com",
     "gender": 2,
     "avatar_url": null,
@@ -706,7 +706,7 @@
   {
     "member_id": 65,
     "username": "Brianna",
-    "password_hash": 123,
+    "member_password": "aa123",
     "email": "test65@test.com",
     "gender": 2,
     "avatar_url": null,
@@ -717,7 +717,7 @@
   {
     "member_id": 66,
     "username": "Caitlin",
-    "password_hash": 123,
+    "member_password": "aa123",
     "email": "test66@test.com",
     "gender": 2,
     "avatar_url": null,
@@ -728,7 +728,7 @@
   {
     "member_id": 67,
     "username": "Candice",
-    "password_hash": 123,
+    "member_password": "aa123",
     "email": "test67@test.com",
     "gender": 2,
     "avatar_url": null,
@@ -739,7 +739,7 @@
   {
     "member_id": 68,
     "username": "Caroline",
-    "password_hash": 123,
+    "member_password": "aa123",
     "email": "test68@test.com",
     "gender": 2,
     "avatar_url": null,
@@ -750,7 +750,7 @@
   {
     "member_id": 69,
     "username": "Catherine",
-    "password_hash": 123,
+    "member_password": "aa123",
     "email": "test69@test.com",
     "gender": 2,
     "avatar_url": null,
@@ -761,7 +761,7 @@
   {
     "member_id": 70,
     "username": "Charlotte",
-    "password_hash": 123,
+    "member_password": "aa123",
     "email": "test70@test.com",
     "gender": 2,
     "avatar_url": null,
@@ -772,7 +772,7 @@
   {
     "member_id": 71,
     "username": "Chloe",
-    "password_hash": 123,
+    "member_password": "aa123",
     "email": "test71@test.com",
     "gender": 2,
     "avatar_url": null,
@@ -783,7 +783,7 @@
   {
     "member_id": 72,
     "username": "Christina",
-    "password_hash": 123,
+    "member_password": "aa123",
     "email": "test72@test.com",
     "gender": 2,
     "avatar_url": null,
@@ -794,7 +794,7 @@
   {
     "member_id": 73,
     "username": "Claire",
-    "password_hash": 123,
+    "member_password": "aa123",
     "email": "test73@test.com",
     "gender": 2,
     "avatar_url": null,
@@ -805,7 +805,7 @@
   {
     "member_id": 74,
     "username": "Courtney",
-    "password_hash": 123,
+    "member_password": "aa123",
     "email": "test74@test.com",
     "gender": 2,
     "avatar_url": null,
@@ -816,7 +816,7 @@
   {
     "member_id": 75,
     "username": "Daisy",
-    "password_hash": 123,
+    "member_password": "aa123",
     "email": "test75@test.com",
     "gender": 2,
     "avatar_url": null,
@@ -827,7 +827,7 @@
   {
     "member_id": 76,
     "username": "Danielle",
-    "password_hash": 123,
+    "member_password": "aa123",
     "email": "test76@test.com",
     "gender": 2,
     "avatar_url": null,
@@ -838,7 +838,7 @@
   {
     "member_id": 77,
     "username": "Deborah",
-    "password_hash": 123,
+    "member_password": "aa123",
     "email": "test77@test.com",
     "gender": 2,
     "avatar_url": null,
@@ -849,7 +849,7 @@
   {
     "member_id": 78,
     "username": "Diana",
-    "password_hash": 123,
+    "member_password": "aa123",
     "email": "test78@test.com",
     "gender": 2,
     "avatar_url": null,
@@ -860,7 +860,7 @@
   {
     "member_id": 79,
     "username": "Ella",
-    "password_hash": 123,
+    "member_password": "aa123",
     "email": "test79@test.com",
     "gender": 2,
     "avatar_url": null,
@@ -871,7 +871,7 @@
   {
     "member_id": 80,
     "username": "Emily",
-    "password_hash": 123,
+    "member_password": "aa123",
     "email": "test80@test.com",
     "gender": 2,
     "avatar_url": null,
@@ -882,7 +882,7 @@
   {
     "member_id": 81,
     "username": "Emma",
-    "password_hash": 123,
+    "member_password": "aa123",
     "email": "test81@test.com",
     "gender": 2,
     "avatar_url": null,
@@ -893,7 +893,7 @@
   {
     "member_id": 82,
     "username": "Eva",
-    "password_hash": 123,
+    "member_password": "aa123",
     "email": "test82@test.com",
     "gender": 2,
     "avatar_url": null,
@@ -904,7 +904,7 @@
   {
     "member_id": 83,
     "username": "Faith",
-    "password_hash": 123,
+    "member_password": "aa123",
     "email": "test83@test.com",
     "gender": 2,
     "avatar_url": null,
@@ -915,7 +915,7 @@
   {
     "member_id": 84,
     "username": "Fiona",
-    "password_hash": 123,
+    "member_password": "aa123",
     "email": "test84@test.com",
     "gender": 2,
     "avatar_url": null,
@@ -926,7 +926,7 @@
   {
     "member_id": 85,
     "username": "Gabriella",
-    "password_hash": 123,
+    "member_password": "aa123",
     "email": "test85@test.com",
     "gender": 2,
     "avatar_url": null,
@@ -937,7 +937,7 @@
   {
     "member_id": 86,
     "username": "Grace",
-    "password_hash": 123,
+    "member_password": "aa123",
     "email": "test86@test.com",
     "gender": 2,
     "avatar_url": null,
@@ -948,7 +948,7 @@
   {
     "member_id": 87,
     "username": "Hannah",
-    "password_hash": 123,
+    "member_password": "aa123",
     "email": "test87@test.com",
     "gender": 2,
     "avatar_url": null,
@@ -959,7 +959,7 @@
   {
     "member_id": 88,
     "username": "Hailey",
-    "password_hash": 123,
+    "member_password": "aa123",
     "email": "test88@test.com",
     "gender": 2,
     "avatar_url": null,
@@ -970,7 +970,7 @@
   {
     "member_id": 89,
     "username": "Heather",
-    "password_hash": 123,
+    "member_password": "aa123",
     "email": "test89@test.com",
     "gender": 2,
     "avatar_url": null,
@@ -981,7 +981,7 @@
   {
     "member_id": 90,
     "username": "Isabella",
-    "password_hash": 123,
+    "member_password": "aa123",
     "email": "test90@test.com",
     "gender": 2,
     "avatar_url": null,
@@ -992,7 +992,7 @@
   {
     "member_id": 91,
     "username": "Ivy",
-    "password_hash": 123,
+    "member_password": "aa123",
     "email": "test91@test.com",
     "gender": 2,
     "avatar_url": null,
@@ -1003,7 +1003,7 @@
   {
     "member_id": 92,
     "username": "Jacqueline",
-    "password_hash": 123,
+    "member_password": "aa123",
     "email": "test92@test.com",
     "gender": 2,
     "avatar_url": null,
@@ -1014,7 +1014,7 @@
   {
     "member_id": 93,
     "username": "Jasmine",
-    "password_hash": 123,
+    "member_password": "aa123",
     "email": "test93@test.com",
     "gender": 2,
     "avatar_url": null,
@@ -1025,7 +1025,7 @@
   {
     "member_id": 94,
     "username": "Jennifer",
-    "password_hash": 123,
+    "member_password": "aa123",
     "email": "test94@test.com",
     "gender": 2,
     "avatar_url": null,
@@ -1036,7 +1036,7 @@
   {
     "member_id": 95,
     "username": "Jessica",
-    "password_hash": 123,
+    "member_password": "aa123",
     "email": "test95@test.com",
     "gender": 2,
     "avatar_url": null,
@@ -1047,7 +1047,7 @@
   {
     "member_id": 96,
     "username": "Julia",
-    "password_hash": 123,
+    "member_password": "aa123",
     "email": "test96@test.com",
     "gender": 2,
     "avatar_url": null,
@@ -1058,7 +1058,7 @@
   {
     "member_id": 97,
     "username": "Katherine",
-    "password_hash": 123,
+    "member_password": "aa123",
     "email": "test97@test.com",
     "gender": 2,
     "avatar_url": null,
@@ -1069,7 +1069,7 @@
   {
     "member_id": 98,
     "username": "Kayla",
-    "password_hash": 123,
+    "member_password": "aa123",
     "email": "test98@test.com",
     "gender": 2,
     "avatar_url": null,
@@ -1080,7 +1080,7 @@
   {
     "member_id": 99,
     "username": "Kimberly",
-    "password_hash": 123,
+    "member_password": "aa123",
     "email": "test99@test.com",
     "gender": 2,
     "avatar_url": null,
@@ -1091,7 +1091,7 @@
   {
     "member_id": 100,
     "username": "Laura",
-    "password_hash": 123,
+    "member_password": "aa123",
     "email": "test100@test.com",
     "gender": 2,
     "avatar_url": null,

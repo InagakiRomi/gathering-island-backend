@@ -1,44 +1,63 @@
-import { HttpException, HttpStatus, Injectable, Logger } from "@nestjs/common";
+import { Injectable, Logger, HttpException, HttpStatus } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Member } from '../entity/member.entity';
-import { MemberDto } from "../dto/member.dto";
-import * as crypto from "crypto";
-
-function md5(str){
-    const hash = crypto.createHash("md5");
-    hash.update(str);
-    return hash.digest("hex");
-}
+import { MemberDto } from '../dto/member.dto';
+import { Gender } from '../enums/gender.enum';
+import * as bcrypt from 'bcrypt';
+import { plainToInstance } from 'class-transformer';
 
 @Injectable()
 export class MemberService {
-    private logger = new Logger();
+    private logger = new Logger(MemberService.name);
 
     constructor(
         @InjectRepository(Member)
         private memberRepository: Repository<Member>,
     ){}
 
-    async register(member: MemberDto) {
-        const foundUser = await this.memberRepository.findOneBy({
-            username: member.username,
-        });
+    /** 新增一筆會員資料（INSERT INTO member ...） */
+    async register(member: MemberDto): Promise<MemberDto> {
+    // 驗證帳號是否已存在
+    await this.ensureUsernameNotTaken(member.username);
 
-        if(foundUser){
-            throw new HttpException("Account already exists", 409);
-        }
+    // 加密密碼
+    member.member_password = await bcrypt.hash(member.member_password, 10);
 
-        const newMember = new Member();
-        newMember.username = member.username;
-        newMember.password_hash = md5(member.password_hash);
+    // 設定建立時間與修改時間
+    const now = new Date();
+    member.created_at = now;
+    member.updated_at = now;
 
-        try {
-            await this.memberRepository.save(newMember);
-            return "Registration successful";
-        } catch (error) {
-            this.logger.error(error.message);
-            return "Registration failed";
-        }
+    // 寫入資料庫
+    const entity = this.memberRepository.create({
+        username: member.username,
+        member_password: member.member_password,
+        email: member.email,
+        gender: member.gender as Gender,
+        avatar_url: member.avatar_url,
+        birthday: new Date(member.birthday),
+        created_at: now,
+        updated_at: now,
+    });
+
+    try {
+        const saved = await this.memberRepository.save(entity);
+
+        // 回傳 DTO 格式的結果
+        return plainToInstance(MemberDto, saved, { excludeExtraneousValues: true });
+    } catch (error) {
+        this.logger.error(error.message);
+        throw new HttpException('Registration failed', HttpStatus.INTERNAL_SERVER_ERROR);
     }
+    }
+
+    /** 檢查帳號是否已存在 */
+    private async ensureUsernameNotTaken(username: string): Promise<void> {
+    const foundUser = await this.memberRepository.findOneBy({ username });
+    if (foundUser) {
+        throw new HttpException('Account already exists', HttpStatus.CONFLICT);
+    }
+    }
+
 }

@@ -34,7 +34,7 @@ DROP TABLE `members`;
 CREATE TABLE `members` (
     member_id INT AUTO_INCREMENT PRIMARY KEY,           -- 主鍵
     username VARCHAR(32) NOT NULL UNIQUE,               -- 使用者帳號名稱
-    password_hash VARCHAR(256) NOT NULL,                -- 密碼加密後的字串
+    member_password VARCHAR(256) NOT NULL,                -- 密碼加密後的字串
     email VARCHAR(128) UNIQUE,                          -- 信箱
     gender SMALLINT NOT NULL,                           -- 性別
     avatar_url VARCHAR(512) DEFAULT NULL,               -- 大頭照 URL

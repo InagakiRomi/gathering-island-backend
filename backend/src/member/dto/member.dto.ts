@@ -14,7 +14,7 @@ export class MemberDto {
 
     /** 密碼加密後的字串 */
     @Expose()
-    password_hash: string;
+    member_password: string;
     
     /** 信箱 */
     @Expose()
