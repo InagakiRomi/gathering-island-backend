@@ -2,7 +2,7 @@ import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
 import { Gender } from '../enums/gender.enum';
 
 @Entity('members')
-export class Members{
+export class Member{
     
     /** 主鍵，自動遞增的會員 ID */
     @PrimaryGeneratedColumn('uuid')
