@@ -17,7 +17,7 @@
 
   function goToEventsPage() {
     router.push({
-      name: RouteName.EVENTS_PAGE
+      name: RouteName.LOGIN_VIEW
     });
   }
 </script>
