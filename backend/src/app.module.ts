@@ -1,6 +1,5 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { Connection } from 'typeorm';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { EventService } from './event/service/event.service';
@@ -9,10 +8,11 @@ import { Event } from './event/entity/event.entity';
 import { EventModule } from './event/event.module';
 import { MemberModule } from './member/member.module';
 import { Member } from './member/entity/member.entity';
+import { JwtModule } from '@nestjs/jwt';
 
 @Module({
   imports: [
-        TypeOrmModule.forRoot({
+    TypeOrmModule.forRoot({
       type: 'mysql',
       host: 'localhost',
       port: 3306,
@@ -22,6 +22,13 @@ import { Member } from './member/entity/member.entity';
       entities: [Event, Member],
       synchronize: true,
     }),
+    JwtModule.register({
+      global: true,
+      secret: "huang",
+      signOptions: {
+        expiresIn: "7d",
+      },
+    }),
     TypeOrmModule.forFeature([Event, Member]),
     EventModule,
     MemberModule,
@@ -30,6 +37,4 @@ import { Member } from './member/entity/member.entity';
   providers: [AppService, EventService],
 })
 
-export class AppModule {
-  constructor(private connection: Connection) {}
-}
+export class AppModule {}

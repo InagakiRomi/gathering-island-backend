@@ -22,8 +22,12 @@ export class MemberDto {
 
     /** 性別 */
     @Expose()
+    gender: Gender;
+
+    /** 性別(多國語言) */
+    @Expose()
     @Transform(({ obj }) => GenderTypeNameMap[obj.type])
-    gender: string;
+    gender_type: string; // 顯示用的中文名稱
 
     /** 大頭照 URL */
     @Expose()

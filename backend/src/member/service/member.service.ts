@@ -18,6 +18,26 @@ export class MemberService {
         private memberRepository: Repository<Member>,
     ){}
 
+    /** 登入會員 */
+    async login(member: MemberDto): Promise<MemberDto | null> {
+        // 找到 username 對應的會員
+        const found = await this.memberRepository.findOneBy({ username: member.username });
+
+        if (!found) {
+            return null; // 帳號不存在
+        }
+
+        // 檢查密碼是否正確
+        const isPasswordValid = await bcrypt.compare(member.member_password, found.member_password);
+        
+        if (!isPasswordValid) {
+            return null; // 密碼錯誤
+        }
+
+        // 登入成功，轉換 Entity 為 DTO 回傳
+        return plainToInstance(MemberDto, found, { excludeExtraneousValues: true });
+    }
+
     /** 註冊會員 */
     async register(member: MemberDto): Promise<MemberDto> {
         return this.processMemberRegistration(member);
@@ -61,7 +81,7 @@ export class MemberService {
             return plainToInstance(MemberDto, saved, { excludeExtraneousValues: true });
 
         } catch (error) {
-            
+
             // 記錄錯誤並丟出 500 錯誤
             this.logger.error(error.message);
             throw new HttpException('Registration failed', HttpStatus.INTERNAL_SERVER_ERROR);
