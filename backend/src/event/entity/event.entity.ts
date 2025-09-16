@@ -46,11 +46,11 @@ export class Event {
     is_ended: boolean;
 
     /** 活動開始時間 */
-    @Column()
+    @Column({nullable: true})
     event_time: Date;
 
     /** 報名截止時間 */
-    @Column()
+    @Column({nullable: true})
     registration_deadline: Date;
 
     /** 建立時間，自動填入目前時間 */

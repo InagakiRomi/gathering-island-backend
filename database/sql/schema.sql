@@ -27,10 +27,10 @@ ALTER TABLE `events` AUTO_INCREMENT = 1;
 
 -----------------------------
 
--- 刪除活動 Table
+-- 刪除會員 Table
 DROP TABLE `members`;
 
--- 創建活動資料
+-- 創建會員資料
 CREATE TABLE `members` (
     member_id INT AUTO_INCREMENT PRIMARY KEY,           -- 主鍵
     username VARCHAR(32) NOT NULL UNIQUE,               -- 使用者帳號名稱
@@ -43,7 +43,7 @@ CREATE TABLE `members` (
     updated_at TIMESTAMP NULL DEFAULT NULL              -- 最後更新時間
 );
 
--- 清除所有活動資料
+-- 清除所有會員資料
 TRUNCATE TABLE `members`;
 
 -- ID 從1開始算
