@@ -3,7 +3,7 @@ import type { RouteRecordRaw } from 'vue-router';
 
 export enum RouteName {
   HOME = 'home',
-  LOGIN_VIEW = 'loginView',
+  LOGIN_PAGE = 'loginPage',
   EVENTS_PAGE = 'eventsPage',
 }
 
@@ -14,9 +14,9 @@ const routes: RouteRecordRaw[] = [
     component: () => import('@/views/homePage.vue'),
   },
   {
-    path: '/loginView',
-    name: RouteName.LOGIN_VIEW,
-    component: () => import('@/views/loginView.vue'),
+    path: '/loginPage',
+    name: RouteName.LOGIN_PAGE,
+    component: () => import('@/views/loginPage.vue'),
   },
   {
     path: '/eventsPage',

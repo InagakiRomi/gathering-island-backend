@@ -1,25 +1,30 @@
 <template>
   <div class="home-container">
     <div class="overlay">
+      <button @click="goToLoginPage" class="login-button">登入</button>
+
       <h1>聚會島</h1>
       <p>歡迎來到聚會島，開始探索島嶼吧！</p>
-      <button @click="goToEventsPage">開始探索</button>
+      <div class="button-group">
+        <button @click="goToEventsPage" class="explore-button">開始探索</button>
+      </div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-  // 跳轉 eventsPage 頁面
-  import { RouteName } from '../router/index';
-    import { useRouter } from 'vue-router';
+import { useRouter } from 'vue-router';
+import { RouteName } from '../router/index';
 
-  const router = useRouter();
+const router = useRouter();
 
-  function goToEventsPage() {
-    router.push({
-      name: RouteName.LOGIN_VIEW
-    });
-  }
+function goToEventsPage() {
+  router.push({ name: RouteName.EVENTS_PAGE });
+}
+
+function goToLoginPage() {
+  router.push({ name: RouteName.LOGIN_PAGE });
+}
 </script>
 
 <style scoped>
@@ -57,8 +62,9 @@
   text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.5);
 }
 
+/* 通用按鈕樣式 */
 .overlay button {
-  background: linear-gradient(135deg, #36d1dc, #5b86e5);
+  position: relative;
   color: white;
   padding: 1.25rem 3rem;
   font-size: 1.5rem;
@@ -68,8 +74,21 @@
   font-weight: bold;
   box-shadow: 0 8px 15px rgba(0, 0, 0, 0.3);
   transition: all 0.3s ease;
-  position: relative;
   overflow: hidden;
+}
+
+/* Login 按鈕 */
+.login-button {
+  background: linear-gradient(135deg, #f091b9ff, #f859bbff);
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  z-index: 10;
+}
+
+/* 進入頁面按鈕 */
+.explore-button {
+  background: linear-gradient(135deg, #36d1dc, #5b86e5);
 }
 
 /* 放大＋流光線滑過效果 */
@@ -99,4 +118,5 @@
   transform: scale(0.97);
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
 }
+
 </style>
