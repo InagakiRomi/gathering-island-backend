@@ -1,40 +1,47 @@
 import { Module } from '@nestjs/common';
-import { TypeOrmModule } from '@nestjs/typeorm';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
-import { EventService } from './event/service/event.service';
-import { EventController } from './event/controller/event.controller';
-import { Event } from './event/entity/event.entity';
-import { EventModule } from './event/event.module';
-import { MemberModule } from './member/member.module';
-import { Member } from './member/entity/member.entity';
-import { JwtModule } from '@nestjs/jwt';
+import { ConfigModule, ConfigService } from '@nestjs/config';
+import { MikroOrmModule } from '@mikro-orm/nestjs';
+import mikroOrmBaseConfig from '../mikro-orm.config';
+import { GatheringsModule } from './gatherings/gatherings.module';
+import { TagsModule } from './tags/tags.module';
+import { AuthModule } from './auth/auth.module';
+import { UsersModule } from './users/users.module';
+import { JwtStrategy } from './auth/strategies/jwt.strategy';
+import { APP_GUARD } from '@nestjs/core';
+import { JwtAuthGuard } from './common/guards/jwt-auth.guard';
+import { RolesGuard } from './common/guards/roles.guard';
+import { configValidationSchema } from './config/validation';
 
 @Module({
   imports: [
-    TypeOrmModule.forRoot({
-      type: 'mysql',
-      host: 'localhost',
-      port: 3306,
-      username: 'root',
-      password: '12345678',
-      database: 'party',
-      entities: [Event, Member],
-      synchronize: true,
+    // 存取環境變數
+    ConfigModule.forRoot({
+      envFilePath: [`.env.stage.${process.env.STAGE}`, '.env'],
+      validationSchema: configValidationSchema, // 使用 Joi 來驗證環境變數的格式
     }),
-    JwtModule.register({
-      global: true,
-      secret: "huang",
-      signOptions: {
-        expiresIn: "7d",
-      },
-    }),
-    TypeOrmModule.forFeature([Event, Member]),
-    EventModule,
-    MemberModule,
-  ],
-  controllers: [AppController, EventController],
-  providers: [AppService, EventService],
-})
 
+    MikroOrmModule.forRootAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: async () => ({
+        ...mikroOrmBaseConfig,
+      }),
+    }),
+    GatheringsModule,
+    TagsModule,
+    AuthModule,
+    UsersModule,
+  ],
+  providers: [
+    JwtStrategy,
+    {
+      provide: APP_GUARD,
+      useClass: JwtAuthGuard,
+    },
+    {
+      provide: APP_GUARD,
+      useClass: RolesGuard,
+    },
+  ],
+})
 export class AppModule {}
