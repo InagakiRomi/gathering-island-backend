@@ -67,12 +67,12 @@ export class GatheringsService {
       query.userId = user;
     }
 
-    // 根據聚會分類篩選
+    // 根據聚會結束狀態篩選
     if (status) {
       query.status = status;
     }
 
-    // 根據任務狀態篩選
+    // 根據聚會分類篩選
     if (type) {
       query.type = type;
     }
@@ -229,7 +229,7 @@ export class GatheringsService {
     updateGatheringDto: UpdateGatheringDto,
     user: User,
   ): Promise<{ gatheringData: Gathering }> {
-    // 先取得任務（如果找不到會自動丟錯）
+    // 先取得聚會（如果找不到會自動丟錯）
     const { gatheringData } = await this.getGatheringById(id, user);
 
     // 使用partial update

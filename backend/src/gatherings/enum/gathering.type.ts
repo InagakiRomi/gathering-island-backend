@@ -1,4 +1,4 @@
-/** 聚會優先度 enum */
+/** 聚會分類 enum */
 export enum GatheringType {
   /** 派對 */
   PARTY = 'PARTY',

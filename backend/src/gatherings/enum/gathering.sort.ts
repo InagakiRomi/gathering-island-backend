@@ -6,7 +6,7 @@ export enum GatheringSortBy {
   /** 聚會分類 */
   Type = 'type',
 
-  /** 截止日期 */
+  /** 報名截止日期 */
   DUE_DATE = 'dueDate',
 
   /** 創建日期 */

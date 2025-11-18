@@ -20,11 +20,11 @@ export class CreateGatheringDto {
   @IsEnum(GatheringType)
   type: GatheringType;
 
-  /** 截止日期 */
+  /** 報名截止日期 */
   @ApiPropertyOptional({
     type: String,
     format: 'date-time',
-    description: '截止日期 (ISO 8601 格式)',
+    description: '報名截止日期 (ISO 8601 格式)',
   })
   @IsOptional()
   dueDate: Date;

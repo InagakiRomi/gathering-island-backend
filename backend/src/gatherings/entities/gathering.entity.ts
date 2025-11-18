@@ -37,7 +37,7 @@ export class Gathering {
   @Property({ default: GatheringType.PARTY })
   type: GatheringType;
 
-  /** 截止日期 */
+  /** 報名截止日期 */
   @Property({ defaultRaw: `'2099-12-31 23:59:59'` })
   dueDate: Date;
 
