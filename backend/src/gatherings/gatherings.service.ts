@@ -175,7 +175,17 @@ export class GatheringsService {
     user: User,
   ): Promise<{ gatheringData: Gathering }> {
     // 從 DTO 中把需要的欄位解構出來
-    const { title, description, type, dueDate, tags } = createGatheringDto;
+    const {
+      title,
+      description,
+      location,
+      participantNumbers,
+      price,
+      type,
+      startTime,
+      dueDate,
+      tags,
+    } = createGatheringDto;
 
     const now = new Date();
 
@@ -192,8 +202,12 @@ export class GatheringsService {
       userId: user.id,
       title,
       description: description ?? null,
+      location,
+      participantNumbers,
+      price,
       status: GatheringStatus.OPEN,
       type: type ?? GatheringType.PARTY,
+      startTime: startTime,
       dueDate: dueDate ?? null,
       isArchived: false,
       createdAt: now,

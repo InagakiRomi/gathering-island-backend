@@ -25,9 +25,21 @@ export class Gathering {
   @Property()
   title: string;
 
-  /** 項目內容 */
+  /** 活動描述 */
   @Property({ default: '' })
   description: string;
+
+  /** 活動地點 */
+  @Property()
+  location: string;
+
+  /** 參加人數 */
+  @Property()
+  participantNumbers: number;
+
+  /** 活動費用 */
+  @Property()
+  price: number;
 
   /** 結束狀態 */
   @Property({ default: GatheringStatus.OPEN })
@@ -36,6 +48,10 @@ export class Gathering {
   /** 聚會分類 */
   @Property({ default: GatheringType.PARTY })
   type: GatheringType;
+
+  /** 活動日期 */
+  @Property({ defaultRaw: `'2099-12-25 00:00:00'` })
+  startTime: Date;
 
   /** 報名截止日期 */
   @Property({ defaultRaw: `'2099-12-31 23:59:59'` })

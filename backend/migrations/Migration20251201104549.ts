@@ -1,9 +1,9 @@
 import { Migration } from '@mikro-orm/migrations';
 
-export class Migration20251117104827 extends Migration {
+export class Migration20251201104549 extends Migration {
 
   override async up(): Promise<void> {
-    this.addSql(`create table \`Gathering\` (\`id\` int unsigned not null auto_increment primary key, \`userId\` int not null, \`title\` varchar(255) not null, \`description\` varchar(255) not null default '', \`status\` varchar(255) not null default 'OPEN', \`type\` varchar(255) not null default 'PARTY', \`dueDate\` datetime not null default '2099-12-31 23:59:59', \`isArchived\` tinyint(1) not null default false, \`createdAt\` datetime not null default now(), \`updatedAt\` datetime not null default now() comment '更新時間') default character set utf8mb4 engine = InnoDB;`);
+    this.addSql(`create table \`Gathering\` (\`id\` int unsigned not null auto_increment primary key, \`userId\` int not null, \`title\` varchar(255) not null, \`description\` varchar(255) not null default '', \`location\` varchar(255) not null, \`participantNumbers\` int not null, \`price\` int not null, \`status\` varchar(255) not null default 'OPEN', \`type\` varchar(255) not null default 'PARTY', \`startTime\` datetime not null default '2099-12-25 00:00:00', \`dueDate\` datetime not null default '2099-12-31 23:59:59', \`isArchived\` tinyint(1) not null default false, \`createdAt\` datetime not null default now(), \`updatedAt\` datetime not null default now() comment '更新時間') default character set utf8mb4 engine = InnoDB;`);
     this.addSql(`alter table \`Gathering\` add index \`Gathering_updatedAt_index\`(\`updatedAt\`);`);
 
     this.addSql(`create table \`Tag\` (\`id\` int unsigned not null auto_increment primary key, \`tagName\` varchar(255) not null) default character set utf8mb4 engine = InnoDB;`);

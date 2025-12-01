@@ -44,6 +44,36 @@
           "default": "''",
           "mappedType": "string"
         },
+        "location": {
+          "name": "location",
+          "type": "varchar(255)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "length": 255,
+          "mappedType": "string"
+        },
+        "participantNumbers": {
+          "name": "participantNumbers",
+          "type": "int",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "length": null,
+          "mappedType": "integer"
+        },
+        "price": {
+          "name": "price",
+          "type": "int",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "length": null,
+          "mappedType": "integer"
+        },
         "status": {
           "name": "status",
           "type": "varchar(255)",
@@ -65,6 +95,17 @@
           "length": 255,
           "default": "'PARTY'",
           "mappedType": "string"
+        },
+        "startTime": {
+          "name": "startTime",
+          "type": "datetime",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "length": null,
+          "default": "'2099-12-25 00:00:00'",
+          "mappedType": "datetime"
         },
         "dueDate": {
           "name": "dueDate",
