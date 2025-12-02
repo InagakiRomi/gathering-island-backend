@@ -1,20 +1,19 @@
 <template>
   <div class="home-container">
     <div class="overlay">
-      <button @click="goToLoginPage" class="login-button">登入</button>
-
       <h1>聚會島</h1>
       <p>歡迎來到聚會島，開始探索島嶼吧！</p>
       <div class="button-group">
         <button @click="goToEventsPage" class="explore-button">開始探索</button>
+        <button @click="goToLoginPage" class="login-button">登入</button>
       </div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { useRouter } from 'vue-router';
-import { RouteName } from '../router/index';
+import { useRouter } from "vue-router";
+import { RouteName } from "../router/index";
 
 const router = useRouter();
 
@@ -99,7 +98,11 @@ function goToLoginPage() {
   left: -75%;
   width: 50%;
   height: 100%;
-  background: linear-gradient(120deg, rgba(255,255,255,0.4), rgba(255,255,255,0));
+  background: linear-gradient(
+    120deg,
+    rgba(255, 255, 255, 0.4),
+    rgba(255, 255, 255, 0)
+  );
   transform: skewX(-20deg);
   transition: left 0.6s ease;
 }
@@ -118,5 +121,4 @@ function goToLoginPage() {
   transform: scale(0.97);
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
 }
-
 </style>
