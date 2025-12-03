@@ -38,4 +38,5 @@ INSERT INTO `user`
 (36, 'lily@test.com', '$2b$10$3sDrsGRmq63M/xgbT88W7uE40Z.0.e202kWRpzSDfNaqVRLZ8t1qy', '', 'Lily', 'user', '2025-11-01 17:53:46', '2025-11-01 17:53:46'),
 (37, 'natalie@test.com', '$2b$10$3sDrsGRmq63M/xgbT88W7uE40Z.0.e202kWRpzSDfNaqVRLZ8t1qy', '', 'Natalie', 'user', '2025-11-01 17:53:46', '2025-11-01 17:53:46'),
 (38, 'ryan@test.com', '$2b$10$3sDrsGRmq63M/xgbT88W7uE40Z.0.e202kWRpzSDfNaqVRLZ8t1qy', '', 'Ryan', 'user', '2025-11-01 17:53:46', '2025-11-01 17:53:46'),
-(39, 'zoe@test.com', '$2b$10$3sDrsGRmq63M/xgbT88W7uE40Z.0.e202kWRpzSDfNaqVRLZ8t1qy', '', 'Zoe', 'user', '2025-11-01 17:53:46', '2025-11-01 17:53:46');
+(39, 'zoe@test.com', '$2b$10$3sDrsGRmq63M/xgbT88W7uE40Z.0.e202kWRpzSDfNaqVRLZ8t1qy', '', 'Zoe', 'user', '2025-11-01 17:53:46', '2025-11-01 17:53:46'),
+(40, 'meri@test.com', '$2b$10$3sDrsGRmq63M/xgbT88W7uE40Z.0.e202kWRpzSDfNaqVRLZ8t1qy', '', 'Meri', 'user', '2025-11-01 17:53:46', '2025-11-01 17:53:46');
