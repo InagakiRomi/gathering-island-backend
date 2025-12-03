@@ -27,6 +27,11 @@ function goToLoginPage() {
 </script>
 
 <style scoped>
+.button-group {
+  display: flex;
+  gap: 20px;
+}
+
 .home-container {
   background-image: var(--background-image-url);
   background-size: cover;
@@ -79,10 +84,6 @@ function goToLoginPage() {
 /* Login 按鈕 */
 .login-button {
   background: linear-gradient(135deg, #f091b9ff, #f859bbff);
-  position: absolute;
-  top: 1rem;
-  right: 1rem;
-  z-index: 10;
 }
 
 /* 進入頁面按鈕 */
