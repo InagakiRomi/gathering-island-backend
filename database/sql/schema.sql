@@ -1,3 +1,8 @@
+-- 建立時預設使用 utf8mb4 編碼
+CREATE DATABASE party
+CHARACTER SET=utf8mb4 
+COLLATE=utf8mb4_unicode_ci;
+
 -- 刪除活動 Table
 DROP TABLE `events`;
 
