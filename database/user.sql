@@ -1,5 +1,5 @@
-INSERT INTO `user` 
-(id, email, passwordHash, refreshTokenHash, displayName, role, createdAt, updatedAt) VALUES
+INSERT INTO "User"
+("id", "email", "passwordHash", "refreshTokenHash", "displayName", "role", "createdAt", "updatedAt") VALUES
 (1, 'super@test.com', '$2b$10$3sDrsGRmq63M/xgbT88W7uE40Z.0.e202kWRpzSDfNaqVRLZ8t1qy', '', 'Super', 'admin', '2025-10-03 15:09:42', '2025-10-03 15:09:42'),
 (2, 'lisa@test.com', '$2b$10$3sDrsGRmq63M/xgbT88W7uE40Z.0.e202kWRpzSDfNaqVRLZ8t1qy', '', 'Lisa', 'user', '2025-10-03 15:09:42', '2025-10-03 15:09:42'),
 (3, 'john@test.com', '$2b$10$3sDrsGRmq63M/xgbT88W7uE40Z.0.e202kWRpzSDfNaqVRLZ8t1qy', '', 'John', 'user', '2025-10-03 15:09:42', '2025-10-03 15:09:42'),

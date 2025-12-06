@@ -1,5 +1,5 @@
-INSERT INTO `events` 
-(event_id, event_name, event_description, event_type, event_location, image_url, max_participants, event_price, organizer_id, is_ended, event_time, registration_deadline, created_at, updated_at) VALUES
+INSERT INTO "events"
+("event_id", "event_name", "event_description", "event_type", "event_location", "image_url", "max_participants", "event_price", "organizer_id", "is_ended", "event_time", "registration_deadline", "created_at", "updated_at") VALUES
 (1, '要不要來學AI', '很怕報名的人都跑了所以先說：前面會有吃的，然後才是講座。一起坐一起滑手機也可以。', 3, '台南市中西區南門路1號（台南孔廟）', NULL, 170, 500, 78, 0, '2026-04-24 11:00:00', '2026-04-14 11:00:00', '2026-03-01 11:00:00', '2026-03-01 11:00:00'),
 (2, '北海道泡湯團', '純粹想泡湯，有人要跟嗎？白天行程我應該會亂走一通。', 5, '日本北海道', NULL, 30, 35000, 5, 0, '2026-01-12 13:00:00', '2026-01-08 13:00:00', '2026-12-19 13:00:00', '2026-12-19 13:00:00'),
 (3, '攝影展揪一波', '主揪可能只會拍人，不一定在看展，想來亂晃的可以+1。', 4, '台北市中正區愛國西路49號（台北市立美術館）', NULL, 250, 0, 65, 0, '2026-03-15 10:00:00', '2026-03-11 00:00:00', '2026-01-05 14:30:00', '2026-01-05 14:30:00'),

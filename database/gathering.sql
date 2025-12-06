@@ -1,5 +1,5 @@
-INSERT INTO `gathering` 
-(id, userId, title, description, location, participantNumbers, price, status, type, startTime, dueDate, isArchived, createdAt, updatedAt) VALUES
+INSERT INTO "Gathering"
+("id", "userId", "title", "description", "location", "participantNumbers", "price", "status", "type", "startTime", "dueDate", "isArchived", "createdAt", "updatedAt") VALUES
 (1, 10, '手作體驗', '聚集志同道合的人，共度特別時光的手作體驗。', '霧森縣翠柏市林語街 4 巷 28 號', 60, 200, 'CLOSED', 'OTHER', '2024-05-16 22:00:00', '2024-05-14 22:00:00', FALSE, '2024-04-19 22:00:00', '2024-04-19 22:00:00'),
 (2, 12, 'AI 開發者社群聚會', '提供最新知識與技能交流，這是一場AI 開發者社群聚會。', '晨光縣朝陽市朝日路 260 號', 30, 200, 'CLOSED', 'LEARNING', '2024-05-23 10:00:00', '2024-05-19 10:00:00', FALSE, '2024-05-06 10:00:00', '2024-05-06 10:00:00'),
 (3, 2, '攝影展揪一波', '主揪可能只會拍人，不一定在看展，想來亂晃的可以+1。', '星辰縣銀河市流星大道 88 號', 30, 700, 'CLOSED', 'EXHIBITION', '2025-03-15 10:00:00', '2025-03-11 00:00:00', FALSE, '2025-01-05 14:30:00', '2025-01-05 14:30:00'),
