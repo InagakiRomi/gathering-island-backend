@@ -5,7 +5,7 @@ import {
   Logger,
   NotFoundException,
 } from '@nestjs/common';
-import { EntityManager, EntityRepository } from '@mikro-orm/mysql';
+import { EntityManager, EntityRepository } from '@mikro-orm/core';
 import { Gathering } from './entities/gathering.entity';
 import { CreateGatheringDto } from './dto/create-gathering-dto';
 import { UpdateGatheringDto } from './dto/update-gathering-dto';

@@ -5,7 +5,7 @@ import { UpdateUserDto } from './dto/update-user-dto';
 import { buildJwtPayload } from 'src/auth/strategies/jwt-payload.builder';
 import { GetUsersQueryDto } from './dto/get-users-query.dto';
 import { InjectRepository } from '@mikro-orm/nestjs';
-import { EntityManager, EntityRepository } from '@mikro-orm/mysql';
+import { EntityManager, EntityRepository } from '@mikro-orm/core';
 
 @Injectable()
 export class UsersService {

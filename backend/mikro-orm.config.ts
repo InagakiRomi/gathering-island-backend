@@ -2,8 +2,8 @@ import { Migrator, TSMigrationGenerator } from '@mikro-orm/migrations';
 import {
   defineConfig,
   EntityCaseNamingStrategy,
-  MySqlDriver,
-} from '@mikro-orm/mysql';
+  PostgreSqlDriver,
+} from '@mikro-orm/postgresql';
 import * as dotenv from 'dotenv';
 import path from 'path';
 
@@ -13,7 +13,7 @@ dotenv.config({
 });
 
 export default defineConfig({
-  driver: MySqlDriver,
+  driver: PostgreSqlDriver,
   dbName: process.env.DB_NAME,
   user: process.env.DB_USER,
   password: process.env.DB_PASSWORD,

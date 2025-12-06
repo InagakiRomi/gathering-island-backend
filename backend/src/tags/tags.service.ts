@@ -1,4 +1,4 @@
-import { EntityManager } from '@mikro-orm/mysql';
+import { EntityManager } from '@mikro-orm/core';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateTagDto } from './dto/create-tag-dto';
 import { Tag } from './entities/tag.entity';
