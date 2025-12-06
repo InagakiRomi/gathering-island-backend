@@ -1,16 +1,18 @@
 {
-  "namespaces": [],
+  "namespaces": [
+    "public"
+  ],
+  "name": "public",
   "tables": [
     {
       "columns": {
         "id": {
           "name": "id",
-          "type": "int",
-          "unsigned": true,
+          "type": "serial",
+          "unsigned": false,
           "autoincrement": true,
           "primary": true,
           "nullable": false,
-          "length": null,
           "mappedType": "integer"
         },
         "userId": {
@@ -20,7 +22,6 @@
           "autoincrement": false,
           "primary": false,
           "nullable": false,
-          "length": null,
           "mappedType": "integer"
         },
         "title": {
@@ -61,7 +62,6 @@
           "autoincrement": false,
           "primary": false,
           "nullable": false,
-          "length": null,
           "mappedType": "integer"
         },
         "price": {
@@ -71,7 +71,6 @@
           "autoincrement": false,
           "primary": false,
           "nullable": false,
-          "length": null,
           "mappedType": "integer"
         },
         "status": {
@@ -98,62 +97,62 @@
         },
         "startTime": {
           "name": "startTime",
-          "type": "datetime",
+          "type": "timestamptz",
           "unsigned": false,
           "autoincrement": false,
           "primary": false,
           "nullable": false,
-          "length": null,
+          "length": 6,
           "default": "'2099-12-25 00:00:00'",
           "mappedType": "datetime"
         },
         "dueDate": {
           "name": "dueDate",
-          "type": "datetime",
+          "type": "timestamptz",
           "unsigned": false,
           "autoincrement": false,
           "primary": false,
           "nullable": false,
-          "length": null,
+          "length": 6,
           "default": "'2099-12-31 23:59:59'",
           "mappedType": "datetime"
         },
         "isArchived": {
           "name": "isArchived",
-          "type": "tinyint(1)",
+          "type": "boolean",
           "unsigned": false,
           "autoincrement": false,
           "primary": false,
           "nullable": false,
-          "length": 1,
           "default": "false",
           "mappedType": "boolean"
         },
         "createdAt": {
           "name": "createdAt",
-          "type": "datetime",
+          "type": "timestamptz",
           "unsigned": false,
           "autoincrement": false,
           "primary": false,
           "nullable": false,
-          "length": null,
+          "length": 6,
           "default": "now()",
           "mappedType": "datetime"
         },
         "updatedAt": {
           "name": "updatedAt",
-          "type": "datetime",
+          "type": "timestamptz",
           "unsigned": false,
           "autoincrement": false,
           "primary": false,
           "nullable": false,
-          "length": null,
+          "length": 6,
           "default": "now()",
           "comment": "更新時間",
           "mappedType": "datetime"
         }
       },
       "name": "Gathering",
+      "schema": "public",
       "indexes": [
         {
           "columnNames": [
@@ -166,7 +165,7 @@
           "unique": false
         },
         {
-          "keyName": "PRIMARY",
+          "keyName": "Gathering_pkey",
           "columnNames": [
             "id"
           ],
@@ -184,12 +183,11 @@
       "columns": {
         "id": {
           "name": "id",
-          "type": "int",
-          "unsigned": true,
+          "type": "serial",
+          "unsigned": false,
           "autoincrement": true,
           "primary": true,
           "nullable": false,
-          "length": null,
           "mappedType": "integer"
         },
         "tagName": {
@@ -204,6 +202,7 @@
         }
       },
       "name": "Tag",
+      "schema": "public",
       "indexes": [
         {
           "columnNames": [
@@ -216,7 +215,7 @@
           "unique": true
         },
         {
-          "keyName": "PRIMARY",
+          "keyName": "Tag_pkey",
           "columnNames": [
             "id"
           ],
@@ -235,48 +234,27 @@
         "gathering": {
           "name": "gathering",
           "type": "int",
-          "unsigned": true,
+          "unsigned": false,
           "autoincrement": false,
           "primary": false,
           "nullable": false,
-          "length": null,
           "mappedType": "integer"
         },
         "tag": {
           "name": "tag",
           "type": "int",
-          "unsigned": true,
+          "unsigned": false,
           "autoincrement": false,
           "primary": false,
           "nullable": false,
-          "length": null,
           "mappedType": "integer"
         }
       },
       "name": "Gathering_tags",
+      "schema": "public",
       "indexes": [
         {
-          "columnNames": [
-            "gathering"
-          ],
-          "composite": false,
-          "keyName": "Gathering_tags_gathering_index",
-          "constraint": false,
-          "primary": false,
-          "unique": false
-        },
-        {
-          "columnNames": [
-            "tag"
-          ],
-          "composite": false,
-          "keyName": "Gathering_tags_tag_index",
-          "constraint": false,
-          "primary": false,
-          "unique": false
-        },
-        {
-          "keyName": "PRIMARY",
+          "keyName": "Gathering_tags_pkey",
           "columnNames": [
             "gathering",
             "tag"
@@ -294,11 +272,11 @@
           "columnNames": [
             "gathering"
           ],
-          "localTableName": "Gathering_tags",
+          "localTableName": "public.Gathering_tags",
           "referencedColumnNames": [
             "id"
           ],
-          "referencedTableName": "Gathering",
+          "referencedTableName": "public.Gathering",
           "deleteRule": "cascade",
           "updateRule": "cascade"
         },
@@ -307,11 +285,11 @@
           "columnNames": [
             "tag"
           ],
-          "localTableName": "Gathering_tags",
+          "localTableName": "public.Gathering_tags",
           "referencedColumnNames": [
             "id"
           ],
-          "referencedTableName": "Tag",
+          "referencedTableName": "public.Tag",
           "deleteRule": "cascade",
           "updateRule": "cascade"
         }
@@ -322,12 +300,11 @@
       "columns": {
         "id": {
           "name": "id",
-          "type": "int",
-          "unsigned": true,
+          "type": "serial",
+          "unsigned": false,
           "autoincrement": true,
           "primary": true,
           "nullable": false,
-          "length": null,
           "mappedType": "integer"
         },
         "email": {
@@ -384,29 +361,30 @@
         },
         "createdAt": {
           "name": "createdAt",
-          "type": "datetime",
+          "type": "timestamptz",
           "unsigned": false,
           "autoincrement": false,
           "primary": false,
           "nullable": false,
-          "length": null,
+          "length": 6,
           "default": "now()",
           "mappedType": "datetime"
         },
         "updatedAt": {
           "name": "updatedAt",
-          "type": "datetime",
+          "type": "timestamptz",
           "unsigned": false,
           "autoincrement": false,
           "primary": false,
           "nullable": false,
-          "length": null,
+          "length": 6,
           "default": "now()",
           "comment": "更新時間",
           "mappedType": "datetime"
         }
       },
       "name": "User",
+      "schema": "public",
       "indexes": [
         {
           "columnNames": [
@@ -429,7 +407,7 @@
           "unique": false
         },
         {
-          "keyName": "PRIMARY",
+          "keyName": "User_pkey",
           "columnNames": [
             "id"
           ],
