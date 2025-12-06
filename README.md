@@ -18,6 +18,14 @@
 
 ---
 
+## 📘 API 文件（Swagger）
+
+本專案提供完整的 Swagger API 文件，方便前後端協作與測試。
+
+👉 [Swagger 連結](https://gathering-island.onrender.com/api)
+
+---
+
 ## 🛠️ 技術架構
 
 ### 核心技術
