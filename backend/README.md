@@ -24,6 +24,12 @@ npx mikro-orm migration:up
 npm run start:dev
 ```
 
+## 新增 `.sql` 檔案資料
+
+```bash
+npm run init:db
+```
+
 ## 環境變數配置
 
 ### 開發環境 (`.env.stage.dev`)

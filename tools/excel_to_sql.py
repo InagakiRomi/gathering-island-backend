@@ -5,7 +5,7 @@ from datetime import datetime
 # 以程式所在路徑為基準
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 DATA_DIR = os.path.join(BASE_DIR, "../data")
-OUTPUT_DIR = os.path.join(BASE_DIR, "../database")
+OUTPUT_DIR = os.path.join(BASE_DIR, "../backend/database")
 
 
 def escape_sql(value):
