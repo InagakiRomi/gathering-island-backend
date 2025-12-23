@@ -2,8 +2,8 @@ import { Migrator, TSMigrationGenerator } from '@mikro-orm/migrations';
 import {
   defineConfig,
   EntityCaseNamingStrategy,
-  PostgreSqlDriver,
-} from '@mikro-orm/postgresql';
+  SqliteDriver,
+} from '@mikro-orm/sqlite';
 import * as dotenv from 'dotenv';
 import path from 'path';
 
@@ -13,17 +13,15 @@ dotenv.config({
 });
 
 export default defineConfig({
-  driver: PostgreSqlDriver,
-  dbName: process.env.DB_NAME,
-  user: process.env.DB_USER,
-  password: process.env.DB_PASSWORD,
-  host: process.env.DB_HOST,
-  port: Number(process.env.DB_PORT),
+  driver: SqliteDriver,
+  dbName:
+    process.env.DB_NAME || path.resolve(process.cwd(), 'data/gathering.db'),
 
   namingStrategy: EntityCaseNamingStrategy, // 保留 Entity 名稱
   entities: ['./dist/**/*.entity.js'],
   entitiesTs: ['./src/**/*.entity.ts'],
 
+  // SQLite 自訂函數配置
   extensions: [Migrator],
   migrations: {
     tableName: 'mikro_orm_migrations',
@@ -31,7 +29,7 @@ export default defineConfig({
     glob: '!(*.d).{js,ts,cjs}',
     silent: false,
     transactional: true,
-    disableForeignKeys: false,
+    disableForeignKeys: true,
     allOrNothing: true,
     dropTables: false,
     safe: false,
