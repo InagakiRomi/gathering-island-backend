@@ -22,9 +22,9 @@ export class Tag {
   @ManyToMany(() => Gathering, (gathering) => gathering.tags)
   gatherings = new Collection<Gathering>(this);
 
+  /** 自定義序列化：排除 gatherings 關聯以避免遞迴 */
   toJSON() {
     return {
-      // 避免將 gatherings 一起序列化，防止循環引用與過多資料回傳
       id: this.id,
       tagName: this.tagName,
     };

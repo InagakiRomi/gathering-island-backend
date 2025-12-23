@@ -30,17 +30,16 @@ export class User {
   role: UserRole;
 
   /** 創建日期 */
-  @Property({ defaultRaw: 'NOW()' })
-  createdAt: Date;
+  @Property()
+  createdAt: Date = new Date();
 
   /** 最後更新日期 */
   @Property({
     comment: '更新時間',
     onUpdate: () => new Date(),
-    defaultRaw: 'NOW()',
     index: true,
   })
-  updatedAt: Date;
+  updatedAt: Date = new Date();
 
   toJSON() {
     return {

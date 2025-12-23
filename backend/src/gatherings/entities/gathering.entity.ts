@@ -66,18 +66,18 @@ export class Gathering {
   isArchived: boolean;
 
   /** 創建日期 */
-  @Property({ defaultRaw: 'NOW()' })
-  createdAt: Date;
+  @Property()
+  createdAt: Date = new Date();
 
   /** 最後更新日期 */
   @Property({
     comment: '更新時間',
     onUpdate: () => new Date(),
-    defaultRaw: 'NOW()',
     index: true,
   })
-  updatedAt: Date;
+  updatedAt: Date = new Date();
 
+  /** 自定義 JSON 輸出格式 */
   toJSON() {
     return {
       // 指定日期欄位格式
