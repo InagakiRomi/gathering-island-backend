@@ -90,17 +90,6 @@ export class GatheringsService {
       ];
     }
 
-    // 計算撈出的資料數量
-    let total = await this.gatheringRepository.count(query);
-
-    // 查詢資料並載入關聯 tags
-    let gatherings = await this.gatheringRepository.find(query, {
-      populate: ['tags'],
-      orderBy: { [sortBy]: sortOrder.toLowerCase() },
-      limit,
-      offset: (page - 1) * limit,
-    });
-
     // 保證 tags 是陣列格式，如果不是就報錯
     if (tags && !Array.isArray(tags)) {
       this.logger.warn(
@@ -112,6 +101,17 @@ export class GatheringsService {
         code: ErrorCode.BAD_REQUEST,
       });
     }
+
+    // 計算撈出的資料數量
+    let total = await this.gatheringRepository.count(query);
+
+    // 查詢資料並載入關聯 tags
+    let gatherings = await this.gatheringRepository.find(query, {
+      populate: ['tags'],
+      orderBy: { [sortBy]: sortOrder.toLowerCase() },
+      limit,
+      offset: (page - 1) * limit,
+    });
 
     // 標籤篩選
     if (Array.isArray(tags) && tags.length > 0) {
