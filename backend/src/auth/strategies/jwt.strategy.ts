@@ -5,7 +5,7 @@ import { JwtPayload } from './jwt-payload.interface';
 import { ConfigService } from '@nestjs/config';
 import { User } from 'src/users/entities/user.entity';
 import { EntityManager } from '@mikro-orm/core';
-import { ErrorCode } from 'src/common/enums/error-code.enum';
+import { ErrorCode } from 'src/common/enum/error-code.enum';
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {

@@ -15,7 +15,7 @@ import { AuthLoginDto } from './dto/auth-login.dto';
 import { buildJwtPayload } from './strategies/jwt-payload.builder';
 import { ConfigService } from '@nestjs/config';
 import { JwtConfigHelper } from './strategies/jwt-config.helper';
-import { ErrorCode } from 'src/common/enums/error-code.enum';
+import { ErrorCode } from 'src/common/enum/error-code.enum';
 import { JwtPayload } from './strategies/jwt-payload.interface';
 
 /** 帳號 Service */

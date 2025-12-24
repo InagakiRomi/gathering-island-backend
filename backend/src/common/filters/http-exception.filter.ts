@@ -5,7 +5,7 @@ import {
   HttpException,
 } from '@nestjs/common';
 import { Request, Response } from 'express';
-import { ErrorCode } from '../enums/error-code.enum';
+import { ErrorCode } from '../enum/error-code.enum';
 import { ApiResult } from '../enum/api-result';
 
 @Catch(HttpException) // 定義要捕捉的例外類型

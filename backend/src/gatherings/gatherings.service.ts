@@ -17,7 +17,7 @@ import { InjectRepository } from '@mikro-orm/nestjs';
 import { Tag } from '../tags/entities/tag.entity';
 import { User } from 'src/users/entities/user.entity';
 import { UserRole } from 'src/users/enum/auth.role';
-import { ErrorCode } from 'src/common/enums/error-code.enum';
+import { ErrorCode } from 'src/common/enum/error-code.enum';
 
 /** 聚會 Service */
 @Injectable()
