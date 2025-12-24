@@ -24,7 +24,19 @@ npx mikro-orm migration:up
 npm run start:dev
 ```
 
-## 新增 `.sql` 檔案資料
+## 匯入 `.sql` 檔案資料
+
+### 1. 移除 "data/gathering.db"
+
+### 2. 更新 migration
+
+會自動建立新的 gathering.db 檔案
+
+```bash
+npx mikro-orm migration:up
+```
+
+### 3. 執行 init 指令
 
 ```bash
 npm run init:db
