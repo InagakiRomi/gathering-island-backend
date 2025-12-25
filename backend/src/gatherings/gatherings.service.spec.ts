@@ -151,12 +151,35 @@ describe('GatheringsService', () => {
       expect(result.total).toBe(1);
     });
 
+    it('管理員可以取得所有 gatherings（不限制 userId）', async () => {
+      gatheringRepository.count.mockResolvedValue(1);
+      gatheringRepository.find.mockResolvedValue([mockGathering()]);
+
+      await service.getGatherings(
+        {
+          page: 1,
+          limit: 10,
+          sortBy: 'createdAt',
+          sortOrder: 'DESC',
+        } as any,
+        mockAdmin as any,
+      );
+
+      // 管理員 query 不應該被加上 userId
+      expect(gatheringRepository.find).toHaveBeenCalledWith(
+        {},
+        expect.any(Object),
+      );
+    });
+
     it('tags 不是 array 時拋出 BadRequestException', async () => {
       await expect(
         service.getGatherings(
           {
             page: 1,
             limit: 10,
+            sortBy: 'createdAt',
+            sortOrder: 'DESC',
             tags: 'invalid' as any,
           } as any,
           mockUser as any,
@@ -166,6 +189,51 @@ describe('GatheringsService', () => {
           message: `The 'tags' field must be an array.`,
           code: ErrorCode.BAD_REQUEST,
         }),
+      );
+    });
+
+    it('tags 為合法 array 但篩選後無結果時回傳空陣列', async () => {
+      gatheringRepository.count.mockResolvedValue(1);
+      gatheringRepository.find.mockResolvedValue([mockGathering()]);
+
+      const result = await service.getGatherings(
+        {
+          page: 1,
+          limit: 10,
+          sortBy: 'createdAt',
+          sortOrder: 'DESC',
+          tags: ['non-exist'],
+        } as any,
+        mockUser as any,
+      );
+
+      expect(result.gatheringData).toHaveLength(0);
+      expect(result.total).toBe(0);
+    });
+
+    it('search 條件會正確組成 $or 查詢', async () => {
+      gatheringRepository.count.mockResolvedValue(0);
+      gatheringRepository.find.mockResolvedValue([]);
+
+      await service.getGatherings(
+        {
+          page: 1,
+          limit: 10,
+          sortBy: 'createdAt',
+          sortOrder: 'DESC',
+          search: 'party',
+        } as any,
+        mockUser as any,
+      );
+
+      expect(gatheringRepository.find).toHaveBeenCalledWith(
+        expect.objectContaining({
+          $or: [
+            { title: { $like: '%party%' } },
+            { description: { $like: '%party%' } },
+          ],
+        }),
+        expect.any(Object),
       );
     });
   });
@@ -191,14 +259,19 @@ describe('GatheringsService', () => {
       ).rejects.toThrow(NotFoundException);
     });
 
-    it('非本人且非管理員時拋出 ForbiddenException', async () => {
+    it('非本人且非管理員時拋出 ForbiddenException（包含 error code）', async () => {
       entityManager.findOne.mockResolvedValue(
         mockGathering({ userId: 999 } as any),
       );
 
-      await expect(
-        service.getGatheringById(1, mockUser as any),
-      ).rejects.toThrow(ForbiddenException);
+      try {
+        await service.getGatheringById(1, mockUser as any);
+      } catch (e) {
+        expect(e).toBeInstanceOf(ForbiddenException);
+        expect(e.getResponse()).toMatchObject({
+          code: ErrorCode.FORBIDDEN,
+        });
+      }
     });
   });
 
@@ -225,8 +298,43 @@ describe('GatheringsService', () => {
         mockUser as any,
       );
 
-      expect(entityManager.persistAndFlush).toHaveBeenCalled();
+      expect(entityManager.persistAndFlush).toHaveBeenCalledTimes(1);
       expect(result.gatheringData).toBe(gathering);
+    });
+
+    it('tags 為空 array 時不會建立 tag 關聯', async () => {
+      const gathering = mockGathering();
+      entityManager.create.mockReturnValue(gathering as any);
+
+      await service.createGathering(
+        {
+          title: 'New Gathering',
+          location: 'Taipei',
+          participantNumbers: 5,
+          startTime: new Date(),
+          tags: [],
+        } as any,
+        mockUser as any,
+      );
+
+      expect(tagsService.findOrCreateTag).not.toHaveBeenCalled();
+    });
+
+    it('未傳 type 時會使用預設 GatheringType.PARTY', async () => {
+      const gathering = mockGathering();
+      entityManager.create.mockReturnValue(gathering as any);
+
+      const result = await service.createGathering(
+        {
+          title: 'New Gathering',
+          location: 'Taipei',
+          participantNumbers: 5,
+          startTime: new Date(),
+        } as any,
+        mockUser as any,
+      );
+
+      expect(result.gatheringData.type).toBe(GatheringType.PARTY);
     });
 
     it('user.id 不存在時拋出 BadRequestException', async () => {
@@ -258,7 +366,23 @@ describe('GatheringsService', () => {
       );
 
       expect(result.gatheringData.title).toBe('Updated');
-      expect(entityManager.persistAndFlush).toHaveBeenCalled();
+      expect(entityManager.persistAndFlush).toHaveBeenCalledTimes(1);
+    });
+
+    it('數值為 0 的欄位無法被更新（目前行為，防止誤改）', async () => {
+      const gathering = mockGathering({ participantNumbers: 10 });
+
+      jest
+        .spyOn(service, 'getGatheringById')
+        .mockResolvedValue({ gatheringData: gathering });
+
+      await service.updateGathering(
+        1,
+        { participantNumbers: 0 } as any,
+        mockUser as any,
+      );
+
+      expect(gathering.participantNumbers).toBe(10);
     });
   });
 
@@ -290,6 +414,14 @@ describe('GatheringsService', () => {
 
     it('closeGathering 會將 status 設為 CLOSED', async () => {
       const result = await service.closeGathering(1, mockUser as any);
+      expect(result.gatheringData.status).toBe(GatheringStatus.CLOSED);
+    });
+
+    it('close 已經 CLOSED 的 gathering 仍會維持 CLOSED（行為規格）', async () => {
+      gathering.status = GatheringStatus.CLOSED;
+
+      const result = await service.closeGathering(1, mockUser as any);
+
       expect(result.gatheringData.status).toBe(GatheringStatus.CLOSED);
     });
   });
