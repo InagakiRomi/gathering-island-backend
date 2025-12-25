@@ -14,7 +14,7 @@
     "start:prod": "cross-env STAGE=prod node dist/src/main",
     "init-db:sqlite": "node scripts/init-db-sqlite.js",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
-    "test": "jest",
+    "test": "jest --verbose",
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
