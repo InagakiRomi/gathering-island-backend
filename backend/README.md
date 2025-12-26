@@ -1,46 +1,54 @@
 ## 快速開始
 
-### 1. 安裝依賴
+### 1. 建立環境變數檔案
+
+### 2. 安裝依賴
 
 ```bash
 npm install
 ```
 
-### 2. 建 migration
-
-```bash
-npx mikro-orm migration:create
-```
-
-### 3. 套用/更新 migration
-
-```bash
-npx mikro-orm migration:up
-```
-
-### 4. 啟動應用程式
+### 3. 啟動應用程式
 
 ```bash
 npm run start:dev
 ```
 
-## 匯入 `.sql` 檔案資料
+---
 
-### 1. 移除 "data/gathering.db"
+## 使用 MikroORM Migration 初始化資料庫
 
-### 2. 更新 migration
+### 1. 刪除現有 migration（如有）
 
-會自動建立新的 gathering.db 檔案
+```bash
+rm -rf migrations
+```
+
+### 2. 刪除現有 SQLite 資料庫（如有）
+
+```bash
+rm -f data/gathering.db
+```
+
+### 3. 建立初始 migration
+
+```bash
+npx mikro-orm migration:create --initial
+```
+
+### 4. 執行 migration，建立資料表
 
 ```bash
 npx mikro-orm migration:up
 ```
 
-### 3. 執行 init 指令
+### 5. 初始化預設資料
 
 ```bash
 npm run init:db
 ```
+
+---
 
 ## 環境變數配置
 
@@ -62,13 +70,15 @@ JWT_COOKIE_SECRET=your-cookie-secret
 ```
 PORT=3000
 STAGE=prod
-DB_NAME=/var/lib/gathering-island/gathering.db
+DB_NAME=data/gathering.db
 JWT_ACCESS_SECRET=your-production-secret-key
 JWT_REFRESH_SECRET=your-production-secret-key
 JWT_ACCESS_EXPIRES=15m
 JWT_REFRESH_EXPIRES=7d
 JWT_COOKIE_SECRET=your-production-cookie-secret
 ```
+
+---
 
 ### Q: 如何備份 SQLite 資料庫？
 
