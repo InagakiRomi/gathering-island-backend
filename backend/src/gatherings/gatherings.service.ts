@@ -35,10 +35,100 @@ export class GatheringsService {
    * 查詢已有聚會
    *
    * @param {GetGatheringsQueryDto} queryDto 查詢參數 DTO
+   * @returns {Promise<{ gatheringData: Gathering }>} 回傳搜尋結果
+   */
+  async getGatherings(queryDto: GetGatheringsQueryDto): Promise<{
+    gatheringData: Gathering[];
+    page: number;
+    limit: number;
+    total: number;
+  }> {
+    const {
+      page,
+      limit,
+      sortBy,
+      sortOrder,
+      status,
+      type,
+      isArchived,
+      search,
+      tags,
+    } = queryDto;
+
+    // 建立查詢條件物件
+    const query: any = {};
+
+    // 根據聚會結束狀態篩選
+    if (status) {
+      query.status = status;
+    }
+
+    // 根據聚會分類篩選
+    if (type) {
+      query.type = type;
+    }
+
+    // 根據封存狀態篩選
+    if (typeof isArchived === 'boolean') {
+      query.isArchived = isArchived;
+    }
+
+    // 根據關鍵字模糊搜尋 title 或 description（不區分大小寫）
+    if (search?.trim()) {
+      query.$or = [
+        { title: { $like: `%${search}%` } },
+        { description: { $like: `%${search}%` } },
+      ];
+    }
+
+    // 保證 tags 是陣列格式，如果不是就報錯
+    if (tags && !Array.isArray(tags)) {
+      this.logger.warn(
+        `The 'tags' field is not an array. Received: ${JSON.stringify(tags)}`,
+      );
+
+      throw new BadRequestException({
+        message: `The 'tags' field must be an array.`,
+        code: ErrorCode.BAD_REQUEST,
+      });
+    }
+
+    // 計算撈出的資料數量
+    let total = await this.gatheringRepository.count(query);
+
+    // 查詢資料並載入關聯 tags
+    let gatherings = await this.gatheringRepository.find(query, {
+      populate: ['tags'],
+      orderBy: { [sortBy]: sortOrder.toLowerCase() },
+      limit,
+      offset: (page - 1) * limit,
+    });
+
+    // 標籤篩選
+    if (Array.isArray(tags) && tags.length > 0) {
+      gatherings = gatherings.filter((gathering) => {
+        // 把每個陣列轉成字串
+        const tagNames = gathering.tags.map((tag) => tag.tagName);
+
+        // 回傳篩選過後的項目
+        return tags.every((tag) => new Set(tagNames).has(tag));
+      });
+    }
+
+    // 計算過濾tag後的資料數量
+    total = gatherings.length;
+
+    return { gatheringData: gatherings, page, limit, total };
+  }
+
+  /**
+   * 取得目前登入使用者創建的聚會
+   *
+   * @param {GetGatheringsQueryDto} queryDto 查詢參數 DTO
    * @param {User} user 取得目前登入的使用者
    * @returns {Promise<{ gatheringData: Gathering }>} 回傳搜尋結果
    */
-  async getGatherings(
+  async getMyGatherings(
     queryDto: GetGatheringsQueryDto,
     user: User,
   ): Promise<{

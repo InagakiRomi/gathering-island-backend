@@ -30,7 +30,6 @@ export class GatheringsController {
    * 查詢已有聚會
    *
    * @param {GetGatheringsQueryDto} queryDto 查詢參數 DTO
-   * @param {User} user 取得目前登入的使用者
    * @returns {Promise<{ items: Gathering[]; page: number; limit: number; total: number }>} 回傳搜尋結果
    */
   @Get()
@@ -38,7 +37,29 @@ export class GatheringsController {
     summary: '查詢聚會列表',
     description: '根據查詢參數（如狀態、關鍵字等）來取得目前的聚會清單',
   })
-  getGatherings(
+  getGatherings(@Query() queryDto: GetGatheringsQueryDto): Promise<{
+    gatheringData: Gathering[];
+    page: number;
+    limit: number;
+    total: number;
+  }> {
+    return this.gatheringsService.getGatherings(queryDto);
+  }
+
+  /**
+   * 取得目前登入使用者創建的聚會
+   *
+   * @param {GetGatheringsQueryDto} queryDto 查詢參數 DTO
+   * @param {User} user 取得目前登入的使用者
+   * @returns {Promise<{ items: Gathering[]; page: number; limit: number; total: number }>} 回傳搜尋結果
+   */
+  @Get()
+  @ApiOperation({
+    summary: '取得目前登入使用者創建的聚會',
+    description:
+      '取得目前登入使用者所建立的所有聚會，管理員可查看所有使用者的聚會',
+  })
+  getMyGatherings(
     @Query() queryDto: GetGatheringsQueryDto,
     @GetUser() user: User,
   ): Promise<{
@@ -47,7 +68,7 @@ export class GatheringsController {
     limit: number;
     total: number;
   }> {
-    return this.gatheringsService.getGatherings(queryDto, user);
+    return this.gatheringsService.getMyGatherings(queryDto, user);
   }
 
   /**
