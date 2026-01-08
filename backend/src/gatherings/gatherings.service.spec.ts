@@ -457,34 +457,20 @@ describe('GatheringsService', () => {
    * ============================
    */
   describe('getGatheringById', () => {
-    it('管理員可以取得任何 gathering', async () => {
+    it('任何使用者都可以取得聚會詳細資料', async () => {
       entityManager.findOne.mockResolvedValue(mockGathering());
 
-      const result = await service.getGatheringById(1, mockAdmin as any);
+      const result = await service.getGatheringById(1);
       expect(result.gatheringData).toBeDefined();
+      expect(entityManager.findOne).toHaveBeenCalledWith(Gathering, 1);
     });
 
     it('找不到 gathering 時拋出 NotFoundException', async () => {
       entityManager.findOne.mockResolvedValue(null);
 
-      await expect(
-        service.getGatheringById(1, mockUser as any),
-      ).rejects.toThrow(NotFoundException);
-    });
-
-    it('非本人且非管理員時拋出 ForbiddenException（包含 error code）', async () => {
-      entityManager.findOne.mockResolvedValue(
-        mockGathering({ userId: 999 } as any),
+      await expect(service.getGatheringById(1)).rejects.toThrow(
+        NotFoundException,
       );
-
-      try {
-        await service.getGatheringById(1, mockUser as any);
-      } catch (e) {
-        expect(e).toBeInstanceOf(ForbiddenException);
-        expect(e.getResponse()).toMatchObject({
-          code: ErrorCode.FORBIDDEN,
-        });
-      }
     });
   });
 
@@ -563,7 +549,7 @@ describe('GatheringsService', () => {
    * ============================
    */
   describe('updateGathering', () => {
-    it('成功更新 gathering 與 tags', async () => {
+    it('本人可以成功更新 gathering 與 tags', async () => {
       const gathering = mockGathering();
 
       jest
@@ -580,6 +566,40 @@ describe('GatheringsService', () => {
 
       expect(result.gatheringData.title).toBe('Updated');
       expect(entityManager.persistAndFlush).toHaveBeenCalledTimes(1);
+    });
+
+    it('管理員可以更新任何 gathering', async () => {
+      const gathering = mockGathering({ userId: 999 });
+
+      jest
+        .spyOn(service, 'getGatheringById')
+        .mockResolvedValue({ gatheringData: gathering });
+
+      tagsService.findOrCreateTag.mockResolvedValue(mockTag('new') as any);
+
+      const result = await service.updateGathering(
+        1,
+        { title: 'Updated by Admin' } as any,
+        mockAdmin as any,
+      );
+
+      expect(result.gatheringData.title).toBe('Updated by Admin');
+    });
+
+    it('非本人且非管理員時拋出 ForbiddenException', async () => {
+      const gathering = mockGathering({ userId: 999 });
+
+      jest
+        .spyOn(service, 'getGatheringById')
+        .mockResolvedValue({ gatheringData: gathering });
+
+      await expect(
+        service.updateGathering(
+          1,
+          { title: 'Unauthorized' } as any,
+          mockUser as any,
+        ),
+      ).rejects.toThrow(ForbiddenException);
     });
 
     it('數值為 0 的欄位無法被更新（目前行為，防止誤改）', async () => {
@@ -614,20 +634,61 @@ describe('GatheringsService', () => {
         .mockResolvedValue({ gatheringData: gathering });
     });
 
-    it('deleteGathering 會將 isArchived 設為 true', async () => {
+    it('本人可以刪除 gathering', async () => {
       const result = await service.deleteGathering(1, mockUser as any);
       expect(result.gatheringData.isArchived).toBe(true);
     });
 
-    it('restoreGathering 會將 isArchived 設為 false', async () => {
+    it('管理員可以刪除任何 gathering', async () => {
+      gathering.userId = 999;
+      const result = await service.deleteGathering(1, mockAdmin as any);
+      expect(result.gatheringData.isArchived).toBe(true);
+    });
+
+    it('非本人且非管理員刪除時拋出 ForbiddenException', async () => {
+      gathering.userId = 999;
+      await expect(service.deleteGathering(1, mockUser as any)).rejects.toThrow(
+        ForbiddenException,
+      );
+    });
+
+    it('本人可以恢復 gathering', async () => {
       gathering.isArchived = true;
       const result = await service.restoreGathering(1, mockUser as any);
       expect(result.gatheringData.isArchived).toBe(false);
     });
 
-    it('closeGathering 會將 status 設為 CLOSED', async () => {
+    it('管理員可以恢復任何 gathering', async () => {
+      gathering.isArchived = true;
+      gathering.userId = 999;
+      const result = await service.restoreGathering(1, mockAdmin as any);
+      expect(result.gatheringData.isArchived).toBe(false);
+    });
+
+    it('非本人且非管理員恢復時拋出 ForbiddenException', async () => {
+      gathering.isArchived = true;
+      gathering.userId = 999;
+      await expect(
+        service.restoreGathering(1, mockUser as any),
+      ).rejects.toThrow(ForbiddenException);
+    });
+
+    it('本人可以關閉 gathering', async () => {
       const result = await service.closeGathering(1, mockUser as any);
       expect(result.gatheringData.status).toBe(GatheringStatus.CLOSED);
+    });
+
+    it('管理員可以關閉任何 gathering', async () => {
+      gathering.userId = 999;
+      const result = await service.closeGathering(1, mockAdmin as any);
+      expect(result.gatheringData.status).toBe(GatheringStatus.CLOSED);
+    });
+
+    it('非本人且非管理員關閉時拋出 ForbiddenException', async () => {
+      gathering.userId = 999;
+      await expect(service.closeGathering(1, mockUser as any)).rejects.toThrow(
+        ForbiddenException,
+      );
     });
 
     it('close 已經 CLOSED 的 gathering 仍會維持 CLOSED（行為規格）', async () => {

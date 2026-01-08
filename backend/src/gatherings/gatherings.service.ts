@@ -224,14 +224,10 @@ export class GatheringsService {
    * 取得指定 id 的聚會
    *
    * @param {number} id 聚會 ID
-   * @param {User} user 取得目前登入的使用者
    * @returns {Promise<{ gatheringData: Gathering }>} 回傳某id的聚會資料
    * @throws {NotFoundException} 若找不到指定id則拋出錯誤
    */
-  async getGatheringById(
-    id: number,
-    user: User,
-  ): Promise<{ gatheringData: Gathering }> {
+  async getGatheringById(id: number): Promise<{ gatheringData: Gathering }> {
     // 查資料庫有沒有這個聚會
     const found = await this.entityManager.findOne(Gathering, id);
 
@@ -240,13 +236,6 @@ export class GatheringsService {
       throw new NotFoundException({
         message: `Gathering with ID "${id}" not found.`,
         code: ErrorCode.NOT_FOUND,
-      });
-    }
-
-    if (user.role !== UserRole.ADMIN && user.id !== found.userId) {
-      throw new ForbiddenException({
-        message: 'You are not authorized to access this gathering.',
-        code: ErrorCode.FORBIDDEN,
       });
     }
 
@@ -334,7 +323,15 @@ export class GatheringsService {
     user: User,
   ): Promise<{ gatheringData: Gathering }> {
     // 先取得聚會（如果找不到會自動丟錯）
-    const { gatheringData } = await this.getGatheringById(id, user);
+    const { gatheringData } = await this.getGatheringById(id);
+
+    // 檢查使用者權限（只有本人或管理員可以更新）
+    if (user.role !== UserRole.ADMIN && user.id !== gatheringData.userId) {
+      throw new ForbiddenException({
+        message: 'You are not authorized to update this gathering.',
+        code: ErrorCode.FORBIDDEN,
+      });
+    }
 
     // 使用partial update
     for (let gatheringDto in updateGatheringDto) {
@@ -370,7 +367,15 @@ export class GatheringsService {
     id: number,
     user: User,
   ): Promise<{ gatheringData: Gathering }> {
-    const { gatheringData } = await this.getGatheringById(id, user);
+    const { gatheringData } = await this.getGatheringById(id);
+
+    // 檢查使用者權限（只有本人或管理員可以刪除）
+    if (user.role !== UserRole.ADMIN && user.id !== gatheringData.userId) {
+      throw new ForbiddenException({
+        message: 'You are not authorized to delete this gathering.',
+        code: ErrorCode.FORBIDDEN,
+      });
+    }
 
     gatheringData.isArchived = true;
     await this.entityManager.persistAndFlush(gatheringData);
@@ -388,7 +393,16 @@ export class GatheringsService {
     id: number,
     user: User,
   ): Promise<{ gatheringData: Gathering }> {
-    const { gatheringData } = await this.getGatheringById(id, user);
+    const { gatheringData } = await this.getGatheringById(id);
+
+    // 檢查使用者權限（只有本人或管理員可以恢復）
+    if (user.role !== UserRole.ADMIN && user.id !== gatheringData.userId) {
+      throw new ForbiddenException({
+        message: 'You are not authorized to restore this gathering.',
+        code: ErrorCode.FORBIDDEN,
+      });
+    }
+
     gatheringData.isArchived = false;
     await this.entityManager.persistAndFlush(gatheringData);
     return { gatheringData: gatheringData };
@@ -405,7 +419,16 @@ export class GatheringsService {
     id: number,
     user: User,
   ): Promise<{ gatheringData: Gathering }> {
-    const { gatheringData } = await this.getGatheringById(id, user);
+    const { gatheringData } = await this.getGatheringById(id);
+
+    // 檢查使用者權限（只有本人或管理員可以關閉）
+    if (user.role !== UserRole.ADMIN && user.id !== gatheringData.userId) {
+      throw new ForbiddenException({
+        message: 'You are not authorized to close this gathering.',
+        code: ErrorCode.FORBIDDEN,
+      });
+    }
+
     gatheringData.status = GatheringStatus.CLOSED;
     await this.entityManager.persistAndFlush(gatheringData);
     return { gatheringData: gatheringData };

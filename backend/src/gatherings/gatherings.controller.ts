@@ -74,8 +74,7 @@ export class GatheringsController {
   /**
    * 取得指定 id 的聚會
    *
-   * @param {number} id 聚會 IUUD
-   * @param {User} user 取得目前登入的使用者
+   * @param {number} id 聚會 ID
    * @returns {Promise<{ gatheringData: Gathering }>} 回傳某id的聚會資料
    */
   @Get('/:id')
@@ -85,9 +84,8 @@ export class GatheringsController {
   })
   getGatheringById(
     @Param('id') id: number,
-    @GetUser() user: User,
   ): Promise<{ gatheringData: Gathering }> {
-    return this.gatheringsService.getGatheringById(id, user);
+    return this.gatheringsService.getGatheringById(id);
   }
 
   /**
