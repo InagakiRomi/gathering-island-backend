@@ -133,11 +133,143 @@ describe('GatheringsService', () => {
    * ============================
    */
   describe('getGatherings', () => {
-    it('一般使用者只能取得自己的 gatherings', async () => {
+    it('取得所有聚會（不限制 userId）', async () => {
       gatheringRepository.count.mockResolvedValue(1);
       gatheringRepository.find.mockResolvedValue([mockGathering()]);
 
-      const result = await service.getGatherings(
+      const result = await service.getGatherings({
+        page: 1,
+        limit: 10,
+        sortBy: 'createdAt',
+        sortOrder: 'DESC',
+      } as any);
+
+      expect(result.gatheringData).toHaveLength(1);
+      expect(result.total).toBe(1);
+    });
+
+    it('tags 不是 array 時拋出 BadRequestException', async () => {
+      await expect(
+        service.getGatherings({
+          page: 1,
+          limit: 10,
+          sortBy: 'createdAt',
+          sortOrder: 'DESC',
+          tags: 'invalid' as any,
+        } as any),
+      ).rejects.toThrow(
+        new BadRequestException({
+          message: `The 'tags' field must be an array.`,
+          code: ErrorCode.BAD_REQUEST,
+        }),
+      );
+    });
+
+    it('tags 為合法 array 但篩選後無結果時回傳空陣列', async () => {
+      gatheringRepository.count.mockResolvedValue(1);
+      gatheringRepository.find.mockResolvedValue([mockGathering()]);
+
+      const result = await service.getGatherings({
+        page: 1,
+        limit: 10,
+        sortBy: 'createdAt',
+        sortOrder: 'DESC',
+        tags: ['non-exist'],
+      } as any);
+
+      expect(result.gatheringData).toHaveLength(0);
+      expect(result.total).toBe(0);
+    });
+
+    it('search 條件會正確組成 $or 查詢', async () => {
+      gatheringRepository.count.mockResolvedValue(0);
+      gatheringRepository.find.mockResolvedValue([]);
+
+      await service.getGatherings({
+        page: 1,
+        limit: 10,
+        sortBy: 'createdAt',
+        sortOrder: 'DESC',
+        search: 'party',
+      } as any);
+
+      expect(gatheringRepository.find).toHaveBeenCalledWith(
+        expect.objectContaining({
+          $or: [
+            { title: { $like: '%party%' } },
+            { description: { $like: '%party%' } },
+          ],
+        }),
+        expect.any(Object),
+      );
+    });
+
+    it('status 篩選正確應用', async () => {
+      gatheringRepository.count.mockResolvedValue(1);
+      gatheringRepository.find.mockResolvedValue([mockGathering()]);
+
+      await service.getGatherings({
+        page: 1,
+        limit: 10,
+        sortBy: 'createdAt',
+        sortOrder: 'DESC',
+        status: GatheringStatus.CLOSED,
+      } as any);
+
+      expect(gatheringRepository.find).toHaveBeenCalledWith(
+        expect.objectContaining({ status: GatheringStatus.CLOSED }),
+        expect.any(Object),
+      );
+    });
+
+    it('type 篩選正確應用', async () => {
+      gatheringRepository.count.mockResolvedValue(1);
+      gatheringRepository.find.mockResolvedValue([mockGathering()]);
+
+      await service.getGatherings({
+        page: 1,
+        limit: 10,
+        sortBy: 'createdAt',
+        sortOrder: 'DESC',
+        type: GatheringType.PARTY,
+      } as any);
+
+      expect(gatheringRepository.find).toHaveBeenCalledWith(
+        expect.objectContaining({ type: GatheringType.PARTY }),
+        expect.any(Object),
+      );
+    });
+
+    it('isArchived 篩選正確應用', async () => {
+      gatheringRepository.count.mockResolvedValue(1);
+      gatheringRepository.find.mockResolvedValue([mockGathering()]);
+
+      await service.getGatherings({
+        page: 1,
+        limit: 10,
+        sortBy: 'createdAt',
+        sortOrder: 'DESC',
+        isArchived: false,
+      } as any);
+
+      expect(gatheringRepository.find).toHaveBeenCalledWith(
+        expect.objectContaining({ isArchived: false }),
+        expect.any(Object),
+      );
+    });
+  });
+
+  /**
+   * ============================
+   * getMyGatherings
+   * ============================
+   */
+  describe('getMyGatherings', () => {
+    it('一般使用者只能取得自己的聚會', async () => {
+      gatheringRepository.count.mockResolvedValue(1);
+      gatheringRepository.find.mockResolvedValue([mockGathering()]);
+
+      const result = await service.getMyGatherings(
         {
           page: 1,
           limit: 10,
@@ -149,13 +281,20 @@ describe('GatheringsService', () => {
 
       expect(result.gatheringData).toHaveLength(1);
       expect(result.total).toBe(1);
+      expect(gatheringRepository.find).toHaveBeenCalledWith(
+        expect.objectContaining({ userId: mockUser }),
+        expect.any(Object),
+      );
     });
 
-    it('管理員可以取得所有 gatherings（不限制 userId）', async () => {
-      gatheringRepository.count.mockResolvedValue(1);
-      gatheringRepository.find.mockResolvedValue([mockGathering()]);
+    it('管理員可以取得所有聚會（不限制 userId）', async () => {
+      gatheringRepository.count.mockResolvedValue(2);
+      gatheringRepository.find.mockResolvedValue([
+        mockGathering(),
+        mockGathering({ id: 2, userId: 999 } as any),
+      ]);
 
-      await service.getGatherings(
+      const result = await service.getMyGatherings(
         {
           page: 1,
           limit: 10,
@@ -165,16 +304,17 @@ describe('GatheringsService', () => {
         mockAdmin as any,
       );
 
-      // 管理員 query 不應該被加上 userId
+      expect(result.gatheringData).toHaveLength(2);
+      // 管理員查詢不應該被加上 userId
       expect(gatheringRepository.find).toHaveBeenCalledWith(
-        {},
+        expect.not.objectContaining({ userId: expect.anything() }),
         expect.any(Object),
       );
     });
 
     it('tags 不是 array 時拋出 BadRequestException', async () => {
       await expect(
-        service.getGatherings(
+        service.getMyGatherings(
           {
             page: 1,
             limit: 10,
@@ -196,7 +336,7 @@ describe('GatheringsService', () => {
       gatheringRepository.count.mockResolvedValue(1);
       gatheringRepository.find.mockResolvedValue([mockGathering()]);
 
-      const result = await service.getGatherings(
+      const result = await service.getMyGatherings(
         {
           page: 1,
           limit: 10,
@@ -215,7 +355,7 @@ describe('GatheringsService', () => {
       gatheringRepository.count.mockResolvedValue(0);
       gatheringRepository.find.mockResolvedValue([]);
 
-      await service.getGatherings(
+      await service.getMyGatherings(
         {
           page: 1,
           limit: 10,
@@ -228,10 +368,83 @@ describe('GatheringsService', () => {
 
       expect(gatheringRepository.find).toHaveBeenCalledWith(
         expect.objectContaining({
+          userId: mockUser,
           $or: [
             { title: { $like: '%party%' } },
             { description: { $like: '%party%' } },
           ],
+        }),
+        expect.any(Object),
+      );
+    });
+
+    it('status 篩選正確應用', async () => {
+      gatheringRepository.count.mockResolvedValue(1);
+      gatheringRepository.find.mockResolvedValue([mockGathering()]);
+
+      await service.getMyGatherings(
+        {
+          page: 1,
+          limit: 10,
+          sortBy: 'createdAt',
+          sortOrder: 'DESC',
+          status: GatheringStatus.CLOSED,
+        } as any,
+        mockUser as any,
+      );
+
+      expect(gatheringRepository.find).toHaveBeenCalledWith(
+        expect.objectContaining({
+          userId: mockUser,
+          status: GatheringStatus.CLOSED,
+        }),
+        expect.any(Object),
+      );
+    });
+
+    it('type 篩選正確應用', async () => {
+      gatheringRepository.count.mockResolvedValue(1);
+      gatheringRepository.find.mockResolvedValue([mockGathering()]);
+
+      await service.getMyGatherings(
+        {
+          page: 1,
+          limit: 10,
+          sortBy: 'createdAt',
+          sortOrder: 'DESC',
+          type: GatheringType.PARTY,
+        } as any,
+        mockUser as any,
+      );
+
+      expect(gatheringRepository.find).toHaveBeenCalledWith(
+        expect.objectContaining({
+          userId: mockUser,
+          type: GatheringType.PARTY,
+        }),
+        expect.any(Object),
+      );
+    });
+
+    it('isArchived 篩選正確應用', async () => {
+      gatheringRepository.count.mockResolvedValue(1);
+      gatheringRepository.find.mockResolvedValue([mockGathering()]);
+
+      await service.getMyGatherings(
+        {
+          page: 1,
+          limit: 10,
+          sortBy: 'createdAt',
+          sortOrder: 'DESC',
+          isArchived: false,
+        } as any,
+        mockUser as any,
+      );
+
+      expect(gatheringRepository.find).toHaveBeenCalledWith(
+        expect.objectContaining({
+          userId: mockUser,
+          isArchived: false,
         }),
         expect.any(Object),
       );
