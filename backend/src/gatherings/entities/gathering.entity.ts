@@ -82,6 +82,7 @@ export class Gathering {
     return {
       // 指定日期欄位格式
       ...this,
+      startTime: dayjs(this.startTime).format('YYYY-MM-DD HH:mm:ss'),
       dueDate: dayjs(this.dueDate).format('YYYY-MM-DD HH:mm:ss'),
       createdAt: dayjs(this.createdAt).format('YYYY-MM-DD HH:mm:ss'),
       updatedAt: dayjs(this.updatedAt).format('YYYY-MM-DD HH:mm:ss'),
