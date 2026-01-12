@@ -53,7 +53,7 @@ export class GatheringsController {
    * @param {User} user 取得目前登入的使用者
    * @returns {Promise<{ items: Gathering[]; page: number; limit: number; total: number }>} 回傳搜尋結果
    */
-  @Get()
+  @Get('my')
   @ApiOperation({
     summary: '取得目前登入使用者創建的聚會',
     description:
