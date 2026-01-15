@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { MikroOrmModule } from '@mikro-orm/nestjs';
+import { ScheduleModule } from '@nestjs/schedule';
 import mikroOrmBaseConfig from '../mikro-orm.config';
 import { GatheringsModule } from './gatherings/gatherings.module';
 import { TagsModule } from './tags/tags.module';
@@ -19,6 +20,9 @@ import { configValidationSchema } from './config/validation';
       envFilePath: [`.env.stage.${process.env.STAGE}`, '.env'],
       validationSchema: configValidationSchema, // 使用 Joi 來驗證環境變數的格式
     }),
+
+    // 定時任務模組
+    ScheduleModule.forRoot(),
 
     MikroOrmModule.forRootAsync({
       imports: [ConfigModule],

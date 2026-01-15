@@ -64,11 +64,6 @@ export class GatheringsService {
     // 建立查詢條件物件，合併基礎查詢條件
     const query: any = { ...baseQuery };
 
-    // 根據聚會結束狀態篩選
-    if (status) {
-      query.status = status;
-    }
-
     // 根據聚會分類篩選
     if (type) {
       query.type = type;
@@ -103,6 +98,21 @@ export class GatheringsService {
     let allGatherings = await this.gatheringRepository.find(query, {
       populate: ['tags'],
     });
+
+    // 動態計算並更新狀態（不寫入資料庫，僅在記憶體中計算）
+    const now = new Date();
+    allGatherings.forEach((gathering) => {
+      const calculatedStatus = gathering.calculateStatus(now);
+      // 臨時更新狀態用於後續過濾和返回，但不持久化到資料庫
+      (gathering as any).status = calculatedStatus;
+    });
+
+    // 根據動態計算的狀態進行篩選（如果用戶傳入了 status 參數）
+    if (status) {
+      allGatherings = allGatherings.filter(
+        (gathering) => gathering.status === status,
+      );
+    }
 
     // 標籤篩選
     if (Array.isArray(tags) && tags.length > 0) {
@@ -202,6 +212,11 @@ export class GatheringsService {
         code: ErrorCode.NOT_FOUND,
       });
     }
+
+    // 動態計算並更新狀態（不寫入資料庫，僅在返回時顯示）
+    const now = new Date();
+    const calculatedStatus = found.calculateStatus(now);
+    (found as any).status = calculatedStatus;
 
     return { gatheringData: found };
   }
@@ -586,5 +601,50 @@ export class GatheringsService {
     };
 
     return this.queryAndFilterGatherings(queryDto, baseQuery);
+  }
+
+  /**
+   * 批量更新聚會狀態
+   * 根據當前時間自動更新所有需要改變狀態的聚會
+   * 此方法用於定時任務，定期更新資料庫中的狀態
+   * 為了效能考量，只查詢必要的欄位，不載入關聯資料
+   *
+   * @param {EntityManager} em 可選的 EntityManager，用於在特定上下文中執行（如排程任務）
+   * @returns {Promise<{ updatedCount: number }>} 回傳更新的筆數
+   */
+  async updateGatheringStatuses(
+    em?: EntityManager,
+  ): Promise<{ updatedCount: number }> {
+    const now = new Date();
+    const entityManager = em || this.entityManager;
+    const gatheringRepository = em
+      ? em.getRepository(Gathering)
+      : this.gatheringRepository;
+
+    // 查詢所有未封存的聚會（不載入 tags 以提升效能）
+    const gatherings = await gatheringRepository.find({
+      isArchived: false,
+    });
+
+    let updatedCount = 0;
+
+    // 批量更新需要改變狀態的聚會
+    for (const gathering of gatherings) {
+      const calculatedStatus = gathering.calculateStatus(now);
+
+      // 如果計算出的狀態與資料庫中的狀態不同，則更新
+      if (gathering.status !== calculatedStatus) {
+        gathering.status = calculatedStatus;
+        updatedCount++;
+      }
+    }
+
+    // 如果有更新，則批量寫入資料庫
+    if (updatedCount > 0) {
+      await entityManager.flush();
+      this.logger.log(`已批量更新 ${updatedCount} 筆聚會狀態`);
+    }
+
+    return { updatedCount };
   }
 }
