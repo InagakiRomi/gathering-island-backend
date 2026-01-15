@@ -34,105 +34,15 @@ export class GatheringsService {
   ) {}
 
   /**
-   * 查詢已有聚會
+   * 統一的查詢、篩選、排序和分頁邏輯
    *
    * @param {GetGatheringsQueryDto} queryDto 查詢參數 DTO
-   * @returns {Promise<{ gatheringData: Gathering }>} 回傳搜尋結果
+   * @param {any} baseQuery 基礎查詢條件
+   * @returns {Promise<{ gatheringData: Gathering[]; page: number; limit: number; total: number }>} 回傳搜尋結果
    */
-  async getGatherings(queryDto: GetGatheringsQueryDto): Promise<{
-    gatheringData: Gathering[];
-    page: number;
-    limit: number;
-    total: number;
-  }> {
-    const {
-      page,
-      limit,
-      sortBy,
-      sortOrder,
-      status,
-      type,
-      isArchived,
-      search,
-      tags,
-    } = queryDto;
-
-    // 建立查詢條件物件
-    const query: any = {};
-
-    // 根據聚會結束狀態篩選
-    if (status) {
-      query.status = status;
-    }
-
-    // 根據聚會分類篩選
-    if (type) {
-      query.type = type;
-    }
-
-    // 根據封存狀態篩選
-    if (typeof isArchived === 'boolean') {
-      query.isArchived = isArchived;
-    }
-
-    // 根據關鍵字模糊搜尋 title 或 description（不區分大小寫）
-    if (search?.trim()) {
-      query.$or = [
-        { title: { $like: `%${search}%` } },
-        { description: { $like: `%${search}%` } },
-      ];
-    }
-
-    // 保證 tags 是陣列格式，如果不是就報錯
-    if (tags && !Array.isArray(tags)) {
-      this.logger.warn(
-        `The 'tags' field is not an array. Received: ${JSON.stringify(tags)}`,
-      );
-
-      throw new BadRequestException({
-        message: `The 'tags' field must be an array.`,
-        code: ErrorCode.BAD_REQUEST,
-      });
-    }
-
-    // 計算撈出的資料數量
-    let total = await this.gatheringRepository.count(query);
-
-    // 查詢資料並載入關聯 tags
-    let gatherings = await this.gatheringRepository.find(query, {
-      populate: ['tags'],
-      orderBy: { [sortBy]: sortOrder.toLowerCase() },
-      limit,
-      offset: (page - 1) * limit,
-    });
-
-    // 標籤篩選
-    if (Array.isArray(tags) && tags.length > 0) {
-      gatherings = gatherings.filter((gathering) => {
-        // 把每個陣列轉成字串
-        const tagNames = gathering.tags.map((tag) => tag.tagName);
-
-        // 回傳篩選過後的項目
-        return tags.every((tag) => new Set(tagNames).has(tag));
-      });
-    }
-
-    // 計算過濾tag後的資料數量
-    total = gatherings.length;
-
-    return { gatheringData: gatherings, page, limit, total };
-  }
-
-  /**
-   * 取得目前登入使用者創建的聚會
-   *
-   * @param {GetGatheringsQueryDto} queryDto 查詢參數 DTO
-   * @param {User} user 取得目前登入的使用者
-   * @returns {Promise<{ gatheringData: Gathering }>} 回傳搜尋結果
-   */
-  async getMyGatherings(
+  private async queryAndFilterGatherings(
     queryDto: GetGatheringsQueryDto,
-    user: User,
+    baseQuery: any = {},
   ): Promise<{
     gatheringData: Gathering[];
     page: number;
@@ -151,13 +61,8 @@ export class GatheringsService {
       tags,
     } = queryDto;
 
-    // 建立查詢條件物件
-    const query: any = {};
-
-    // 一般使用者只能看到自己的 gathering
-    if (user.role !== UserRole.ADMIN) {
-      query.userId = user;
-    }
+    // 建立查詢條件物件，合併基礎查詢條件
+    const query: any = { ...baseQuery };
 
     // 根據聚會結束狀態篩選
     if (status) {
@@ -194,20 +99,14 @@ export class GatheringsService {
       });
     }
 
-    // 計算撈出的資料數量
-    let total = await this.gatheringRepository.count(query);
-
-    // 查詢資料並載入關聯 tags
-    let gatherings = await this.gatheringRepository.find(query, {
+    // 查詢所有資料並載入關聯 tags（不分頁，用於計算總數和 tags 篩選）
+    let allGatherings = await this.gatheringRepository.find(query, {
       populate: ['tags'],
-      orderBy: { [sortBy]: sortOrder.toLowerCase() },
-      limit,
-      offset: (page - 1) * limit,
     });
 
     // 標籤篩選
     if (Array.isArray(tags) && tags.length > 0) {
-      gatherings = gatherings.filter((gathering) => {
+      allGatherings = allGatherings.filter((gathering) => {
         // 把每個陣列轉成字串
         const tagNames = gathering.tags.map((tag) => tag.tagName);
 
@@ -216,10 +115,62 @@ export class GatheringsService {
       });
     }
 
-    // 計算過濾tag後的資料數量
-    total = gatherings.length;
+    // 計算過濾後的總數
+    const total = allGatherings.length;
+
+    // 排序並分頁
+    const sortedGatherings = allGatherings.sort((a, b) => {
+      const aValue = (a as any)[sortBy];
+      const bValue = (b as any)[sortBy];
+      const comparison = aValue < bValue ? -1 : aValue > bValue ? 1 : 0;
+      return sortOrder.toLowerCase() === 'desc' ? -comparison : comparison;
+    });
+
+    const gatherings = sortedGatherings.slice((page - 1) * limit, page * limit);
 
     return { gatheringData: gatherings, page, limit, total };
+  }
+
+  /**
+   * 查詢已有聚會
+   *
+   * @param {GetGatheringsQueryDto} queryDto 查詢參數 DTO
+   * @returns {Promise<{ gatheringData: Gathering }>} 回傳搜尋結果
+   */
+  async getGatherings(queryDto: GetGatheringsQueryDto): Promise<{
+    gatheringData: Gathering[];
+    page: number;
+    limit: number;
+    total: number;
+  }> {
+    return this.queryAndFilterGatherings(queryDto);
+  }
+
+  /**
+   * 取得目前登入使用者創建的聚會
+   *
+   * @param {GetGatheringsQueryDto} queryDto 查詢參數 DTO
+   * @param {User} user 取得目前登入的使用者
+   * @returns {Promise<{ gatheringData: Gathering }>} 回傳搜尋結果
+   */
+  async getMyGatherings(
+    queryDto: GetGatheringsQueryDto,
+    user: User,
+  ): Promise<{
+    gatheringData: Gathering[];
+    page: number;
+    limit: number;
+    total: number;
+  }> {
+    // 建立基礎查詢條件
+    const baseQuery: any = {};
+
+    // 一般使用者只能看到自己的 gathering
+    if (user.role !== UserRole.ADMIN) {
+      baseQuery.userId = user;
+    }
+
+    return this.queryAndFilterGatherings(queryDto, baseQuery);
   }
 
   /**
@@ -606,18 +557,6 @@ export class GatheringsService {
     limit: number;
     total: number;
   }> {
-    const {
-      page,
-      limit,
-      sortBy,
-      sortOrder,
-      status,
-      type,
-      isArchived,
-      search,
-      tags,
-    } = queryDto;
-
     // 檢查使用者 id 是否存在
     if (!user.id) {
       throw new BadRequestException({
@@ -637,74 +576,15 @@ export class GatheringsService {
 
     // 如果沒有參與任何活動，直接回傳空結果
     if (gatheringIds.length === 0) {
+      const { page, limit } = queryDto;
       return { gatheringData: [], page, limit, total: 0 };
     }
 
-    // 建立查詢條件物件
-    const query: any = {
+    // 建立基礎查詢條件
+    const baseQuery: any = {
       id: { $in: gatheringIds },
     };
 
-    // 根據聚會結束狀態篩選
-    if (status) {
-      query.status = status;
-    }
-
-    // 根據聚會分類篩選
-    if (type) {
-      query.type = type;
-    }
-
-    // 根據封存狀態篩選
-    if (typeof isArchived === 'boolean') {
-      query.isArchived = isArchived;
-    }
-
-    // 根據關鍵字模糊搜尋 title 或 description（不區分大小寫）
-    if (search?.trim()) {
-      query.$or = [
-        { title: { $like: `%${search}%` } },
-        { description: { $like: `%${search}%` } },
-      ];
-    }
-
-    // 保證 tags 是陣列格式，如果不是就報錯
-    if (tags && !Array.isArray(tags)) {
-      this.logger.warn(
-        `The 'tags' field is not an array. Received: ${JSON.stringify(tags)}`,
-      );
-
-      throw new BadRequestException({
-        message: `The 'tags' field must be an array.`,
-        code: ErrorCode.BAD_REQUEST,
-      });
-    }
-
-    // 計算撈出的資料數量
-    let total = await this.gatheringRepository.count(query);
-
-    // 查詢資料並載入關聯 tags
-    let gatherings = await this.gatheringRepository.find(query, {
-      populate: ['tags'],
-      orderBy: { [sortBy]: sortOrder.toLowerCase() },
-      limit,
-      offset: (page - 1) * limit,
-    });
-
-    // 標籤篩選
-    if (Array.isArray(tags) && tags.length > 0) {
-      gatherings = gatherings.filter((gathering) => {
-        // 把每個陣列轉成字串
-        const tagNames = gathering.tags.map((tag) => tag.tagName);
-
-        // 回傳篩選過後的項目
-        return tags.every((tag) => new Set(tagNames).has(tag));
-      });
-    }
-
-    // 計算過濾tag後的資料數量
-    total = gatherings.length;
-
-    return { gatheringData: gatherings, page, limit, total };
+    return this.queryAndFilterGatherings(queryDto, baseQuery);
   }
 }

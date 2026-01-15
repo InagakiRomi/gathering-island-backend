@@ -1208,11 +1208,21 @@ describe('GatheringsService', () => {
     });
 
     it('分頁參數正確應用', async () => {
-      entityManager.find.mockResolvedValue([participant1 as any]);
-      gatheringRepository.count.mockResolvedValue(1);
-      gatheringRepository.find.mockResolvedValue([gathering1]);
+      // 創建多個 gatherings 來測試分頁
+      const gatherings = Array.from({ length: 10 }, (_, i) =>
+        mockGathering({
+          id: i + 1,
+          createdAt: new Date(2024, 0, i + 1), // 不同的日期用於排序
+        }),
+      );
+      const participants = gatherings.map((g, i) =>
+        mockParticipant({ id: i + 1, gathering: g }),
+      );
 
-      await service.getParticipatedGatherings(
+      entityManager.find.mockResolvedValue(participants as any);
+      gatheringRepository.find.mockResolvedValue(gatherings);
+
+      const result = await service.getParticipatedGatherings(
         {
           page: 2,
           limit: 5,
@@ -1222,12 +1232,16 @@ describe('GatheringsService', () => {
         mockUser as any,
       );
 
+      // 驗證分頁結果：第 2 頁應該有 5 筆資料（索引 5-9）
+      expect(result.gatheringData).toHaveLength(5);
+      expect(result.page).toBe(2);
+      expect(result.limit).toBe(5);
+      expect(result.total).toBe(10);
+      // 驗證查詢時沒有使用 limit 和 offset（因為現在在記憶體中分頁）
       expect(gatheringRepository.find).toHaveBeenCalledWith(
         expect.any(Object),
         expect.objectContaining({
-          limit: 5,
-          offset: 5, // (page - 1) * limit = (2 - 1) * 5 = 5
-          orderBy: { createdAt: 'asc' },
+          populate: ['tags'],
         }),
       );
     });
