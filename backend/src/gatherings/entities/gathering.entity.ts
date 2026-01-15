@@ -55,7 +55,7 @@ export class Gathering {
 
   /** 報名截止日期 */
   @Property({ defaultRaw: `'2099-12-31 23:59:59'` })
-  dueDate: Date;
+  deadline: Date;
 
   /** 標籤 */
   @ManyToMany(() => Tag, (tag) => tag.gatherings, { owner: true, eager: true })
@@ -83,7 +83,7 @@ export class Gathering {
       // 指定日期欄位格式
       ...this,
       startTime: dayjs(this.startTime).format('YYYY-MM-DD HH:mm:ss'),
-      dueDate: dayjs(this.dueDate).format('YYYY-MM-DD HH:mm:ss'),
+      deadline: dayjs(this.deadline).format('YYYY-MM-DD HH:mm:ss'),
       createdAt: dayjs(this.createdAt).format('YYYY-MM-DD HH:mm:ss'),
       updatedAt: dayjs(this.updatedAt).format('YYYY-MM-DD HH:mm:ss'),
 

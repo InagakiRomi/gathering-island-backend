@@ -58,7 +58,7 @@ export class UpdateGatheringDto {
     description: '報名截止日期 (ISO 8601 格式)',
   })
   @IsOptional()
-  dueDate: Date;
+  deadline: Date;
 
   /** 標籤 */
   @ApiPropertyOptional({

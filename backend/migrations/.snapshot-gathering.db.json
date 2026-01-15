@@ -107,8 +107,8 @@
           "default": "'2099-12-25 00:00:00'",
           "mappedType": "datetime"
         },
-        "dueDate": {
-          "name": "dueDate",
+        "deadline": {
+          "name": "deadline",
           "type": "datetime",
           "unsigned": false,
           "autoincrement": false,

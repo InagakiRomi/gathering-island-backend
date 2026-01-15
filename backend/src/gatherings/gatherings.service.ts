@@ -226,7 +226,7 @@ export class GatheringsService {
       price,
       type,
       startTime,
-      dueDate,
+      deadline,
       tags,
     } = createGatheringDto;
 
@@ -251,7 +251,7 @@ export class GatheringsService {
       status: GatheringStatus.OPEN,
       type: type ?? GatheringType.PARTY,
       startTime: startTime,
-      dueDate: dueDate ?? null,
+      deadline: deadline ?? null,
       isArchived: false,
       createdAt: now,
       updatedAt: now,
@@ -441,7 +441,7 @@ export class GatheringsService {
 
     // 檢查報名截止日期
     const now = new Date();
-    if (gatheringData.dueDate && new Date(gatheringData.dueDate) < now) {
+    if (gatheringData.deadline && new Date(gatheringData.deadline) < now) {
       throw new BadRequestException({
         message: 'The registration deadline has passed.',
         code: ErrorCode.BAD_REQUEST,

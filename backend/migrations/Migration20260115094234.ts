@@ -1,9 +1,9 @@
 import { Migration } from '@mikro-orm/migrations';
 
-export class Migration20251223093547 extends Migration {
+export class Migration20260115094234 extends Migration {
 
   override async up(): Promise<void> {
-    this.addSql(`create table \`Gathering\` (\`id\` integer not null primary key autoincrement, \`userId\` integer not null, \`title\` text not null, \`description\` text not null default '', \`location\` text not null, \`participantNumbers\` integer not null, \`price\` integer not null, \`status\` text not null default 'OPEN', \`type\` text not null default 'PARTY', \`startTime\` datetime not null default '2099-12-25 00:00:00', \`dueDate\` datetime not null default '2099-12-31 23:59:59', \`isArchived\` integer not null default false, \`createdAt\` datetime not null, \`updatedAt\` datetime not null);`);
+    this.addSql(`create table \`Gathering\` (\`id\` integer not null primary key autoincrement, \`userId\` integer not null, \`title\` text not null, \`description\` text not null default '', \`location\` text not null, \`participantNumbers\` integer not null, \`price\` integer not null, \`status\` text not null default 'OPEN', \`type\` text not null default 'PARTY', \`startTime\` datetime not null default '2099-12-25 00:00:00', \`deadline\` datetime not null default '2099-12-31 23:59:59', \`isArchived\` integer not null default false, \`createdAt\` datetime not null, \`updatedAt\` datetime not null);`);
     this.addSql(`create index \`Gathering_updatedAt_index\` on \`Gathering\` (\`updatedAt\`);`);
 
     this.addSql(`create table \`Tag\` (\`id\` integer not null primary key autoincrement, \`tagName\` text not null);`);
@@ -16,6 +16,11 @@ export class Migration20251223093547 extends Migration {
     this.addSql(`create table \`User\` (\`id\` integer not null primary key autoincrement, \`email\` text not null, \`passwordHash\` text not null, \`refreshTokenHash\` text not null default '', \`displayName\` text not null, \`role\` text not null default 'user', \`createdAt\` datetime not null, \`updatedAt\` datetime not null);`);
     this.addSql(`create unique index \`User_email_unique\` on \`User\` (\`email\`);`);
     this.addSql(`create index \`User_updatedAt_index\` on \`User\` (\`updatedAt\`);`);
+
+    this.addSql(`create table \`Participant\` (\`id\` integer not null primary key autoincrement, \`gathering\` integer not null, \`user\` integer not null, \`joinedAt\` datetime not null, constraint \`Participant_gathering_foreign\` foreign key(\`gathering\`) references \`Gathering\`(\`id\`) on update cascade, constraint \`Participant_user_foreign\` foreign key(\`user\`) references \`User\`(\`id\`) on update cascade);`);
+    this.addSql(`create index \`Participant_gathering_index\` on \`Participant\` (\`gathering\`);`);
+    this.addSql(`create index \`Participant_user_index\` on \`Participant\` (\`user\`);`);
+    this.addSql(`create unique index \`Participant_gathering_user_unique\` on \`Participant\` (\`gathering\`, \`user\`);`);
   }
 
 }

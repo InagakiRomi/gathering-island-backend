@@ -16,7 +16,7 @@ export enum GatheringSortBy {
   START_TIME = 'startTime',
 
   /** 報名截止日期 */
-  DUE_DATE = 'dueDate',
+  DEADLINE = 'deadline',
 
   /** 創建日期 */
   CREATED_AT = 'createdAt',

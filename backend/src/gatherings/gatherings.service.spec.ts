@@ -70,7 +70,7 @@ const mockGathering = (
     status: GatheringStatus.OPEN,
     type: GatheringType.PARTY,
     startTime: new Date(),
-    dueDate: null,
+    deadline: null,
     isArchived: false,
     createdAt: new Date(),
     updatedAt: new Date(),
@@ -91,7 +91,7 @@ const mockGathering = (
       status: GatheringStatus.OPEN,
       type: GatheringType.PARTY,
       startTime: new Date().toISOString(),
-      dueDate: null,
+      deadline: null,
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
       tags: ['music', 'food'],
@@ -737,7 +737,7 @@ describe('GatheringsService', () => {
         participantNumbers: 10,
         status: GatheringStatus.OPEN,
         isArchived: false,
-        dueDate: null as any,
+        deadline: null as any,
       });
       participant = mockParticipant() as Participant;
 
@@ -805,7 +805,7 @@ describe('GatheringsService', () => {
     it('報名截止日期已過時拋出 BadRequestException', async () => {
       const pastDate = new Date();
       pastDate.setDate(pastDate.getDate() - 1); // 昨天
-      gathering.dueDate = pastDate;
+      gathering.deadline = pastDate;
 
       await expect(service.joinGathering(1, mockUser as any)).rejects.toThrow(
         new BadRequestException({
@@ -818,7 +818,7 @@ describe('GatheringsService', () => {
     it('報名截止日期未過時可以報名', async () => {
       const futureDate = new Date();
       futureDate.setDate(futureDate.getDate() + 1); // 明天
-      gathering.dueDate = futureDate;
+      gathering.deadline = futureDate;
 
       entityManager.findOne.mockResolvedValue(null);
       entityManager.count.mockResolvedValue(5);
@@ -878,7 +878,7 @@ describe('GatheringsService', () => {
     });
 
     it('沒有設定報名截止日期時可以報名', async () => {
-      (gathering as any).dueDate = null;
+      (gathering as any).deadline = null;
       entityManager.findOne.mockResolvedValue(null);
       entityManager.count.mockResolvedValue(5);
       entityManager.create.mockReturnValue(participant);

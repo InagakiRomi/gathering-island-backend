@@ -1,5 +1,5 @@
 INSERT INTO "Gathering"
-("id", "userId", "title", "description", "location", "participantNumbers", "price", "status", "type", "startTime", "dueDate", "isArchived", "createdAt", "updatedAt") VALUES
+("id", "userId", "title", "description", "location", "participantNumbers", "price", "status", "type", "startTime", "deadline", "isArchived", "createdAt", "updatedAt") VALUES
 (1, 4, '啤酒節生死鬥', '去年被灌到回不了家，今年打算吃東西為主，誰要來幫顧戰力。', '彩虹縣晴夢市繽紛街 12 巷 6 號', 30, 0, 'CLOSED', 'FOOD', '2025-01-22 12:00:00', '2025-01-19 12:00:00', FALSE, '2025-01-09 12:00:00', '2025-01-09 12:00:00'),
 (2, 5, '花蓮旅遊但會累爆', '有點後悔自己排這麼滿的行程，但錢都繳了只能硬著頭皮揪人了。', '幻月縣霜影市月華路 377 號', 50, 5400, 'CLOSED', 'TRAVEL', '2025-02-11 11:00:00', '2025-02-08 11:00:00', FALSE, '2025-01-19 11:00:00', '2025-01-19 11:00:00'),
 (3, 6, '部門耶誕交換禮物', '我們部門自己辦的，可以帶朋友來！但先說活動很吵XD', '青風縣翡翠市清泉街 5 巷 19 號', 30, 300, 'CLOSED', 'PARTY', '2025-03-12 16:00:00', '2025-03-09 16:00:00', FALSE, '2025-02-16 16:00:00', '2025-02-16 16:00:00'),
