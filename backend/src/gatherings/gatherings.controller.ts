@@ -5,12 +5,14 @@ import {
   Get,
   Logger,
   Param,
+  ParseIntPipe,
   Patch,
   Post,
   Query,
 } from '@nestjs/common';
 import { GatheringsService } from './gatherings.service';
 import { Gathering } from './entities/gathering.entity';
+import { Participant } from './entities/participant.entity';
 import { CreateGatheringDto } from './dto/create-gathering-dto';
 import { UpdateGatheringDto } from './dto/update-gathering-dto';
 import { GetGatheringsQueryDto } from './dto/get-gatherings-query.dto';
@@ -72,6 +74,30 @@ export class GatheringsController {
   }
 
   /**
+   * 取得目前登入使用者已參加的活動
+   *
+   * @param {GetGatheringsQueryDto} queryDto 查詢參數 DTO
+   * @param {User} user 取得目前登入的使用者
+   * @returns {Promise<{ gatheringData: Gathering[]; page: number; limit: number; total: number }>} 回傳搜尋結果
+   */
+  @Get('participated')
+  @ApiOperation({
+    summary: '查詢已參加的活動',
+    description: '取得目前登入使用者已報名參加的所有活動清單',
+  })
+  getParticipatedGatherings(
+    @Query() queryDto: GetGatheringsQueryDto,
+    @GetUser() user: User,
+  ): Promise<{
+    gatheringData: Gathering[];
+    page: number;
+    limit: number;
+    total: number;
+  }> {
+    return this.gatheringsService.getParticipatedGatherings(queryDto, user);
+  }
+
+  /**
    * 取得指定 id 的聚會
    *
    * @param {number} id 聚會 ID
@@ -83,7 +109,7 @@ export class GatheringsController {
     description: '透過指定的聚會 ID，取得該筆聚會的詳細資料',
   })
   getGatheringById(
-    @Param('id') id: number,
+    @Param('id', ParseIntPipe) id: number,
   ): Promise<{ gatheringData: Gathering }> {
     return this.gatheringsService.getGatheringById(id);
   }
@@ -162,7 +188,7 @@ export class GatheringsController {
     },
   })
   updateGathering(
-    @Param('id') id: number, // 從網址中的 :id 取得聚會 ID
+    @Param('id', ParseIntPipe) id: number, // 從網址中的 :id 取得聚會 ID
     @Body() updateGatheringDto: UpdateGatheringDto,
     @GetUser() user: User,
   ): Promise<{ gatheringData: Gathering }> {
@@ -183,7 +209,7 @@ export class GatheringsController {
     description: '使用聚會 ID 將該筆資料標記為已刪除（不會實際刪除資料）',
   })
   deleteGathering(
-    @Param('id') id: number,
+    @Param('id', ParseIntPipe) id: number,
     @GetUser() user: User,
   ): Promise<{ gatheringData: Gathering }> {
     return this.gatheringsService.deleteGathering(id, user);
@@ -202,7 +228,7 @@ export class GatheringsController {
     description: '透過 ID 恢復先前軟刪除的聚會資料',
   })
   restoreGathering(
-    @Param('id') id: number,
+    @Param('id', ParseIntPipe) id: number,
     @GetUser() user: User,
   ): Promise<{ gatheringData: Gathering }> {
     return this.gatheringsService.restoreGathering(id, user);
@@ -221,9 +247,32 @@ export class GatheringsController {
     description: '透過 ID 將指定的聚會標記為結束狀態',
   })
   closeGathering(
-    @Param('id') id: number,
+    @Param('id', ParseIntPipe) id: number,
     @GetUser() user: User,
   ): Promise<{ gatheringData: Gathering }> {
     return this.gatheringsService.closeGathering(id, user);
   }
+
+  /**
+   * 報名參加活動
+   *
+   * @param {number} id 活動 ID
+   * @param {User} user 取得目前登入的使用者
+   * @returns {Promise<{ participantData: Participant }>} 回傳報名資料
+   */
+  @Post(':id/join')
+  @ApiOperation({
+    summary: '報名參加活動',
+    description: '報名參加指定的活動，系統會檢查活動狀態、報名截止日期和參與人數上限',
+  })
+  joinGathering(
+    @Param('id', ParseIntPipe) id: number,
+    @GetUser() user: User,
+  ): Promise<{ participantData: Participant }> {
+    this.logger.verbose(
+      `User "${user.displayName}" joining gathering with ID: ${id}`,
+    );
+    return this.gatheringsService.joinGathering(id, user);
+  }
+
 }

@@ -438,6 +438,122 @@
       "checks": [],
       "foreignKeys": {},
       "nativeEnums": {}
+    },
+    {
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "integer",
+          "unsigned": false,
+          "autoincrement": true,
+          "primary": true,
+          "nullable": false,
+          "length": null,
+          "mappedType": "integer"
+        },
+        "gathering": {
+          "name": "gathering",
+          "type": "integer",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "length": null,
+          "mappedType": "integer"
+        },
+        "user": {
+          "name": "user",
+          "type": "integer",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "length": null,
+          "mappedType": "integer"
+        },
+        "joinedAt": {
+          "name": "joinedAt",
+          "type": "datetime",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "length": null,
+          "mappedType": "datetime"
+        }
+      },
+      "name": "Participant",
+      "indexes": [
+        {
+          "columnNames": [
+            "gathering"
+          ],
+          "composite": false,
+          "keyName": "Participant_gathering_index",
+          "constraint": false,
+          "primary": false,
+          "unique": false
+        },
+        {
+          "columnNames": [
+            "user"
+          ],
+          "composite": false,
+          "keyName": "Participant_user_index",
+          "constraint": false,
+          "primary": false,
+          "unique": false
+        },
+        {
+          "keyName": "Participant_gathering_user_unique",
+          "columnNames": [
+            "gathering",
+            "user"
+          ],
+          "composite": true,
+          "constraint": true,
+          "primary": false,
+          "unique": true
+        },
+        {
+          "keyName": "primary",
+          "columnNames": [
+            "id"
+          ],
+          "composite": false,
+          "constraint": true,
+          "primary": true,
+          "unique": true
+        }
+      ],
+      "checks": [],
+      "foreignKeys": {
+        "Participant_gathering_foreign": {
+          "constraintName": "Participant_gathering_foreign",
+          "columnNames": [
+            "gathering"
+          ],
+          "localTableName": "Participant",
+          "referencedColumnNames": [
+            "id"
+          ],
+          "referencedTableName": "Gathering",
+          "updateRule": "cascade"
+        },
+        "Participant_user_foreign": {
+          "constraintName": "Participant_user_foreign",
+          "columnNames": [
+            "user"
+          ],
+          "localTableName": "Participant",
+          "referencedColumnNames": [
+            "id"
+          ],
+          "referencedTableName": "User",
+          "updateRule": "cascade"
+        }
+      },
+      "nativeEnums": {}
     }
   ],
   "nativeEnums": {}

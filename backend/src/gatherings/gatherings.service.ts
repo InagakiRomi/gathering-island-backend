@@ -18,6 +18,8 @@ import { Tag } from '../tags/entities/tag.entity';
 import { User } from 'src/users/entities/user.entity';
 import { UserRole } from 'src/users/enum/auth.role';
 import { ErrorCode } from 'src/common/enum/error-code.enum';
+import { Participant } from './entities/participant.entity';
+import { ConflictException } from '@nestjs/common';
 
 /** 聚會 Service */
 @Injectable()
@@ -226,10 +228,21 @@ export class GatheringsService {
    * @param {number} id 聚會 ID
    * @returns {Promise<{ gatheringData: Gathering }>} 回傳某id的聚會資料
    * @throws {NotFoundException} 若找不到指定id則拋出錯誤
+   * @throws {BadRequestException} 若 ID 無效則拋出錯誤
    */
   async getGatheringById(id: number): Promise<{ gatheringData: Gathering }> {
+    // 驗證 ID 是否為有效數字
+    if (!id || isNaN(id) || id <= 0 || !Number.isInteger(id)) {
+      throw new BadRequestException({
+        message: `Invalid gathering ID: "${id}". ID must be a positive integer.`,
+        code: ErrorCode.BAD_REQUEST,
+      });
+    }
+
     // 查資料庫有沒有這個聚會
-    const found = await this.entityManager.findOne(Gathering, id);
+    const found = await this.entityManager.findOne(Gathering, id, {
+      populate: ['tags'],
+    });
 
     // 如果沒有跳出錯誤
     if (!found) {
@@ -432,5 +445,221 @@ export class GatheringsService {
     gatheringData.status = GatheringStatus.CLOSED;
     await this.entityManager.persistAndFlush(gatheringData);
     return { gatheringData: gatheringData };
+  }
+
+  /**
+   * 報名參加活動
+   *
+   * @param {number} gatheringId 活動 ID
+   * @param {User} user 取得目前登入的使用者
+   * @returns {Promise<{ participantData: Participant }>} 回傳報名資料
+   * @throws {NotFoundException} 若找不到指定活動則拋出錯誤
+   * @throws {ConflictException} 若已經報名過則拋出錯誤
+   * @throws {BadRequestException} 若活動已關閉、已過期或已達人數上限則拋出錯誤
+   */
+  async joinGathering(
+    gatheringId: number,
+    user: User,
+  ): Promise<{ participantData: Participant }> {
+    // 檢查使用者 id 是否存在
+    if (!user.id) {
+      throw new BadRequestException({
+        message: 'User ID is missing.',
+        code: ErrorCode.BAD_REQUEST,
+      });
+    }
+
+    // 取得活動資料
+    const { gatheringData } = await this.getGatheringById(gatheringId);
+
+    // 檢查活動是否已封存
+    if (gatheringData.isArchived) {
+      throw new BadRequestException({
+        message: 'This gathering has been archived.',
+        code: ErrorCode.BAD_REQUEST,
+      });
+    }
+
+    // 檢查活動狀態是否為關閉
+    if (gatheringData.status === GatheringStatus.CLOSED) {
+      throw new BadRequestException({
+        message: 'This gathering is already closed.',
+        code: ErrorCode.BAD_REQUEST,
+      });
+    }
+
+    // 檢查報名截止日期
+    const now = new Date();
+    if (gatheringData.dueDate && new Date(gatheringData.dueDate) < now) {
+      throw new BadRequestException({
+        message: 'The registration deadline has passed.',
+        code: ErrorCode.BAD_REQUEST,
+      });
+    }
+
+    // 檢查是否已經報名過
+    const existingParticipant = await this.entityManager.findOne(Participant, {
+      gathering: gatheringData.id,
+      user: user.id,
+    });
+
+    if (existingParticipant) {
+      throw new ConflictException({
+        message: 'You have already joined this gathering.',
+        code: ErrorCode.CONFLICT,
+      });
+    }
+
+    // 檢查是否為活動創建者（創建者不需要報名）
+    if (gatheringData.userId === user.id) {
+      throw new BadRequestException({
+        message:
+          'You are the creator of this gathering and cannot join as a participant.',
+        code: ErrorCode.BAD_REQUEST,
+      });
+    }
+
+    // 計算目前參與人數
+    const currentParticipantCount = await this.entityManager.count(
+      Participant,
+      { gathering: gatheringData.id },
+    );
+
+    // 檢查是否已達人數上限
+    if (currentParticipantCount >= gatheringData.participantNumbers) {
+      throw new BadRequestException({
+        message:
+          'This gathering has reached the maximum number of participants.',
+        code: ErrorCode.BAD_REQUEST,
+      });
+    }
+
+    // 建立參與者記錄
+    const participant = this.entityManager.create(Participant, {
+      gathering: gatheringData,
+      user: user,
+      joinedAt: now,
+    });
+
+    await this.entityManager.persistAndFlush(participant);
+    return { participantData: participant };
+  }
+
+  /**
+   * 取得目前登入使用者已參加的活動
+   *
+   * @param {GetGatheringsQueryDto} queryDto 查詢參數 DTO
+   * @param {User} user 取得目前登入的使用者
+   * @returns {Promise<{ gatheringData: Gathering[]; page: number; limit: number; total: number }>} 回傳搜尋結果
+   */
+  async getParticipatedGatherings(
+    queryDto: GetGatheringsQueryDto,
+    user: User,
+  ): Promise<{
+    gatheringData: Gathering[];
+    page: number;
+    limit: number;
+    total: number;
+  }> {
+    const {
+      page,
+      limit,
+      sortBy,
+      sortOrder,
+      status,
+      type,
+      isArchived,
+      search,
+      tags,
+    } = queryDto;
+
+    // 檢查使用者 id 是否存在
+    if (!user.id) {
+      throw new BadRequestException({
+        message: 'User ID is missing.',
+        code: ErrorCode.BAD_REQUEST,
+      });
+    }
+
+    // 取得該用戶參與的所有活動ID
+    const participants = await this.entityManager.find(
+      Participant,
+      { user: user.id },
+      { populate: ['gathering'] },
+    );
+
+    const gatheringIds = participants.map((p) => p.gathering.id);
+
+    // 如果沒有參與任何活動，直接回傳空結果
+    if (gatheringIds.length === 0) {
+      return { gatheringData: [], page, limit, total: 0 };
+    }
+
+    // 建立查詢條件物件
+    const query: any = {
+      id: { $in: gatheringIds },
+    };
+
+    // 根據聚會結束狀態篩選
+    if (status) {
+      query.status = status;
+    }
+
+    // 根據聚會分類篩選
+    if (type) {
+      query.type = type;
+    }
+
+    // 根據封存狀態篩選
+    if (typeof isArchived === 'boolean') {
+      query.isArchived = isArchived;
+    }
+
+    // 根據關鍵字模糊搜尋 title 或 description（不區分大小寫）
+    if (search?.trim()) {
+      query.$or = [
+        { title: { $like: `%${search}%` } },
+        { description: { $like: `%${search}%` } },
+      ];
+    }
+
+    // 保證 tags 是陣列格式，如果不是就報錯
+    if (tags && !Array.isArray(tags)) {
+      this.logger.warn(
+        `The 'tags' field is not an array. Received: ${JSON.stringify(tags)}`,
+      );
+
+      throw new BadRequestException({
+        message: `The 'tags' field must be an array.`,
+        code: ErrorCode.BAD_REQUEST,
+      });
+    }
+
+    // 計算撈出的資料數量
+    let total = await this.gatheringRepository.count(query);
+
+    // 查詢資料並載入關聯 tags
+    let gatherings = await this.gatheringRepository.find(query, {
+      populate: ['tags'],
+      orderBy: { [sortBy]: sortOrder.toLowerCase() },
+      limit,
+      offset: (page - 1) * limit,
+    });
+
+    // 標籤篩選
+    if (Array.isArray(tags) && tags.length > 0) {
+      gatherings = gatherings.filter((gathering) => {
+        // 把每個陣列轉成字串
+        const tagNames = gathering.tags.map((tag) => tag.tagName);
+
+        // 回傳篩選過後的項目
+        return tags.every((tag) => new Set(tagNames).has(tag));
+      });
+    }
+
+    // 計算過濾tag後的資料數量
+    total = gatherings.length;
+
+    return { gatheringData: gatherings, page, limit, total };
   }
 }
