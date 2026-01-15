@@ -546,6 +546,51 @@ export class GatheringsService {
   }
 
   /**
+   * 取消報名活動
+   *
+   * @param {number} gatheringId 活動 ID
+   * @param {User} user 取得目前登入的使用者
+   * @returns {Promise<{ message: string }>} 回傳成功訊息
+   * @throws {NotFoundException} 若找不到指定活動則拋出錯誤
+   * @throws {BadRequestException} 若尚未報名則拋出錯誤
+   */
+  async leaveGathering(
+    gatheringId: number,
+    user: User,
+  ): Promise<{ message: string }> {
+    // 檢查使用者 id 是否存在
+    if (!user.id) {
+      throw new BadRequestException({
+        message: 'User ID is missing.',
+        code: ErrorCode.BAD_REQUEST,
+      });
+    }
+
+    // 取得活動資料
+    const { gatheringData } = await this.getGatheringById(gatheringId);
+
+    // 檢查是否已經報名過
+    const existingParticipant = await this.entityManager.findOne(Participant, {
+      gathering: gatheringData.id,
+      user: user.id,
+    });
+
+    if (!existingParticipant) {
+      throw new BadRequestException({
+        message: 'You have not joined this gathering.',
+        code: ErrorCode.BAD_REQUEST,
+      });
+    }
+
+    // 刪除參與者記錄
+    await this.entityManager.removeAndFlush(existingParticipant);
+
+    return {
+      message: 'Successfully left the gathering.',
+    };
+  }
+
+  /**
    * 取得目前登入使用者已參加的活動
    *
    * @param {GetGatheringsQueryDto} queryDto 查詢參數 DTO

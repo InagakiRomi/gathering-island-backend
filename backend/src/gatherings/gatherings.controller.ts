@@ -263,7 +263,8 @@ export class GatheringsController {
   @Post(':id/join')
   @ApiOperation({
     summary: '報名參加活動',
-    description: '報名參加指定的活動，系統會檢查活動狀態、報名截止日期和參與人數上限',
+    description:
+      '報名參加指定的活動，系統會檢查活動狀態、報名截止日期和參與人數上限',
   })
   joinGathering(
     @Param('id', ParseIntPipe) id: number,
@@ -275,4 +276,25 @@ export class GatheringsController {
     return this.gatheringsService.joinGathering(id, user);
   }
 
+  /**
+   * 取消報名活動
+   *
+   * @param {number} id 活動 ID
+   * @param {User} user 取得目前登入的使用者
+   * @returns {Promise<{ message: string }>} 回傳成功訊息
+   */
+  @Delete(':id/leave')
+  @ApiOperation({
+    summary: '取消報名活動',
+    description: '取消已報名的活動，系統會檢查使用者是否已報名該活動',
+  })
+  leaveGathering(
+    @Param('id', ParseIntPipe) id: number,
+    @GetUser() user: User,
+  ): Promise<{ message: string }> {
+    this.logger.verbose(
+      `User "${user.displayName}" leaving gathering with ID: ${id}`,
+    );
+    return this.gatheringsService.leaveGathering(id, user);
+  }
 }
