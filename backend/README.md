@@ -50,6 +50,30 @@ npm run init:db
 
 ---
 
+## 更新資料庫
+
+如果只是要更新資料庫（不需要重新建立 migration），只需要執行以下步驟：
+
+### 1. 刪除現有 SQLite 資料庫（如有）
+
+```bash
+rm -f data/gathering.db
+```
+
+### 2. 執行 migration，建立資料表
+
+```bash
+npx mikro-orm migration:up
+```
+
+### 3. 初始化預設資料
+
+```bash
+npm run init:db
+```
+
+---
+
 ## 環境變數配置
 
 ### 開發環境 (`.env.stage.dev`)
