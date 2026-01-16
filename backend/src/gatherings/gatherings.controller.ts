@@ -173,14 +173,9 @@ export class GatheringsController {
     examples: {
       only: {
         value: {
-          title: '桌遊聚會',
           description: '週末一起來玩桌遊吧！歡迎新手加入',
           location: '社區活動中心',
-          participantNumbers: 15,
-          price: 0,
-          status: 'OPEN',
           type: 'GAME',
-          startTime: '2026-09-20 10:00:00',
           deadline: '2026-09-18 14:00:00',
           tags: ['桌遊'],
         },
