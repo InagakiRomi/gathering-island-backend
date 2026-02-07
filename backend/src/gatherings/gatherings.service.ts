@@ -293,6 +293,8 @@ export class GatheringsService {
    * @param {UpdateGatheringDto} updateGatheringDto 從請求的 body 中取得聚會欄位
    * @param {User} user 取得目前登入的使用者
    * @returns {Promise<{ gatheringData: Gathering }>} 回傳填入的聚會資料
+   * @throws {ForbiddenException} 若使用者無權限則拋出錯誤
+   * @throws {BadRequestException} 若活動已關閉、進行中或已封存則拋出錯誤
    */
   async updateGathering(
     id: number,
@@ -307,6 +309,29 @@ export class GatheringsService {
       throw new ForbiddenException({
         message: 'You are not authorized to update this gathering.',
         code: ErrorCode.FORBIDDEN,
+      });
+    }
+
+    // 檢查活動是否已封存
+    if (gatheringData.isArchived) {
+      throw new BadRequestException({
+        message: 'Cannot update archived gatherings.',
+        code: ErrorCode.BAD_REQUEST,
+      });
+    }
+
+    // 檢查活動狀態是否為關閉或進行中（UPCOMING）
+    if (gatheringData.status === GatheringStatus.CLOSED) {
+      throw new BadRequestException({
+        message: 'Cannot update closed gatherings.',
+        code: ErrorCode.BAD_REQUEST,
+      });
+    }
+
+    if (gatheringData.status === GatheringStatus.UPCOMING) {
+      throw new BadRequestException({
+        message: 'Cannot update gatherings in progress.',
+        code: ErrorCode.BAD_REQUEST,
       });
     }
 
@@ -516,7 +541,7 @@ export class GatheringsService {
    * @param {User} user 取得目前登入的使用者
    * @returns {Promise<{ message: string }>} 回傳成功訊息
    * @throws {NotFoundException} 若找不到指定活動則拋出錯誤
-   * @throws {BadRequestException} 若尚未報名則拋出錯誤
+   * @throws {BadRequestException} 若尚未報名、活動已關閉或活動進行中則拋出錯誤
    */
   async leaveGathering(
     gatheringId: number,
@@ -532,6 +557,29 @@ export class GatheringsService {
 
     // 取得活動資料
     const { gatheringData } = await this.getGatheringById(gatheringId);
+
+    // 檢查活動是否已封存
+    if (gatheringData.isArchived) {
+      throw new BadRequestException({
+        message: 'Cannot cancel participation for archived gatherings.',
+        code: ErrorCode.BAD_REQUEST,
+      });
+    }
+
+    // 檢查活動狀態是否為關閉或進行中（UPCOMING）
+    if (gatheringData.status === GatheringStatus.CLOSED) {
+      throw new BadRequestException({
+        message: 'Cannot cancel participation for closed gatherings.',
+        code: ErrorCode.BAD_REQUEST,
+      });
+    }
+
+    if (gatheringData.status === GatheringStatus.UPCOMING) {
+      throw new BadRequestException({
+        message: 'Cannot cancel participation for gatherings in progress.',
+        code: ErrorCode.BAD_REQUEST,
+      });
+    }
 
     // 檢查是否已經報名過
     const existingParticipant = await this.entityManager.findOne(Participant, {

@@ -640,6 +640,73 @@ describe('GatheringsService', () => {
 
       expect(gathering.participantNumbers).toBe(10);
     });
+
+    it('活動已封存時無法更新，拋出 BadRequestException', async () => {
+      const gathering = mockGathering({ isArchived: true });
+
+      jest
+        .spyOn(service, 'getGatheringById')
+        .mockResolvedValue({ gatheringData: gathering });
+
+      await expect(
+        service.updateGathering(
+          1,
+          { title: 'Updated' } as any,
+          mockUser as any,
+        ),
+      ).rejects.toThrow(
+        new BadRequestException({
+          message: 'Cannot update archived gatherings.',
+          code: ErrorCode.BAD_REQUEST,
+        }),
+      );
+    });
+
+    it('活動狀態為 CLOSED 時無法更新，拋出 BadRequestException', async () => {
+      const gathering = mockGathering({
+        status: GatheringStatus.CLOSED,
+      });
+
+      jest
+        .spyOn(service, 'getGatheringById')
+        .mockResolvedValue({ gatheringData: gathering });
+
+      await expect(
+        service.updateGathering(
+          1,
+          { title: 'Updated' } as any,
+          mockUser as any,
+        ),
+      ).rejects.toThrow(
+        new BadRequestException({
+          message: 'Cannot update closed gatherings.',
+          code: ErrorCode.BAD_REQUEST,
+        }),
+      );
+    });
+
+    it('活動狀態為 UPCOMING 時無法更新，拋出 BadRequestException', async () => {
+      const gathering = mockGathering({
+        status: GatheringStatus.UPCOMING,
+      });
+
+      jest
+        .spyOn(service, 'getGatheringById')
+        .mockResolvedValue({ gatheringData: gathering });
+
+      await expect(
+        service.updateGathering(
+          1,
+          { title: 'Updated' } as any,
+          mockUser as any,
+        ),
+      ).rejects.toThrow(
+        new BadRequestException({
+          message: 'Cannot update gatherings in progress.',
+          code: ErrorCode.BAD_REQUEST,
+        }),
+      );
+    });
   });
 
   /**
@@ -952,6 +1019,55 @@ describe('GatheringsService', () => {
 
       await expect(service.leaveGathering(1, mockUser as any)).rejects.toThrow(
         NotFoundException,
+      );
+    });
+
+    it('活動已封存時無法取消報名，拋出 BadRequestException', async () => {
+      const gathering = mockGathering({ isArchived: true });
+
+      jest
+        .spyOn(service, 'getGatheringById')
+        .mockResolvedValue({ gatheringData: gathering });
+
+      await expect(service.leaveGathering(1, mockUser as any)).rejects.toThrow(
+        new BadRequestException({
+          message: 'Cannot cancel participation for archived gatherings.',
+          code: ErrorCode.BAD_REQUEST,
+        }),
+      );
+    });
+
+    it('活動狀態為 CLOSED 時無法取消報名，拋出 BadRequestException', async () => {
+      const gathering = mockGathering({
+        status: GatheringStatus.CLOSED,
+      });
+
+      jest
+        .spyOn(service, 'getGatheringById')
+        .mockResolvedValue({ gatheringData: gathering });
+
+      await expect(service.leaveGathering(1, mockUser as any)).rejects.toThrow(
+        new BadRequestException({
+          message: 'Cannot cancel participation for closed gatherings.',
+          code: ErrorCode.BAD_REQUEST,
+        }),
+      );
+    });
+
+    it('活動狀態為 UPCOMING 時無法取消報名，拋出 BadRequestException', async () => {
+      const gathering = mockGathering({
+        status: GatheringStatus.UPCOMING,
+      });
+
+      jest
+        .spyOn(service, 'getGatheringById')
+        .mockResolvedValue({ gatheringData: gathering });
+
+      await expect(service.leaveGathering(1, mockUser as any)).rejects.toThrow(
+        new BadRequestException({
+          message: 'Cannot cancel participation for gatherings in progress.',
+          code: ErrorCode.BAD_REQUEST,
+        }),
       );
     });
   });
