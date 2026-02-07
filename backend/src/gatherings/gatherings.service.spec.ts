@@ -80,6 +80,8 @@ const mockGathering = (
       map: (fn: any) => [{ tagName: 'music' }, { tagName: 'food' }].map(fn),
     },
 
+    calculateStatus: (now: Date) => gathering.status,
+
     toJSON: () => ({
       id: 1,
       userId: 1,
