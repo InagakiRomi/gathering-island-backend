@@ -15,8 +15,8 @@ export interface JwtPayload {
   role: UserRole;
 
   /** 創建日期 */
-  createdAt: Date;
+  createdAt: string;
 
   /** 最後更新日期 */
-  updatedAt: Date;
+  updatedAt: string;
 }

@@ -9,6 +9,7 @@ import { UpdateUserDto } from './dto/update-user-dto';
 import { GetUsersQueryDto } from './dto/get-users-query.dto';
 import { JwtPayload } from 'src/auth/strategies/jwt-payload.interface';
 import * as jwtPayloadBuilder from 'src/auth/strategies/jwt-payload.builder';
+import dayjs from 'dayjs';
 
 /**
  * ============================
@@ -87,8 +88,8 @@ describe('UsersService', () => {
         email: mockUser.email,
         username: mockUser.displayName,
         role: mockUser.role,
-        createdAt: mockUser.createdAt,
-        updatedAt: mockUser.updatedAt,
+        createdAt: dayjs(mockUser.createdAt).format('YYYY-MM-DD HH:mm:ss'),
+        updatedAt: dayjs(mockUser.updatedAt).format('YYYY-MM-DD HH:mm:ss'),
       };
 
       const spy = jest
@@ -118,8 +119,8 @@ describe('UsersService', () => {
         email: mockUser.email,
         username: dto.displayName,
         role: mockUser.role,
-        createdAt: mockUser.createdAt,
-        updatedAt: mockUser.updatedAt,
+        createdAt: dayjs(mockUser.createdAt).format('YYYY-MM-DD HH:mm:ss'),
+        updatedAt: dayjs(mockUser.updatedAt).format('YYYY-MM-DD HH:mm:ss'),
       };
 
       const spy = jest
