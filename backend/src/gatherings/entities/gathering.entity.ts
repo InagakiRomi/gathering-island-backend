@@ -108,13 +108,20 @@ export class Gathering {
   /** 自定義 JSON 輸出格式 */
   toJSON() {
     return {
-      // 指定日期欄位格式
-      ...this,
+      id: this.id,
+      userId: this.userId,
+      title: this.title,
+      description: this.description,
+      location: this.location,
+      participantNumbers: this.participantNumbers,
+      price: this.price,
+      type: this.type,
+      status: this.status,
+      isArchived: this.isArchived,
       startTime: dayjs(this.startTime).format('YYYY-MM-DD HH:mm:ss'),
       deadline: dayjs(this.deadline).format('YYYY-MM-DD HH:mm:ss'),
       createdAt: dayjs(this.createdAt).format('YYYY-MM-DD HH:mm:ss'),
       updatedAt: dayjs(this.updatedAt).format('YYYY-MM-DD HH:mm:ss'),
-
       // Tag 只回傳名稱
       tags: this.tags.getItems().map((tag) => tag.tagName),
     };
