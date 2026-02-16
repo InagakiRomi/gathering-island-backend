@@ -253,6 +253,22 @@ export class GatheringsService {
       });
     }
 
+    // 驗證 startTime 不能小於現在時間
+    if (new Date(startTime) < now) {
+      throw new BadRequestException({
+        message: 'Start time cannot be earlier than the current time.',
+        code: ErrorCode.BAD_REQUEST,
+      });
+    }
+
+    // 驗證 deadline 不能大於 startTime
+    if (deadline && new Date(deadline) > new Date(startTime)) {
+      throw new BadRequestException({
+        message: 'Dead line cannot be earlier than the start time.',
+        code: ErrorCode.BAD_REQUEST,
+      });
+    }
+
     // 建立一筆新的 Gathering 資料
     const gathering = this.entityManager.create(Gathering, {
       userId: user.id,

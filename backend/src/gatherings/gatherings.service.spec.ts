@@ -564,6 +564,51 @@ describe('GatheringsService', () => {
         service.createGathering({} as any, {} as any),
       ).rejects.toThrow(BadRequestException);
     });
+
+    it('startTime 小於現在時拋出 BadRequestException', async () => {
+      const past = new Date(Date.now() - 1000 * 60 * 60); // 一小時前
+      await expect(
+        service.createGathering(
+          {
+            title: 'Past Gathering',
+            location: 'Taipei',
+            participantNumbers: 5,
+            startTime: past,
+            tags: ['music'],
+          } as any,
+          mockUser as any,
+        ),
+      ).rejects.toThrow(
+        new BadRequestException({
+          message: 'Start time cannot be earlier than the current time.',
+          code: ErrorCode.BAD_REQUEST,
+        }),
+      );
+    });
+
+    it('deadline 大於 startTime 時拋出 BadRequestException', async () => {
+      const now = new Date();
+      const startTime = new Date(now.getTime() + 1000 * 60 * 60); // 一小時後
+      const deadline = new Date(startTime.getTime() + 1000 * 60 * 60); // 兩小時後
+      await expect(
+        service.createGathering(
+          {
+            title: 'Invalid Deadline',
+            location: 'Taipei',
+            participantNumbers: 5,
+            startTime,
+            deadline,
+            tags: ['music'],
+          } as any,
+          mockUser as any,
+        ),
+      ).rejects.toThrow(
+        new BadRequestException({
+          message: 'Dead line cannot be earlier than the start time.',
+          code: ErrorCode.BAD_REQUEST,
+        }),
+      );
+    });
   });
 
   /**
