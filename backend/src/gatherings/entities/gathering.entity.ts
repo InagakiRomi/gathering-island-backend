@@ -9,6 +9,7 @@ import { GatheringStatus } from '../enum/gathering.status';
 import { GatheringType } from '../enum/gathering.type';
 import dayjs from 'dayjs';
 import { Tag } from '../../tags/entities/tag.entity';
+import { DateUtil } from '../../common/utils/date.util';
 
 /** 聚會 Entity */
 @Entity()
@@ -67,15 +68,15 @@ export class Gathering {
 
   /** 創建日期 */
   @Property()
-  createdAt: Date = new Date();
+  createdAt: Date = DateUtil.nowUTC();
 
   /** 最後更新日期 */
   @Property({
     comment: '更新時間',
-    onUpdate: () => new Date(),
+    onUpdate: () => DateUtil.nowUTC(),
     index: true,
   })
-  updatedAt: Date = new Date();
+  updatedAt: Date = DateUtil.nowUTC();
 
   /**
    * 根據當前時間計算聚會狀態
@@ -118,10 +119,10 @@ export class Gathering {
       type: this.type,
       status: this.status,
       isArchived: this.isArchived,
-      startTime: dayjs(this.startTime).format('YYYY-MM-DD HH:mm:ss'),
-      deadline: dayjs(this.deadline).format('YYYY-MM-DD HH:mm:ss'),
-      createdAt: dayjs(this.createdAt).format('YYYY-MM-DD HH:mm:ss'),
-      updatedAt: dayjs(this.updatedAt).format('YYYY-MM-DD HH:mm:ss'),
+      startTime: DateUtil.toAppTimezone(this.startTime),
+      deadline: DateUtil.toAppTimezone(this.deadline),
+      createdAt: DateUtil.toAppTimezone(this.createdAt),
+      updatedAt: DateUtil.toAppTimezone(this.updatedAt),
       // Tag 只回傳名稱
       tags: this.tags.getItems().map((tag) => tag.tagName),
     };

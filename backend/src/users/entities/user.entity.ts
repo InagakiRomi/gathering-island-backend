@@ -1,6 +1,6 @@
 import { Entity, PrimaryKey, Property } from '@mikro-orm/core';
-import dayjs from 'dayjs';
 import { UserRole } from '../enum/auth.role';
+import { DateUtil } from '../../common/utils/date.util';
 
 /** 使用者 Entity */
 @Entity()
@@ -31,22 +31,22 @@ export class User {
 
   /** 創建日期 */
   @Property()
-  createdAt: Date = new Date();
+  createdAt: Date = DateUtil.nowUTC();
 
   /** 最後更新日期 */
   @Property({
     comment: '更新時間',
-    onUpdate: () => new Date(),
+    onUpdate: () => DateUtil.nowUTC(),
     index: true,
   })
-  updatedAt: Date = new Date();
+  updatedAt: Date = DateUtil.nowUTC();
 
+  /** 自定義 JSON 輸出格式 */
   toJSON() {
     return {
-      // 指定日期欄位格式
       ...this,
-      createdAt: dayjs(this.createdAt).format('YYYY-MM-DD HH:mm:ss'),
-      updatedAt: dayjs(this.updatedAt).format('YYYY-MM-DD HH:mm:ss'),
+      createdAt: DateUtil.toAppTimezone(this.createdAt),
+      updatedAt: DateUtil.toAppTimezone(this.updatedAt),
     };
   }
 }

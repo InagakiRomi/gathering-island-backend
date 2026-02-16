@@ -7,7 +7,7 @@ import {
 } from '@mikro-orm/core';
 import { Gathering } from './gathering.entity';
 import { User } from '../../users/entities/user.entity';
-import dayjs from 'dayjs';
+import { DateUtil } from '../../common/utils/date.util';
 
 /** 參與者 Entity - 記錄用戶參與活動的關係 */
 @Entity()
@@ -27,7 +27,7 @@ export class Participant {
 
   /** 報名日期 */
   @Property()
-  joinedAt: Date = new Date();
+  joinedAt: Date = DateUtil.nowUTC();
 
   /** 自定義 JSON 輸出格式 */
   toJSON() {
@@ -35,7 +35,7 @@ export class Participant {
       id: this.id,
       gatheringId: this.gathering?.id,
       userId: this.user?.id,
-      joinedAt: dayjs(this.joinedAt).format('YYYY-MM-DD HH:mm:ss'),
+      joinedAt: DateUtil.toAppTimezone(this.joinedAt),
     };
   }
 }

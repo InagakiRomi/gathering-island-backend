@@ -1,6 +1,7 @@
 export default () => ({
   port: parseInt(process.env.PORT || '3000', 10),
   stage: process.env.STAGE || 'dev',
+  appTimezone: process.env.APP_TIMEZONE || 'UTC',
 
   database: {
     host: process.env.DB_HOST || 'localhost',
