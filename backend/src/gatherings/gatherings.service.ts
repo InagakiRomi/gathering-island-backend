@@ -6,6 +6,10 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { EntityManager, EntityRepository } from '@mikro-orm/core';
+import * as XLSX from 'xlsx';
+import { WorkBook } from 'xlsx';
+import { plainToInstance } from 'class-transformer';
+import { validate } from 'class-validator';
 import { Gathering } from './entities/gathering.entity';
 import { CreateGatheringDto } from './dto/create-gathering-dto';
 import { UpdateGatheringDto } from './dto/update-gathering-dto';
@@ -20,6 +24,7 @@ import { UserRole } from 'src/users/enum/auth.role';
 import { ErrorCode } from 'src/common/enum/error-code.enum';
 import { Participant } from './entities/participant.entity';
 import { ConflictException } from '@nestjs/common';
+import { ImportGatheringExcelDto } from './dto/import-gathering-excel.dto';
 
 /** 聚會 Service */
 @Injectable()
@@ -262,7 +267,7 @@ export class GatheringsService {
     }
 
     // 驗證 deadline 不能大於 startTime
-    if (deadline && new Date(deadline) > new Date(startTime)) {
+    if (new Date(deadline) > new Date(startTime)) {
       throw new BadRequestException({
         message: 'Dead line cannot be earlier than the start time.',
         code: ErrorCode.BAD_REQUEST,
@@ -708,5 +713,123 @@ export class GatheringsService {
     }
 
     return { updatedCount };
+  }
+
+  /**
+   * 檢查 Gathering.xlsx 檔案內容是否符合 DTO 驗證規則
+   * @param file 上傳的 Excel 檔案
+   * @returns 檢查結果，包含錯誤資訊或有效資料
+   */
+  async checkExcelGathering(workbook: WorkBook) {
+    // 取得第一個工作表
+    const sheetName = workbook.SheetNames[0];
+    if (!sheetName) {
+      throw new BadRequestException({
+        message: `No worksheets found in the Excel file.`,
+        code: ErrorCode.BAD_REQUEST,
+      });
+    }
+
+    const worksheet = workbook.Sheets[sheetName];
+
+    // 轉為 JSON
+    const gatheringRecords = XLSX.utils.sheet_to_json<Record<string, any>>(
+      worksheet,
+      {
+        defval: '',
+        range: 1, // 從第 2 排開始讀
+      },
+    );
+
+    // 檢查是否有任何內容
+    if (!gatheringRecords.length) {
+      throw new BadRequestException({
+        message: `The Excel file is empty.`,
+        code: ErrorCode.BAD_REQUEST,
+      });
+    }
+
+    // 檢查表單資料是否正確，並收集驗證錯誤
+    // 收集所有驗證失敗的列資料
+    const allErrors: {
+      row: number;
+      fields: { field: string; message: string }[];
+    }[] = [];
+
+    // 逐筆驗證 Excel 轉出來的資料
+    for (let i = 0; i < gatheringRecords.length; i++) {
+      const record = gatheringRecords[i];
+
+      // 將 plain object 轉為 DTO instance
+      const dto = plainToInstance(ImportGatheringExcelDto, record);
+
+      // 執行驗證
+      const validationErrors = await validate(dto, {
+        whitelist: true,
+        forbidNonWhitelisted: true,
+      });
+
+      const rowErrors: { field: string; message: string }[] = [];
+
+      // 如果有驗證錯誤，記錄錯誤資訊
+      if (validationErrors.length > 0) {
+        validationErrors.forEach((error) => {
+          if (error.constraints) {
+            Object.values(error.constraints).forEach((msg) => {
+              // 將每一條錯誤訊息轉換成統一格式
+              rowErrors.push({
+                field: error.property,
+                message: msg,
+              });
+            });
+          }
+        });
+      }
+
+      // 自訂驗證
+      // 驗證 createdAt 的時間不能大於其他的時間
+      if (
+        new Date(dto.createdAt) > new Date(dto.startTime) ||
+        new Date(dto.createdAt) > new Date(dto.deadline) ||
+        new Date(dto.createdAt) > new Date(dto.updatedAt)
+      ) {
+        rowErrors.push({
+          field: 'createdAt',
+          message: 'The createdAt time cannot be later than the other time.',
+        });
+      }
+
+      // 驗證 deadline 不能大於 startTime
+      if (new Date(dto.deadline) > new Date(dto.startTime)) {
+        rowErrors.push({
+          field: 'deadline',
+          message: 'The deadline time cannot be earlier than the start time.',
+        });
+      }
+
+      // 合併自訂驗證
+      if (rowErrors.length > 0) {
+        allErrors.push({
+          row: i + 2,
+          fields: rowErrors,
+        });
+      }
+    }
+
+    // 如果有任一列驗證失敗，統一拋出錯誤
+    if (allErrors.length > 0) {
+      throw new BadRequestException(
+        JSON.stringify({
+          totalErrorRows: allErrors.length,
+          errors: allErrors,
+        }),
+      );
+    }
+
+    // 回傳 JSON 結果
+    return {
+      total: gatheringRecords.length,
+      data: gatheringRecords,
+    };
   }
 }

@@ -1,6 +1,7 @@
-import { IsEnum, IsNotEmpty, IsOptional } from 'class-validator';
+import { IsEnum, IsNotEmpty, IsOptional, Max, Min } from 'class-validator';
 import { GatheringType } from '../enum/gathering.type';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { GatheringLimits } from 'src/common/constants/gathering.limits';
 
 /** 建立聚會 DTO */
 export class CreateGatheringDto {
@@ -21,17 +22,21 @@ export class CreateGatheringDto {
 
   /** 參加人數 */
   @ApiPropertyOptional({ type: Number, description: '參加人數' })
+  @Min(GatheringLimits.PARTICIPANT_NUMBERS.MIN)
+  @Max(GatheringLimits.PARTICIPANT_NUMBERS.MAX)
   @IsNotEmpty()
   participantNumbers: number;
 
   /** 活動費用 */
   @ApiPropertyOptional({ type: Number, description: '活動費用' })
+  @Min(GatheringLimits.PRICE.MIN)
+  @Max(GatheringLimits.PRICE.MAX)
   @IsNotEmpty()
   price: number;
 
   /** 聚會分類 */
   @ApiPropertyOptional({ enum: GatheringType, description: '聚會分類' })
-  @IsOptional()
+  @IsNotEmpty()
   @IsEnum(GatheringType)
   type: GatheringType;
 
@@ -50,7 +55,7 @@ export class CreateGatheringDto {
     format: 'date-time',
     description: '報名截止日期 (ISO 8601 格式)',
   })
-  @IsOptional()
+  @IsNotEmpty()
   deadline: Date;
 
   /** 標籤 */

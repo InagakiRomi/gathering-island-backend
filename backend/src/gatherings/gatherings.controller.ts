@@ -5,20 +5,32 @@ import {
   Get,
   Logger,
   Param,
+  ParseFilePipe,
   ParseIntPipe,
   Patch,
   Post,
   Query,
+  UploadedFile,
+  UseInterceptors,
 } from '@nestjs/common';
+import {
+  ApiBearerAuth,
+  ApiBody,
+  ApiConsumes,
+  ApiOperation,
+} from '@nestjs/swagger';
+import type { WorkBook } from 'xlsx';
+import { FileInterceptor } from '@nestjs/platform-express';
 import { GatheringsService } from './gatherings.service';
 import { Gathering } from './entities/gathering.entity';
 import { Participant } from './entities/participant.entity';
 import { CreateGatheringDto } from './dto/create-gathering-dto';
 import { UpdateGatheringDto } from './dto/update-gathering-dto';
 import { GetGatheringsQueryDto } from './dto/get-gatherings-query.dto';
-import { ApiBearerAuth, ApiBody, ApiOperation } from '@nestjs/swagger';
 import { User } from 'src/users/entities/user.entity';
 import { GetUser } from 'src/auth/decorator/get-user.decorator';
+import { Roles } from 'src/common/decorators/roles.decorator';
+import { XlsxFilePipe } from 'src/common/pipes/xlsx-file.pipe';
 
 /** 聚會 Controller */
 @ApiBearerAuth('access-token')
@@ -137,7 +149,7 @@ export class GatheringsController {
           participantNumbers: 20,
           price: 300,
           type: 'SPORTS',
-          startTime: '2026-12-05 14:00:00',
+          startTime: '2026-12-19 14:00:00',
           deadline: '2026-12-09 18:00:00',
           tags: ['游泳'],
         },
@@ -291,5 +303,43 @@ export class GatheringsController {
       `User "${user.displayName}" leaving gathering with ID: ${id}`,
     );
     return this.gatheringsService.leaveGathering(id, user);
+  }
+
+  /**
+   * 檢查 Gathering.xlsx 檔案內容是否符合 DTO 驗證規則
+   * @param file 上傳的 Excel 檔案
+   * @returns 檢查結果，包含錯誤資訊或有效資料
+   */
+  @Post('excel/check')
+  @Roles('admin')
+  @UseInterceptors(FileInterceptor('file'))
+  @ApiOperation({
+    summary: '檢查 Gathering.xlsx 資料格式',
+    description: '檢查 Gathering.xlsx 每列資料格式是否正確，回傳錯誤資訊',
+  })
+  @ApiConsumes('multipart/form-data')
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        file: {
+          type: 'string',
+          format: 'binary',
+        },
+      },
+    },
+  })
+  async checkExcelGathering(
+    @UploadedFile(
+      // 驗證檔案是否存在
+      new ParseFilePipe({
+        fileIsRequired: true,
+      }),
+      // 自訂 Pipe：將 .xlsx 解析為 workbook
+      new XlsxFilePipe(),
+    )
+    workbook: WorkBook,
+  ) {
+    return this.gatheringsService.checkExcelGathering(workbook);
   }
 }
