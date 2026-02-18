@@ -5,6 +5,7 @@ import {
   HttpException,
 } from '@nestjs/common';
 import { Request, Response } from 'express';
+import dayjs from 'dayjs';
 import { ErrorCode } from '../enum/error-code.enum';
 import { ApiResult } from '../enum/api-result';
 
@@ -40,7 +41,7 @@ export class HttpExceptionFilter implements ExceptionFilter {
       message: this.normalizeMessage(resObj.message ?? exception.message), // 錯誤訊息
       code: resObj.code ?? ErrorCode.INTERNAL_SERVER_ERROR, // 自訂錯誤代碼
       path: request.url, // 發生錯誤的 URL 路徑
-      timestamp: new Date().toISOString(), // 發生錯誤的時間（ISO 格式）
+      timestamp: dayjs().format('YYYY-MM-DD HH:mm:ss'), // 發生錯誤的時間
     };
 
     // 使用 response 回傳自定義的錯誤格式 JSON 給 client
