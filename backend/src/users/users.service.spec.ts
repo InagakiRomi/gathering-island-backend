@@ -5,7 +5,7 @@ import { getRepositoryToken } from '@mikro-orm/nestjs';
 import { UsersService } from './users.service';
 import { User } from './entities/user.entity';
 import { UserRole } from 'src/users/enum/auth.role';
-import { UpdateUserDto } from './dto/update-user-dto';
+import { UpdateUserDto } from './dto/update-user.dto';
 import { GetUsersQueryDto } from './dto/get-users-query.dto';
 import { JwtPayload } from 'src/auth/strategies/jwt-payload.interface';
 import * as jwtPayloadBuilder from 'src/auth/strategies/jwt-payload.builder';

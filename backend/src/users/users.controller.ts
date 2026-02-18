@@ -4,7 +4,7 @@ import { ApiBearerAuth, ApiOperation } from '@nestjs/swagger';
 import { User } from './entities/user.entity';
 import { JwtPayload } from '../auth/strategies/jwt-payload.interface';
 import { GetUser } from '../auth/decorator/get-user.decorator';
-import { UpdateUserDto } from './dto/update-user-dto';
+import { UpdateUserDto } from './dto/update-user.dto';
 import { GetUsersQueryDto } from './dto/get-users-query.dto';
 import { Roles } from 'src/common/decorators/roles.decorator';
 

@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { JwtPayload } from 'src/auth/strategies/jwt-payload.interface';
 import { User } from './entities/user.entity';
-import { UpdateUserDto } from './dto/update-user-dto';
+import { UpdateUserDto } from './dto/update-user.dto';
 import { buildJwtPayload } from 'src/auth/strategies/jwt-payload.builder';
 import { GetUsersQueryDto } from './dto/get-users-query.dto';
 import { InjectRepository } from '@mikro-orm/nestjs';

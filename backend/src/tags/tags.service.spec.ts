@@ -4,7 +4,7 @@ import { EntityManager } from '@mikro-orm/core';
 
 import { TagsService } from './tags.service';
 import { Tag } from './entities/tag.entity';
-import { CreateTagDto } from './dto/create-tag-dto';
+import { CreateTagDto } from './dto/create-tag.dto';
 import { ErrorCode } from 'src/common/enum/error-code.enum';
 
 /**

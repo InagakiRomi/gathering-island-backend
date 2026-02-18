@@ -1,6 +1,6 @@
 import { EntityManager } from '@mikro-orm/core';
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { CreateTagDto } from './dto/create-tag-dto';
+import { CreateTagDto } from './dto/create-tag.dto';
 import { Tag } from './entities/tag.entity';
 import { ErrorCode } from 'src/common/enum/error-code.enum';
 
