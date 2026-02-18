@@ -1,90 +1,65 @@
 # Gathering Island Backend
 
-以 **NestJS + TypeScript** 打造的後端 API 服務，管理聚會、標籤與使用者系統，並整合 JWT 驗證與角色授權。
+可以舉辦和報名參加聚會活動的網頁平台，以 **NestJS + TypeScript** 實作，提供 JWT 雙 Token 驗證、排程任務、Excel 匯入驗證等功能。
+
+- API 文件：[Swagger](https://gathering-island.onrender.com/api)
 
 ---
 
-## 🧠 專案簡介
+## 主要功能
 
-本專案為聚會平台核心後端，涵蓋以下功能：
-
-- 聚會與標籤管理
-- 使用者系統、角色權限控制
-- JWT 登入與授權
-- 統一 API 回應格式
-- 資料庫 schema 與版本控管（MikroORM）
-
-架構模組化、分層清晰，適合中大型多人協作。
-
----
-
-## 📘 API 文件（Swagger）
-
-本專案提供完整的 Swagger API 文件，方便前後端協作與測試。
-
-👉 [Swagger 連結](https://gathering-island.onrender.com/api)
+| 類別       | 說明                                                     |
+| ---------- | -------------------------------------------------------- |
+| 身分驗證   | JWT Access + Refresh Token，支援 Cookie 或 Header 回傳   |
+| 排程任務   | 透過 `@nestjs/schedule` 每 5 分鐘更新聚會狀態            |
+| Excel 匯入 | `.xlsx` 檔案上傳，自訂 Pipe 解析，`class-validator` 驗證 |
+| 查詢       | 分頁、排序、多條件篩選（狀態、類型、標籤、關鍵字）       |
+| 軟刪除     | 封存與恢復                                               |
+| API 回傳   | 統一成功與錯誤回應格式（Interceptor + Filter）           |
 
 ---
 
-## 🛠️ 技術架構
+## 技術棧
 
-### 核心技術
-
-- **NestJS**：模組化與 DI 框架
-- **MikroORM**：資料庫存取與遷移機制（`mikro-orm.config.ts`）
-- **JWT 驗證機制**：含自訂策略與角色授權控制
-
-### 程式分層與資料設計
-
-- 每個 module 含 controller / service / dto / entity
-- DTO 使用 `class-validator` 驗證輸入
-- Entity 強化 domain 邏輯表達
-- 統一成功／錯誤輸出（interceptor + filter）
+- **NestJS**、**MikroORM**、**SQLite**：後端與資料庫
+- **Passport + passport-jwt**：JWT 驗證
+- **bcrypt**：密碼雜湊
+- **class-validator + class-transformer**：DTO 驗證
+- **Joi**：環境變數驗證（`@nestjs/config`）
+- **@nestjs/swagger**：API 文件
+- **@nestjs/schedule**：Cron 排程
+- **xlsx**：Excel 解析
+- **dayjs**：日期處理
+- **Jest**、**supertest**：測試
 
 ---
 
-## 🔐 身分驗證與授權
+## 身分驗證
 
-- `JwtStrategy`：解析 JWT 與 payload
-- `@Public()`：開放無需登入的路由
-- `@Roles()` + `RolesGuard`：角色權限控管
-- `JwtAuthGuard`：登入保護路由
-- 支援 Cookie-based 或 Header-based token 回傳
-
----
-
-## 🧩 模組與重要檔案
-
-### 模組職責
-
-| 模組         | 功能                             |
-| ------------ | -------------------------------- |
-| `auth`       | 登入 / 註冊 / JWT 驗證           |
-| `gatherings` | 聚會 CRUD、查詢                  |
-| `tags`       | 標籤 CRUD                        |
-| `users`      | 使用者與角色管理                 |
-| `common`     | 公用 decorator、guard、filter 等 |
-| `config`     | 設定管理、環境變數驗證           |
-| `migrations` | 資料庫版本控管                   |
-
-### 核心檔案
-
-- `main.ts`：應用啟動
-- `app.module.ts`：主模組註冊
-- `mikro-orm.config.ts`：ORM 設定
-- `migrations/`：資料庫版本紀錄
+- `@Public()`：標記無需登入的公開路由（如登入、註冊）
+- `@Roles('admin')`：角色權限控管
+- `@GetUser()`：取得目前登入的使用者
+- 雙 Token 機制（Access + Refresh），支援 Cookie 或 Header 回傳
 
 ---
 
-## 🗃️ 資料庫與遷移
+## 模組
 
-透過 MikroORM 管理 schema，使用 `npx mikro-orm migration:up` 同步版本，並支援多種 SQL 資料庫。
+| 模組       | 功能                                           |
+| ---------- | ---------------------------------------------- |
+| auth       | 註冊、登入、登出、Refresh Token                |
+| gatherings | CRUD、報名與取消、軟刪除與恢復、Excel 格式檢查 |
+| tags       | 標籤 CRUD                                      |
+| users      | 使用者與角色                                   |
 
 ---
 
-## 🛡️ 安全性設計
+## 快速開始
 
-- 環境變數隔離敏感資訊
-- 支援 secure / httpOnly cookies
-- DTO 驗證防止惡意輸入
-- 採用角色機制防止未授權存取
+```bash
+cd backend
+npm install
+npm run start:dev
+```
+
+資料庫遷移與環境變數設定請參閱 [backend/README.md](backend/README.md)。
