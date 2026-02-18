@@ -55,3 +55,24 @@
 2. 儲存完成後，執行此檔案：check_gathering_participants.py
 
 3. 依結果查看輸出，結束時按 Enter 關閉
+
+---
+
+# 依 Gathering 批次填寫 Participant 工具
+
+功能如下：
+
+- 從 `../data` 讀取 `Gathering.xlsx`
+- 依活動的 `userId`（擁有者）、`participantNumbers`、`createdAt`、`deadline` 產生參與者
+- 每個活動的參與者為「其他活動的擁有者」，且不包含該活動建立者；**人數隨機多寡**（0 ～ 可報名額），不讓每場都差不多
+- **檢查報名人數不超過**：每場參與者數 ≤ 可報名額（participantNumbers - 1）
+- `joinedAt` 落在該活動的 `createdAt`～`deadline` 之間
+- **輸出至新檔案** `../data/Participant_filled.xlsx`，**不取代**原 `Participant.xlsx`
+
+## 🔧 使用說明
+
+1. 確認 `../data` 內有 `Gathering.xlsx`
+
+2. 執行：`fill_participant_from_gathering.py`
+
+3. 產出為 `Participant_filled.xlsx`；若要檢查可將該檔複製為 `Participant.xlsx` 後執行 `check_gathering_participants.py`
