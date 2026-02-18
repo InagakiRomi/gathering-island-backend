@@ -72,7 +72,7 @@ export class UsersService {
     });
 
     // 計算撈出的資料數量
-    let total = await this.userRepository.count(query);
+    const total = await this.userRepository.count(query);
 
     return { items: users, page, limit, total };
   }

@@ -44,7 +44,7 @@ export class AuthService {
     const hashedPassword = await bcrypt.hash(password, salt);
 
     // 查資料庫有沒有這個email
-    let emailFind = await this.entityManager.findOne(User, { email });
+    const emailFind = await this.entityManager.findOne(User, { email });
 
     // 如果 email 已經存在
     if (emailFind) {

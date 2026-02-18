@@ -357,7 +357,7 @@ export class GatheringsService {
     }
 
     // 使用 partial update
-    for (let gatheringDto in updateGatheringDto) {
+    for (const gatheringDto in updateGatheringDto) {
       const gatheringValue = updateGatheringDto[gatheringDto];
       if (gatheringValue) {
         if (gatheringDto === 'tags') {

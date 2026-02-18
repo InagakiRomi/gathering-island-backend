@@ -542,9 +542,9 @@ describe('GatheringsService', () => {
       await expect(service.getGatheringById(null as any)).rejects.toThrow(
         BadRequestException,
       );
-      await expect(
-        service.getGatheringById(undefined as any),
-      ).rejects.toThrow(BadRequestException);
+      await expect(service.getGatheringById(undefined as any)).rejects.toThrow(
+        BadRequestException,
+      );
       expect(entityManager.findOne).not.toHaveBeenCalled();
     });
   });
