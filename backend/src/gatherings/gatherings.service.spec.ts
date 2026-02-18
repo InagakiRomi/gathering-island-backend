@@ -16,6 +16,7 @@ import { GatheringStatus } from './enum/gathering.status';
 import { GatheringType } from './enum/gathering.type';
 import { UserRole } from 'src/users/enum/auth.role';
 import { ErrorCode } from 'src/common/enum/error-code.enum';
+import * as XLSX from 'xlsx';
 
 /**
  * ============================
@@ -131,6 +132,7 @@ describe('GatheringsService', () => {
             create: jest.fn(),
             persistAndFlush: jest.fn(),
             removeAndFlush: jest.fn(),
+            flush: jest.fn(),
           },
         },
         {
@@ -495,6 +497,56 @@ describe('GatheringsService', () => {
         NotFoundException,
       );
     });
+
+    it('ID 為無效數字（NaN）時拋出 BadRequestException', async () => {
+      await expect(service.getGatheringById(NaN)).rejects.toThrow(
+        new BadRequestException({
+          message: `Invalid gathering ID: "NaN". ID must be a positive integer.`,
+          code: ErrorCode.BAD_REQUEST,
+        }),
+      );
+      expect(entityManager.findOne).not.toHaveBeenCalled();
+    });
+
+    it('ID 為 0 時拋出 BadRequestException', async () => {
+      await expect(service.getGatheringById(0)).rejects.toThrow(
+        new BadRequestException({
+          message: `Invalid gathering ID: "0". ID must be a positive integer.`,
+          code: ErrorCode.BAD_REQUEST,
+        }),
+      );
+      expect(entityManager.findOne).not.toHaveBeenCalled();
+    });
+
+    it('ID 為負數時拋出 BadRequestException', async () => {
+      await expect(service.getGatheringById(-1)).rejects.toThrow(
+        new BadRequestException({
+          message: `Invalid gathering ID: "-1". ID must be a positive integer.`,
+          code: ErrorCode.BAD_REQUEST,
+        }),
+      );
+      expect(entityManager.findOne).not.toHaveBeenCalled();
+    });
+
+    it('ID 為非整數時拋出 BadRequestException', async () => {
+      await expect(service.getGatheringById(1.5)).rejects.toThrow(
+        new BadRequestException({
+          message: `Invalid gathering ID: "1.5". ID must be a positive integer.`,
+          code: ErrorCode.BAD_REQUEST,
+        }),
+      );
+      expect(entityManager.findOne).not.toHaveBeenCalled();
+    });
+
+    it('ID 為 null 或 undefined 時拋出 BadRequestException', async () => {
+      await expect(service.getGatheringById(null as any)).rejects.toThrow(
+        BadRequestException,
+      );
+      await expect(
+        service.getGatheringById(undefined as any),
+      ).rejects.toThrow(BadRequestException);
+      expect(entityManager.findOne).not.toHaveBeenCalled();
+    });
   });
 
   /**
@@ -748,6 +800,33 @@ describe('GatheringsService', () => {
       ).rejects.toThrow(
         new BadRequestException({
           message: 'Cannot update gatherings in progress.',
+          code: ErrorCode.BAD_REQUEST,
+        }),
+      );
+    });
+
+    it('更新 deadline 且新 deadline 大於 startTime 時拋出 BadRequestException', async () => {
+      const startTime = new Date('2025-06-01T12:00:00Z');
+      const gathering = mockGathering({
+        startTime,
+        deadline: new Date('2025-05-01T12:00:00Z'),
+      });
+
+      jest
+        .spyOn(service, 'getGatheringById')
+        .mockResolvedValue({ gatheringData: gathering });
+
+      const newDeadline = new Date('2025-07-01T12:00:00Z'); // 晚於 startTime
+
+      await expect(
+        service.updateGathering(
+          1,
+          { deadline: newDeadline } as any,
+          mockUser as any,
+        ),
+      ).rejects.toThrow(
+        new BadRequestException({
+          message: 'The deadline time cannot be earlier than the start time.',
           code: ErrorCode.BAD_REQUEST,
         }),
       );
@@ -1441,6 +1520,209 @@ describe('GatheringsService', () => {
         }),
         expect.any(Object),
       );
+    });
+  });
+
+  /**
+   * ============================
+   * updateGatheringStatuses
+   * ============================
+   */
+  describe('updateGatheringStatuses', () => {
+    it('無需更新時回傳 updatedCount 0 且不呼叫 flush', async () => {
+      const g = mockGathering({ status: GatheringStatus.OPEN });
+      (g as any).calculateStatus = () => GatheringStatus.OPEN; // 與現狀相同
+      gatheringRepository.find.mockResolvedValue([g]);
+
+      const result = await service.updateGatheringStatuses();
+
+      expect(result.updatedCount).toBe(0);
+      expect(entityManager.flush).not.toHaveBeenCalled();
+    });
+
+    it('有聚會狀態與計算結果不同時會更新並呼叫 flush', async () => {
+      const g = mockGathering({ status: GatheringStatus.OPEN });
+      (g as any).calculateStatus = () => GatheringStatus.CLOSED; // 需要更新
+      gatheringRepository.find.mockResolvedValue([g]);
+
+      const result = await service.updateGatheringStatuses();
+
+      expect(result.updatedCount).toBe(1);
+      expect(g.status).toBe(GatheringStatus.CLOSED);
+      expect(entityManager.flush).toHaveBeenCalledTimes(1);
+    });
+
+    it('傳入 EntityManager 時使用該 em 的 getRepository 與 flush', async () => {
+      const g = mockGathering({ status: GatheringStatus.OPEN });
+      (g as any).calculateStatus = () => GatheringStatus.UPCOMING;
+      const mockEm = {
+        getRepository: jest.fn().mockReturnValue({
+          find: jest.fn().mockResolvedValue([g]),
+        }),
+        flush: jest.fn(),
+      } as any;
+
+      const result = await service.updateGatheringStatuses(mockEm);
+
+      expect(mockEm.getRepository).toHaveBeenCalledWith(Gathering);
+      expect(result.updatedCount).toBe(1);
+      expect(mockEm.flush).toHaveBeenCalledTimes(1);
+      expect(entityManager.flush).not.toHaveBeenCalled();
+    });
+
+    it('沒有未封存聚會時回傳 updatedCount 0', async () => {
+      gatheringRepository.find.mockResolvedValue([]);
+
+      const result = await service.updateGatheringStatuses();
+
+      expect(result.updatedCount).toBe(0);
+      expect(entityManager.flush).not.toHaveBeenCalled();
+    });
+  });
+
+  /**
+   * ============================
+   * checkExcelGathering
+   * ============================
+   */
+  describe('checkExcelGathering', () => {
+    it('workbook 沒有工作表時拋出 BadRequestException', async () => {
+      const workbook = { SheetNames: [], Sheets: {} };
+
+      await expect(
+        service.checkExcelGathering(workbook as any),
+      ).rejects.toThrow(
+        new BadRequestException({
+          message: `No worksheets found in the Excel file.`,
+          code: ErrorCode.BAD_REQUEST,
+        }),
+      );
+    });
+
+    it('Excel 無資料列時拋出 BadRequestException', async () => {
+      const workbook = {
+        SheetNames: ['Sheet1'],
+        Sheets: { Sheet1: {} },
+      };
+      jest.spyOn(XLSX.utils, 'sheet_to_json').mockReturnValue([]);
+
+      await expect(
+        service.checkExcelGathering(workbook as any),
+      ).rejects.toThrow(
+        new BadRequestException({
+          message: `The Excel file is empty.`,
+          code: ErrorCode.BAD_REQUEST,
+        }),
+      );
+    });
+
+    it('資料驗證通過時回傳 total 與 data', async () => {
+      const validRecord = {
+        id: 1,
+        userId: 1,
+        title: 'Test',
+        description: 'Desc',
+        location: 'Taipei',
+        participantNumbers: 5,
+        price: 0,
+        status: GatheringStatus.OPEN,
+        type: GatheringType.PARTY,
+        startTime: new Date('2025-01-03'),
+        deadline: new Date('2025-01-02'),
+        isArchived: false,
+        createdAt: new Date('2025-01-01'),
+        updatedAt: new Date('2025-01-04'),
+      };
+      const workbook = {
+        SheetNames: ['Sheet1'],
+        Sheets: { Sheet1: {} },
+      };
+      jest.spyOn(XLSX.utils, 'sheet_to_json').mockReturnValue([validRecord]);
+
+      const result = await service.checkExcelGathering(workbook as any);
+
+      expect(result).toEqual({ total: 1, data: [validRecord] });
+    });
+
+    it('自訂驗證：deadline 大於 startTime 時收集錯誤並拋出 BadRequestException', async () => {
+      const invalidRecord = {
+        id: 1,
+        userId: 1,
+        title: 'Test',
+        location: 'Taipei',
+        participantNumbers: 5,
+        price: 0,
+        status: GatheringStatus.OPEN,
+        type: GatheringType.PARTY,
+        startTime: new Date('2025-01-01'),
+        deadline: new Date('2025-01-02'), // 晚於 startTime
+        isArchived: false,
+        createdAt: new Date('2024-12-31'),
+        updatedAt: new Date('2025-01-03'),
+      };
+      const workbook = {
+        SheetNames: ['Sheet1'],
+        Sheets: { Sheet1: {} },
+      };
+      jest.spyOn(XLSX.utils, 'sheet_to_json').mockReturnValue([invalidRecord]);
+
+      await expect(
+        service.checkExcelGathering(workbook as any),
+      ).rejects.toThrow(BadRequestException);
+    });
+
+    it('自訂驗證：createdAt 晚於其他時間時收集錯誤並拋出 BadRequestException', async () => {
+      const invalidRecord = {
+        id: 1,
+        userId: 1,
+        title: 'Test',
+        location: 'Taipei',
+        participantNumbers: 5,
+        price: 0,
+        status: GatheringStatus.OPEN,
+        type: GatheringType.PARTY,
+        startTime: new Date('2025-01-01'),
+        deadline: new Date('2025-01-01'),
+        isArchived: false,
+        createdAt: new Date('2025-01-02'), // 晚於 startTime / deadline
+        updatedAt: new Date('2025-01-01'),
+      };
+      const workbook = {
+        SheetNames: ['Sheet1'],
+        Sheets: { Sheet1: {} },
+      };
+      jest.spyOn(XLSX.utils, 'sheet_to_json').mockReturnValue([invalidRecord]);
+
+      await expect(
+        service.checkExcelGathering(workbook as any),
+      ).rejects.toThrow(BadRequestException);
+    });
+
+    it('DTO 驗證失敗（缺少必填欄位或型別錯誤）時拋出 BadRequestException', async () => {
+      const invalidRecord = {
+        id: 'not-a-number', // 應為數字
+        userId: 1,
+        title: 'Test',
+        location: 'Taipei',
+        participantNumbers: 5,
+        price: 0,
+        status: GatheringStatus.OPEN,
+        type: GatheringType.PARTY,
+        startTime: new Date('2025-01-03'),
+        deadline: new Date('2025-01-02'),
+        isArchived: false,
+        createdAt: new Date('2025-01-01'),
+        updatedAt: new Date('2025-01-04'),
+      };
+      const workbook = {
+        SheetNames: ['Sheet1'],
+        Sheets: { Sheet1: {} },
+      };
+      jest.spyOn(XLSX.utils, 'sheet_to_json').mockReturnValue([invalidRecord]);
+
+      await expect(
+        service.checkExcelGathering(workbook as any),
+      ).rejects.toThrow(BadRequestException);
     });
   });
 });
