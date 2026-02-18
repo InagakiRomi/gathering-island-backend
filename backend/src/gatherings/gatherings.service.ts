@@ -356,7 +356,7 @@ export class GatheringsService {
       });
     }
 
-    // 使用partial update
+    // 使用 partial update
     for (let gatheringDto in updateGatheringDto) {
       const gatheringValue = updateGatheringDto[gatheringDto];
       if (gatheringValue) {
@@ -368,6 +368,17 @@ export class GatheringsService {
           }
           // 建立多對多關聯
           gatheringData.tags.set(tagEntities);
+        } else if (gatheringDto === 'deadline') {
+          // 若有更改 deadline 檢查是否超過 startTime
+          const newDeadline = new Date(gatheringValue);
+          const startTime = new Date(gatheringData.startTime);
+          if (newDeadline > startTime) {
+            throw new BadRequestException({
+              message:
+                'The deadline time cannot be earlier than the start time.',
+              code: ErrorCode.BAD_REQUEST,
+            });
+          }
         } else {
           (gatheringData as any)[gatheringDto] = gatheringValue;
         }
