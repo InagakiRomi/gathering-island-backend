@@ -1,5 +1,6 @@
 import { NestFactory } from '@nestjs/core';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
+import * as fs from 'node:fs';
 import { AppModule } from './app.module';
 import { Logger, ValidationPipe } from '@nestjs/common';
 import cookieParser from 'cookie-parser';
@@ -50,9 +51,9 @@ async function bootstrap() {
       'access-token',
     )
     .build();
-  const documentFactory = () => SwaggerModule.createDocument(app, config);
-
-  SwaggerModule.setup('api', app, documentFactory);
+  const document = SwaggerModule.createDocument(app, config);
+  SwaggerModule.setup('api', app, document);
+  fs.writeFileSync('swagger.json', JSON.stringify(document, null, 2));
 
   app.use(cookieParser('my-secret-key'));
 
