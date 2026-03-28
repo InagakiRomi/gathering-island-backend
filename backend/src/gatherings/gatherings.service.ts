@@ -84,12 +84,9 @@ export class GatheringsService {
       query.isArchived = isArchived;
     }
 
-    // 根據關鍵字模糊搜尋 title 或 description（不區分大小寫）
+    // 根據關鍵字模糊搜尋 title（不區分大小寫）
     if (search?.trim()) {
-      query.$or = [
-        { title: { $like: `%${search}%` } },
-        { description: { $like: `%${search}%` } },
-      ];
+      query.$or = [{ title: { $like: `%${search}%` } }];
     }
 
     // 保證 tags 是陣列格式，如果不是就報錯

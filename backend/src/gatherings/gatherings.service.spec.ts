@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/unbound-method */
 import { Test, TestingModule } from '@nestjs/testing';
 import {
   BadRequestException,
@@ -81,7 +82,7 @@ const mockGathering = (
       map: (fn: any) => [{ tagName: 'music' }, { tagName: 'food' }].map(fn),
     },
 
-    calculateStatus: (now: Date) => gathering.status,
+    calculateStatus: (_now: Date) => gathering.status,
 
     toJSON: () => ({
       id: 1,
@@ -218,10 +219,7 @@ describe('GatheringsService', () => {
 
       expect(gatheringRepository.find).toHaveBeenCalledWith(
         expect.objectContaining({
-          $or: [
-            { title: { $like: '%party%' } },
-            { description: { $like: '%party%' } },
-          ],
+          $or: [{ title: { $like: '%party%' } }],
         }),
         expect.any(Object),
       );
@@ -392,10 +390,7 @@ describe('GatheringsService', () => {
       expect(gatheringRepository.find).toHaveBeenCalledWith(
         expect.objectContaining({
           userId: mockUser,
-          $or: [
-            { title: { $like: '%party%' } },
-            { description: { $like: '%party%' } },
-          ],
+          $or: [{ title: { $like: '%party%' } }],
         }),
         expect.any(Object),
       );
@@ -1378,10 +1373,7 @@ describe('GatheringsService', () => {
       expect(gatheringRepository.find).toHaveBeenCalledWith(
         expect.objectContaining({
           id: { $in: [1] },
-          $or: [
-            { title: { $like: '%party%' } },
-            { description: { $like: '%party%' } },
-          ],
+          $or: [{ title: { $like: '%party%' } }],
         }),
         expect.any(Object),
       );
@@ -1513,10 +1505,7 @@ describe('GatheringsService', () => {
           status: GatheringStatus.OPEN,
           type: GatheringType.PARTY,
           isArchived: false,
-          $or: [
-            { title: { $like: '%test%' } },
-            { description: { $like: '%test%' } },
-          ],
+          $or: [{ title: { $like: '%test%' } }],
         }),
         expect.any(Object),
       );
