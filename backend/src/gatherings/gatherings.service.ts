@@ -218,7 +218,19 @@ export class GatheringsService {
     const calculatedStatus = found.calculateStatus(now);
     (found as any).status = calculatedStatus;
 
-    return { gatheringData: found };
+    // 計算目前參與人數
+    const currentParticipantCount = await this.entityManager.count(
+      Participant,
+      { gathering: found.id },
+    );
+
+    // 回傳聚會資料
+    const gatheringData = {
+      ...found.toJSON(),
+      currentParticipantCount,
+    };
+
+    return { gatheringData: gatheringData as any };
   }
 
   /**
