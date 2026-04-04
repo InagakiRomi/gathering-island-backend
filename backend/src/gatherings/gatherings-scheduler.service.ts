@@ -25,10 +25,10 @@ export class GatheringsSchedulerService implements OnApplicationBootstrap {
   }
 
   /**
-   * 每5分鐘執行一次，批量更新聚會狀態
-   * Cron 表達式：每5分鐘執行一次
+   * 每10分鐘執行一次，批量更新聚會狀態
+   * Cron 表達式：每10分鐘執行一次
    */
-  @Cron('*/5 * * * *')
+  @Cron('*/10 * * * *')
   async handleGatheringStatusUpdate() {
     await this.updateGatheringStatus();
   }

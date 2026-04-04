@@ -846,12 +846,14 @@ describe('GatheringsService', () => {
     it('本人可以刪除 gathering', async () => {
       const result = await service.deleteGathering(1, mockUser as any);
       expect(result.gatheringData.isArchived).toBe(true);
+      expect(result.gatheringData.status).toBe(GatheringStatus.CLOSED);
     });
 
     it('管理員可以刪除任何 gathering', async () => {
       gathering.userId = 999;
       const result = await service.deleteGathering(1, mockAdmin as any);
       expect(result.gatheringData.isArchived).toBe(true);
+      expect(result.gatheringData.status).toBe(GatheringStatus.CLOSED);
     });
 
     it('非本人且非管理員刪除時拋出 ForbiddenException', async () => {
@@ -863,15 +865,21 @@ describe('GatheringsService', () => {
 
     it('本人可以恢復 gathering', async () => {
       gathering.isArchived = true;
+      gathering.status = GatheringStatus.CLOSED;
+      (gathering as any).calculateStatus = () => GatheringStatus.OPEN;
       const result = await service.restoreGathering(1, mockUser as any);
       expect(result.gatheringData.isArchived).toBe(false);
+      expect(result.gatheringData.status).toBe(GatheringStatus.OPEN);
     });
 
     it('管理員可以恢復任何 gathering', async () => {
       gathering.isArchived = true;
       gathering.userId = 999;
+      gathering.status = GatheringStatus.CLOSED;
+      (gathering as any).calculateStatus = () => GatheringStatus.UPCOMING;
       const result = await service.restoreGathering(1, mockAdmin as any);
       expect(result.gatheringData.isArchived).toBe(false);
+      expect(result.gatheringData.status).toBe(GatheringStatus.UPCOMING);
     });
 
     it('非本人且非管理員恢復時拋出 ForbiddenException', async () => {
@@ -1518,6 +1526,32 @@ describe('GatheringsService', () => {
    * ============================
    */
   describe('updateGatheringStatuses', () => {
+    it('僅查詢可能需要轉換狀態的候選聚會', async () => {
+      gatheringRepository.find.mockResolvedValue([]);
+
+      await service.updateGatheringStatuses();
+
+      expect(gatheringRepository.find).toHaveBeenCalledWith(
+        expect.objectContaining({
+          isArchived: false,
+          $or: [
+            expect.objectContaining({
+              status: GatheringStatus.OPEN,
+              deadline: expect.objectContaining({ $lte: expect.any(Date) }),
+            }),
+            expect.objectContaining({
+              status: GatheringStatus.OPEN,
+              startTime: expect.objectContaining({ $lt: expect.any(Date) }),
+            }),
+            expect.objectContaining({
+              status: GatheringStatus.UPCOMING,
+              startTime: expect.objectContaining({ $lt: expect.any(Date) }),
+            }),
+          ],
+        }),
+      );
+    });
+
     it('無需更新時回傳 updatedCount 0 且不呼叫 flush', async () => {
       const g = mockGathering({ status: GatheringStatus.OPEN });
       (g as any).calculateStatus = () => GatheringStatus.OPEN; // 與現狀相同

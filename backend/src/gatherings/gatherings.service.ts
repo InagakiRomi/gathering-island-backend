@@ -421,6 +421,7 @@ export class GatheringsService {
     }
 
     gatheringData.isArchived = true;
+    gatheringData.status = GatheringStatus.CLOSED;
     await this.entityManager.persistAndFlush(gatheringData);
     return { gatheringData: gatheringData };
   }
@@ -447,6 +448,7 @@ export class GatheringsService {
     }
 
     gatheringData.isArchived = false;
+    gatheringData.status = gatheringData.calculateStatus(new Date());
     await this.entityManager.persistAndFlush(gatheringData);
     return { gatheringData: gatheringData };
   }
@@ -708,9 +710,14 @@ export class GatheringsService {
       ? em.getRepository(Gathering)
       : this.gatheringRepository;
 
-    // 查詢所有未封存的聚會（不載入 tags 以提升效能）
+    // 只查詢「可能跨越狀態邊界」的聚會，避免每次排程都全表掃描
     const gatherings = await gatheringRepository.find({
       isArchived: false,
+      $or: [
+        { status: GatheringStatus.OPEN, deadline: { $lte: now } },
+        { status: GatheringStatus.OPEN, startTime: { $lt: now } },
+        { status: GatheringStatus.UPCOMING, startTime: { $lt: now } },
+      ],
     });
 
     let updatedCount = 0;
