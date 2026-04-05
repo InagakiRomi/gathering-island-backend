@@ -331,8 +331,17 @@ export class GatheringsService {
     updateGatheringDto: UpdateGatheringDto,
     user: User,
   ): Promise<{ gatheringData: Gathering }> {
-    // 先取得聚會（如果找不到會自動丟錯）
-    const { gatheringData } = await this.getGatheringById(id);
+    // 先取得聚會實體
+    const gatheringData = await this.entityManager.findOne(Gathering, id, {
+      populate: ['tags'],
+    });
+
+    if (!gatheringData) {
+      throw new NotFoundException({
+        message: `Gathering with ID "${id}" not found.`,
+        code: ErrorCode.NOT_FOUND,
+      });
+    }
 
     // 檢查使用者權限（只有本人或管理員可以更新）
     if (user.role !== UserRole.ADMIN && user.id !== gatheringData.userId) {
