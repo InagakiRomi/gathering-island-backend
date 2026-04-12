@@ -191,7 +191,10 @@ export class GatheringsService {
    * @throws {NotFoundException} 若找不到指定id則拋出錯誤
    * @throws {BadRequestException} 若 ID 無效則拋出錯誤
    */
-  async getGatheringById(id: number): Promise<{ gatheringData: Gathering }> {
+  async getGatheringById(
+    id: number,
+    options?: { rawEntity?: boolean },
+  ): Promise<{ gatheringData: Gathering }> {
     // 驗證 ID 是否為有效數字
     if (!id || isNaN(id) || id <= 0 || !Number.isInteger(id)) {
       throw new BadRequestException({
@@ -211,6 +214,11 @@ export class GatheringsService {
         message: `Gathering with ID "${id}" not found.`,
         code: ErrorCode.NOT_FOUND,
       });
+    }
+
+    // 需要持久化時直接回傳 entity，避免 persist plain object
+    if (options?.rawEntity) {
+      return { gatheringData: found };
     }
 
     // 動態計算並更新狀態（不寫入資料庫，僅在返回時顯示）
@@ -351,6 +359,8 @@ export class GatheringsService {
       });
     }
 
+    const currentStatus = gatheringData.calculateStatus(new Date());
+
     // 檢查活動是否已封存
     if (gatheringData.isArchived) {
       throw new BadRequestException({
@@ -360,14 +370,14 @@ export class GatheringsService {
     }
 
     // 檢查活動狀態是否為關閉或進行中（UPCOMING）
-    if (gatheringData.status === GatheringStatus.CLOSED) {
+    if (currentStatus === GatheringStatus.CLOSED) {
       throw new BadRequestException({
         message: 'Cannot update closed gatherings.',
         code: ErrorCode.BAD_REQUEST,
       });
     }
 
-    if (gatheringData.status === GatheringStatus.UPCOMING) {
+    if (currentStatus === GatheringStatus.UPCOMING) {
       throw new BadRequestException({
         message: 'Cannot update gatherings in progress.',
         code: ErrorCode.BAD_REQUEST,
@@ -419,13 +429,41 @@ export class GatheringsService {
     id: number,
     user: User,
   ): Promise<{ gatheringData: Gathering }> {
-    const { gatheringData } = await this.getGatheringById(id);
+    const { gatheringData } = await this.getGatheringById(id, {
+      rawEntity: true,
+    });
 
     // 檢查使用者權限（只有本人或管理員可以刪除）
     if (user.role !== UserRole.ADMIN && user.id !== gatheringData.userId) {
       throw new ForbiddenException({
         message: 'You are not authorized to delete this gathering.',
         code: ErrorCode.FORBIDDEN,
+      });
+    }
+
+    const currentStatus = gatheringData.calculateStatus(new Date());
+
+    // 已封存活動不可重複刪除
+    if (gatheringData.isArchived) {
+      throw new BadRequestException({
+        message: 'Cannot delete archived gatherings.',
+        code: ErrorCode.BAD_REQUEST,
+      });
+    }
+
+    // 已關閉或進行中的活動不可刪除
+    if (currentStatus === GatheringStatus.CLOSED) {
+      throw new BadRequestException({
+        message: 'Cannot delete closed gatherings.',
+        code: ErrorCode.BAD_REQUEST,
+      });
+    }
+
+    // 即將開始的活動不可刪除
+    if (currentStatus === GatheringStatus.UPCOMING) {
+      throw new BadRequestException({
+        message: 'Cannot delete gatherings in progress.',
+        code: ErrorCode.BAD_REQUEST,
       });
     }
 
@@ -446,7 +484,9 @@ export class GatheringsService {
     id: number,
     user: User,
   ): Promise<{ gatheringData: Gathering }> {
-    const { gatheringData } = await this.getGatheringById(id);
+    const { gatheringData } = await this.getGatheringById(id, {
+      rawEntity: true,
+    });
 
     // 檢查使用者權限（只有本人或管理員可以恢復）
     if (user.role !== UserRole.ADMIN && user.id !== gatheringData.userId) {
@@ -473,7 +513,9 @@ export class GatheringsService {
     id: number,
     user: User,
   ): Promise<{ gatheringData: Gathering }> {
-    const { gatheringData } = await this.getGatheringById(id);
+    const { gatheringData } = await this.getGatheringById(id, {
+      rawEntity: true,
+    });
 
     // 檢查使用者權限（只有本人或管理員可以關閉）
     if (user.role !== UserRole.ADMIN && user.id !== gatheringData.userId) {
