@@ -32,6 +32,7 @@
             "schema": {
               "type": "string",
               "enum": [
+                "id",
                 "participantNumbers",
                 "price",
                 "status",
@@ -213,6 +214,7 @@
             "schema": {
               "type": "string",
               "enum": [
+                "id",
                 "participantNumbers",
                 "price",
                 "status",
@@ -348,6 +350,7 @@
             "schema": {
               "type": "string",
               "enum": [
+                "id",
                 "participantNumbers",
                 "price",
                 "status",

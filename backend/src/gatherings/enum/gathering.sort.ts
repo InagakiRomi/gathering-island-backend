@@ -1,5 +1,8 @@
 /** 聚會排序欄位 enum */
 export enum GatheringSortBy {
+  /** 活動 ID */
+  ID = 'id',
+
   /** 參加人數 */
   PARTICIPANT_NUMBERS = 'participantNumbers',
 
