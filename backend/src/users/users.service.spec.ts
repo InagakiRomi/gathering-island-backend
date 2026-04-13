@@ -169,6 +169,29 @@ describe('UsersService', () => {
 
   /**
    * ============================
+   * getUserById
+   * ============================
+   */
+  describe('getUserById', () => {
+    it('成功依 id 取得使用者', async () => {
+      const target = { ...mockUser } as User;
+      userRepository.findOne.mockResolvedValue(target);
+
+      const result = await service.getUserById(1);
+
+      expect(userRepository.findOne).toHaveBeenCalledWith({ id: 1 });
+      expect(result).toBe(target);
+    });
+
+    it('找不到使用者時拋出 NotFoundException', async () => {
+      userRepository.findOne.mockResolvedValue(null);
+
+      await expect(service.getUserById(999)).rejects.toThrow(NotFoundException);
+    });
+  });
+
+  /**
+   * ============================
    * getUsers
    * ============================
    */

@@ -83,6 +83,26 @@ export class UsersService {
   }
 
   /**
+   * 管理員依 ID 取得單一使用者
+   *
+   * @param {number} id 使用者主鍵
+   * @returns {Promise<User>} 使用者實體
+   * @throws {NotFoundException} 找不到指定 id 時
+   */
+  async getUserById(id: number): Promise<User> {
+    const user = await this.userRepository.findOne({ id });
+
+    if (!user) {
+      throw new NotFoundException({
+        message: `User with id ${id} not found.`,
+        code: ErrorCode.NOT_FOUND,
+      });
+    }
+
+    return user;
+  }
+
+  /**
    * 分頁列出所有使用者
    *
    * @param {GetUsersQueryDto} queryDto 查詢參數 DTO

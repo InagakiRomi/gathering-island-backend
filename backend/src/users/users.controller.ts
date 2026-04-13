@@ -75,6 +75,22 @@ export class UsersController {
   }
 
   /**
+   * 管理員依 ID 取得單一使用者
+   *
+   * @param {number} id 使用者主鍵
+   * @returns {Promise<User>} 使用者資料
+   */
+  @Get(':id')
+  @Roles('admin')
+  @ApiOperation({
+    summary: '管理員取得指定使用者',
+    description: '依使用者 ID 取得基本資料，僅管理員可用。',
+  })
+  getUserById(@Param('id', ParseIntPipe) id: number): Promise<User> {
+    return this.usersService.getUserById(id);
+  }
+
+  /**
    * 管理員依 ID 更新使用者名稱
    *
    * @param {number} id 使用者主鍵

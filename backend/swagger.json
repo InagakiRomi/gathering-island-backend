@@ -1000,6 +1000,34 @@
       }
     },
     "/users/{id}": {
+      "get": {
+        "description": "依使用者 ID 取得基本資料，僅管理員可用。",
+        "operationId": "UsersController_getUserById",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "access-token": []
+          }
+        ],
+        "summary": "管理員取得指定使用者",
+        "tags": [
+          "Users"
+        ]
+      },
       "patch": {
         "description": "依使用者 ID 更新 displayName，僅管理員可用。",
         "operationId": "UsersController_updateUserById",
