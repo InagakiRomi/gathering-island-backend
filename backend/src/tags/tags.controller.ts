@@ -3,12 +3,29 @@ import { TagsService } from './tags.service';
 import { CreateTagDto } from './dto/create-tag.dto';
 import { Tag } from './entities/tag.entity';
 import { ApiBearerAuth, ApiOperation } from '@nestjs/swagger';
+import { Roles } from 'src/common/decorators/roles.decorator';
 
 /** 標籤 Controller */
 @ApiBearerAuth('access-token')
 @Controller('tags')
 export class TagsController {
   constructor(private tagsService: TagsService) {}
+
+  /**
+   * 列出所有標籤（管理後台用）
+   *
+   * @returns {Promise<{ tagData: Tag[] }>} 標籤清單（物件包一層，避免成功攔截器將陣列展開成數字鍵）
+   */
+  @Get()
+  @Roles('admin')
+  @ApiOperation({
+    summary: '列出所有標籤',
+    description: '回傳資料庫中所有標籤，依 id 遞增排序；僅管理員可用。',
+  })
+  async listTags(): Promise<{ tagData: Tag[] }> {
+    const tagData = await this.tagsService.findAllTags();
+    return { tagData };
+  }
 
   /**
    * 根據標籤名稱查詢標籤 ID

@@ -50,4 +50,13 @@ export class TagsService {
 
     return tag;
   }
+
+  /**
+   * 列出所有標籤（依 id 遞增）
+   *
+   * @returns {Promise<Tag[]>} 標籤清單
+   */
+  async findAllTags(): Promise<Tag[]> {
+    return this.entityManager.find(Tag, {}, { orderBy: { id: 'ASC' } });
+  }
 }

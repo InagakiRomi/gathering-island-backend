@@ -751,20 +751,11 @@
         ]
       }
     },
-    "/tags/name": {
+    "/tags": {
       "get": {
-        "description": "根據傳入的 tagName 查詢資料庫中是否存在相同名稱的標籤，並回傳其 ID",
-        "operationId": "TagsController_findTagIdByName",
-        "parameters": [
-          {
-            "name": "tagName",
-            "required": true,
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
+        "description": "回傳資料庫中所有標籤，依 id 遞增排序；僅管理員可用。",
+        "operationId": "TagsController_listTags",
+        "parameters": [],
         "responses": {
           "200": {
             "description": ""
@@ -775,13 +766,11 @@
             "access-token": []
           }
         ],
-        "summary": "透過標籤名稱查詢 ID",
+        "summary": "列出所有標籤",
         "tags": [
           "Tags"
         ]
-      }
-    },
-    "/tags": {
+      },
       "post": {
         "description": "若傳入的標籤名稱尚未存在，將建立新的標籤並回傳該標籤資料；若已存在，則回傳既有資料",
         "operationId": "TagsController_createTag",
@@ -807,6 +796,36 @@
           }
         ],
         "summary": "建立新標籤",
+        "tags": [
+          "Tags"
+        ]
+      }
+    },
+    "/tags/name": {
+      "get": {
+        "description": "根據傳入的 tagName 查詢資料庫中是否存在相同名稱的標籤，並回傳其 ID",
+        "operationId": "TagsController_findTagIdByName",
+        "parameters": [
+          {
+            "name": "tagName",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "access-token": []
+          }
+        ],
+        "summary": "透過標籤名稱查詢 ID",
         "tags": [
           "Tags"
         ]

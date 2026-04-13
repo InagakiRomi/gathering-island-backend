@@ -43,6 +43,7 @@ describe('TagsService', () => {
           provide: EntityManager,
           useValue: {
             findOne: jest.fn(),
+            find: jest.fn(),
             create: jest.fn(),
             persistAndFlush: jest.fn(),
           },
@@ -122,6 +123,24 @@ describe('TagsService', () => {
         tagName: 'new',
       });
       expect(entityManager.persistAndFlush).toHaveBeenCalledWith(newTag);
+    });
+  });
+
+  /**
+   * ============================
+   * findAllTags
+   * ============================
+   */
+  describe('findAllTags', () => {
+    it('應依 id 遞增回傳所有標籤', async () => {
+      const t1 = mockTag('a');
+      const t2 = mockTag('b');
+      entityManager.find.mockResolvedValue([t1, t2]);
+
+      const result = await service.findAllTags();
+
+      expect(result).toEqual([t1, t2]);
+      expect(entityManager.find).toHaveBeenCalledWith(Tag, {}, { orderBy: { id: 'ASC' } });
     });
   });
 });
