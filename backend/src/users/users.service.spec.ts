@@ -1,4 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
+import { NotFoundException } from '@nestjs/common';
 import { EntityManager, EntityRepository } from '@mikro-orm/core';
 import { getRepositoryToken } from '@mikro-orm/nestjs';
 
@@ -57,6 +58,7 @@ describe('UsersService', () => {
           provide: getRepositoryToken(User),
           useValue: {
             find: jest.fn(),
+            findOne: jest.fn(),
             count: jest.fn(),
           },
         },
@@ -133,6 +135,35 @@ describe('UsersService', () => {
       expect(entityManager.persistAndFlush).toHaveBeenCalledWith(mockUser);
       expect(result).toEqual(expectedPayload);
       expect(spy).toHaveBeenCalledWith(mockUser);
+    });
+  });
+
+  /**
+   * ============================
+   * updateUserById
+   * ============================
+   */
+  describe('updateUserById', () => {
+    it('成功依 id 更新 displayName 並回傳使用者', async () => {
+      const target = { ...mockUser } as User;
+      const dto: UpdateUserDto = { displayName: 'New Display' };
+
+      userRepository.findOne.mockResolvedValue(target);
+
+      const result = await service.updateUserById(1, dto);
+
+      expect(userRepository.findOne).toHaveBeenCalledWith({ id: 1 });
+      expect(target.displayName).toBe(dto.displayName);
+      expect(entityManager.persistAndFlush).toHaveBeenCalledWith(target);
+      expect(result).toBe(target);
+    });
+
+    it('找不到使用者時拋出 NotFoundException', async () => {
+      userRepository.findOne.mockResolvedValue(null);
+
+      await expect(service.updateUserById(999, { displayName: 'x' })).rejects.toThrow(
+        NotFoundException,
+      );
     });
   });
 

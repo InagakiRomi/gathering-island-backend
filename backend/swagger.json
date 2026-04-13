@@ -998,6 +998,46 @@
           "Users"
         ]
       }
+    },
+    "/users/{id}": {
+      "patch": {
+        "description": "依使用者 ID 更新 displayName，僅管理員可用。",
+        "operationId": "UsersController_updateUserById",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateUserDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "access-token": []
+          }
+        ],
+        "summary": "管理員更新指定使用者名稱",
+        "tags": [
+          "Users"
+        ]
+      }
     }
   },
   "info": {

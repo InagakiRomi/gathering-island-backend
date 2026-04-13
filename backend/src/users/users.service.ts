@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { JwtPayload } from 'src/auth/strategies/jwt-payload.interface';
 import { User } from './entities/user.entity';
 import { UpdateUserDto } from './dto/update-user.dto';
@@ -6,6 +6,7 @@ import { buildJwtPayload } from 'src/auth/strategies/jwt-payload.builder';
 import { GetUsersQueryDto } from './dto/get-users-query.dto';
 import { InjectRepository } from '@mikro-orm/nestjs';
 import { EntityManager, EntityRepository } from '@mikro-orm/core';
+import { ErrorCode } from 'src/common/enum/error-code.enum';
 
 @Injectable()
 export class UsersService {
@@ -49,6 +50,36 @@ export class UsersService {
     // 建立並回傳更新後的 Payload
     const payload = buildJwtPayload(user);
     return Promise.resolve(payload);
+  }
+
+  /**
+   * 管理員依 ID 更新使用者顯示名稱
+   *
+   * @param {number} id 使用者主鍵
+   * @param {UpdateUserDto} updateUserDto 更新欄位
+   * @returns {Promise<User>} 更新後的使用者實體
+   * @throws {NotFoundException} 找不到指定 id 時
+   */
+  async updateUserById(
+    id: number,
+    updateUserDto: UpdateUserDto,
+  ): Promise<User> {
+    const user = await this.userRepository.findOne({ id });
+
+    if (!user) {
+      throw new NotFoundException({
+        message: `User with id ${id} not found.`,
+        code: ErrorCode.NOT_FOUND,
+      });
+    }
+
+    if (updateUserDto.displayName !== undefined) {
+      user.displayName = updateUserDto.displayName;
+    }
+
+    await this.entityManager.persistAndFlush(user);
+
+    return user;
   }
 
   /**

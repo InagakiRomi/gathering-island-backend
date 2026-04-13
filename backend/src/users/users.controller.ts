@@ -1,4 +1,12 @@
-import { Body, Controller, Get, Patch, Query } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  ParseIntPipe,
+  Patch,
+  Query,
+} from '@nestjs/common';
 import { UsersService } from './users.service';
 import { ApiBearerAuth, ApiOperation } from '@nestjs/swagger';
 import { User } from './entities/user.entity';
@@ -64,5 +72,25 @@ export class UsersController {
     @Query() queryDto: GetUsersQueryDto,
   ): Promise<{ items: User[]; page: number; limit: number; total: number }> {
     return this.usersService.getUsers(queryDto);
+  }
+
+  /**
+   * 管理員依 ID 更新使用者名稱
+   *
+   * @param {number} id 使用者主鍵
+   * @param {UpdateUserDto} updateUserDto 更新內容
+   * @returns {Promise<User>} 更新後的使用者資料
+   */
+  @Patch(':id')
+  @Roles('admin')
+  @ApiOperation({
+    summary: '管理員更新指定使用者名稱',
+    description: '依使用者 ID 更新 displayName，僅管理員可用。',
+  })
+  updateUserById(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() updateUserDto: UpdateUserDto,
+  ): Promise<User> {
+    return this.usersService.updateUserById(id, updateUserDto);
   }
 }
