@@ -22,6 +22,7 @@ import { Tag } from '../tags/entities/tag.entity';
 import { User } from 'src/users/entities/user.entity';
 import { UserRole } from 'src/users/enum/auth.role';
 import { ErrorCode } from 'src/common/enum/error-code.enum';
+import { DateUtil } from 'src/common/utils/date.util';
 import { Participant } from './entities/participant.entity';
 import { ConflictException } from '@nestjs/common';
 import { ImportGatheringExcelDto } from './dto/import-gathering-excel.dto';
@@ -181,6 +182,61 @@ export class GatheringsService {
     }
 
     return this.queryAndFilterGatherings(queryDto, baseQuery);
+  }
+
+  /**
+   * 取得指定活動的已報名使用者列表（僅管理員或活動建立者可查）
+   *
+   * @param gatheringId 活動 ID
+   * @param user 目前登入使用者
+   */
+  async getGatheringParticipants(
+    gatheringId: number,
+    user: User,
+  ): Promise<{
+    userData: {
+      id: number;
+      email: string;
+      displayName: string;
+      role: UserRole;
+      createdAt: string;
+      updatedAt: string;
+    }[];
+  }> {
+    const { gatheringData } = await this.getGatheringById(gatheringId, {
+      rawEntity: true,
+    });
+
+    if (user.role !== UserRole.ADMIN && user.id !== gatheringData.userId) {
+      throw new ForbiddenException({
+        message:
+          'You are not authorized to view participants for this gathering.',
+        code: ErrorCode.FORBIDDEN,
+      });
+    }
+
+    const participants = await this.entityManager.find(
+      Participant,
+      { gathering: gatheringId },
+      {
+        populate: ['user'],
+        orderBy: { joinedAt: 'ASC' },
+      },
+    );
+
+    const userData = participants.map((participant) => {
+      const participantUser = participant.user;
+      return {
+        id: participantUser.id as number,
+        email: participantUser.email,
+        displayName: participantUser.displayName,
+        role: participantUser.role,
+        createdAt: DateUtil.toAppTimezone(participantUser.createdAt),
+        updatedAt: DateUtil.toAppTimezone(participantUser.updatedAt),
+      };
+    });
+
+    return { userData };
   }
 
   /**

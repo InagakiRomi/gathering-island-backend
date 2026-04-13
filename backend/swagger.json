@@ -455,6 +455,36 @@
         ]
       }
     },
+    "/gatherings/{id}/participants": {
+      "get": {
+        "description": "回傳已報名此活動的使用者基本資料；僅管理員或該活動建立者可查詢。",
+        "operationId": "GatheringsController_getGatheringParticipants",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "access-token": []
+          }
+        ],
+        "summary": "查詢活動已參加帳號",
+        "tags": [
+          "Gatherings"
+        ]
+      }
+    },
     "/gatherings/{id}": {
       "get": {
         "description": "透過指定的聚會 ID，取得該筆聚會的詳細資料",

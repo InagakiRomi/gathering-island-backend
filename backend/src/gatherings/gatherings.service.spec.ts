@@ -546,6 +546,75 @@ describe('GatheringsService', () => {
 
   /**
    * ============================
+   * getGatheringParticipants
+   * ============================
+   */
+  describe('getGatheringParticipants', () => {
+    afterEach(() => {
+      jest.restoreAllMocks();
+    });
+
+    it('活動建立者可取得參與者列表', async () => {
+      const gathering = mockGathering({ userId: 1 });
+      jest.spyOn(service, 'getGatheringById').mockResolvedValue({
+        gatheringData: gathering,
+      });
+
+      const participantUser = {
+        id: 2,
+        email: 'p@example.com',
+        displayName: 'Participant',
+        role: UserRole.USER,
+        createdAt: new Date('2025-01-01T00:00:00.000Z'),
+        updatedAt: new Date('2025-01-02T00:00:00.000Z'),
+      };
+
+      entityManager.find.mockResolvedValue([
+        mockParticipant({ user: participantUser as any }) as any,
+      ]);
+
+      const result = await service.getGatheringParticipants(1, mockUser as any);
+
+      expect(result.userData).toHaveLength(1);
+      expect(result.userData[0].id).toBe(2);
+      expect(result.userData[0].email).toBe('p@example.com');
+      expect(entityManager.find).toHaveBeenCalledWith(
+        Participant,
+        { gathering: 1 },
+        expect.objectContaining({
+          populate: ['user'],
+          orderBy: { joinedAt: 'ASC' },
+        }),
+      );
+    });
+
+    it('管理員可取得他人活動的參與者列表', async () => {
+      const gathering = mockGathering({ userId: 42 });
+      jest.spyOn(service, 'getGatheringById').mockResolvedValue({
+        gatheringData: gathering,
+      });
+      entityManager.find.mockResolvedValue([]);
+
+      const result = await service.getGatheringParticipants(1, mockAdmin as any);
+
+      expect(result.userData).toEqual([]);
+    });
+
+    it('非建立者且非管理員時拋出 ForbiddenException', async () => {
+      const gathering = mockGathering({ userId: 999 });
+      jest.spyOn(service, 'getGatheringById').mockResolvedValue({
+        gatheringData: gathering,
+      });
+
+      await expect(
+        service.getGatheringParticipants(1, mockUser as any),
+      ).rejects.toThrow(ForbiddenException);
+      expect(entityManager.find).not.toHaveBeenCalled();
+    });
+  });
+
+  /**
+   * ============================
    * createGathering
    * ============================
    */
@@ -667,9 +736,7 @@ describe('GatheringsService', () => {
     it('本人可以成功更新 gathering 與 tags', async () => {
       const gathering = mockGathering();
 
-      jest
-        .spyOn(service, 'getGatheringById')
-        .mockResolvedValue({ gatheringData: gathering });
+      entityManager.findOne.mockResolvedValue(gathering);
 
       tagsService.findOrCreateTag.mockResolvedValue(mockTag('new') as any);
 
@@ -686,9 +753,7 @@ describe('GatheringsService', () => {
     it('管理員可以更新任何 gathering', async () => {
       const gathering = mockGathering({ userId: 999 });
 
-      jest
-        .spyOn(service, 'getGatheringById')
-        .mockResolvedValue({ gatheringData: gathering });
+      entityManager.findOne.mockResolvedValue(gathering);
 
       tagsService.findOrCreateTag.mockResolvedValue(mockTag('new') as any);
 
@@ -704,9 +769,7 @@ describe('GatheringsService', () => {
     it('非本人且非管理員時拋出 ForbiddenException', async () => {
       const gathering = mockGathering({ userId: 999 });
 
-      jest
-        .spyOn(service, 'getGatheringById')
-        .mockResolvedValue({ gatheringData: gathering });
+      entityManager.findOne.mockResolvedValue(gathering);
 
       await expect(
         service.updateGathering(
@@ -720,9 +783,7 @@ describe('GatheringsService', () => {
     it('數值為 0 的欄位無法被更新（目前行為，防止誤改）', async () => {
       const gathering = mockGathering({ participantNumbers: 10 });
 
-      jest
-        .spyOn(service, 'getGatheringById')
-        .mockResolvedValue({ gatheringData: gathering });
+      entityManager.findOne.mockResolvedValue(gathering);
 
       await service.updateGathering(
         1,
@@ -736,9 +797,7 @@ describe('GatheringsService', () => {
     it('活動已封存時無法更新，拋出 BadRequestException', async () => {
       const gathering = mockGathering({ isArchived: true });
 
-      jest
-        .spyOn(service, 'getGatheringById')
-        .mockResolvedValue({ gatheringData: gathering });
+      entityManager.findOne.mockResolvedValue(gathering);
 
       await expect(
         service.updateGathering(
@@ -759,9 +818,7 @@ describe('GatheringsService', () => {
         status: GatheringStatus.CLOSED,
       });
 
-      jest
-        .spyOn(service, 'getGatheringById')
-        .mockResolvedValue({ gatheringData: gathering });
+      entityManager.findOne.mockResolvedValue(gathering);
 
       await expect(
         service.updateGathering(
@@ -782,9 +839,7 @@ describe('GatheringsService', () => {
         status: GatheringStatus.UPCOMING,
       });
 
-      jest
-        .spyOn(service, 'getGatheringById')
-        .mockResolvedValue({ gatheringData: gathering });
+      entityManager.findOne.mockResolvedValue(gathering);
 
       await expect(
         service.updateGathering(
@@ -807,9 +862,7 @@ describe('GatheringsService', () => {
         deadline: new Date('2025-05-01T12:00:00Z'),
       });
 
-      jest
-        .spyOn(service, 'getGatheringById')
-        .mockResolvedValue({ gatheringData: gathering });
+      entityManager.findOne.mockResolvedValue(gathering);
 
       const newDeadline = new Date('2025-07-01T12:00:00Z'); // 晚於 startTime
 

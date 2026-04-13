@@ -110,6 +110,25 @@ export class GatheringsController {
   }
 
   /**
+   * 取得指定活動已報名的帳號列表（管理員或活動建立者）
+   *
+   * @param id 聚會 ID
+   * @param user 目前登入使用者
+   */
+  @Get(':id/participants')
+  @ApiOperation({
+    summary: '查詢活動已參加帳號',
+    description:
+      '回傳已報名此活動的使用者基本資料；僅管理員或該活動建立者可查詢。',
+  })
+  getGatheringParticipants(
+    @Param('id', ParseIntPipe) id: number,
+    @GetUser() user: User,
+  ) {
+    return this.gatheringsService.getGatheringParticipants(id, user);
+  }
+
+  /**
    * 取得指定 id 的聚會
    *
    * @param {number} id 聚會 ID
