@@ -1,5 +1,9 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  ForbiddenException,
+  NotFoundException,
+} from '@nestjs/common';
 import { EntityManager, EntityRepository } from '@mikro-orm/core';
 import { getRepositoryToken } from '@mikro-orm/nestjs';
 
@@ -7,6 +11,7 @@ import { UsersService } from './users.service';
 import { User } from './entities/user.entity';
 import { UserRole } from 'src/users/enum/auth.role';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { UpdateUserRoleDto } from './dto/update-user-role.dto';
 import { GetUsersQueryDto } from './dto/get-users-query.dto';
 import { JwtPayload } from 'src/auth/strategies/jwt-payload.interface';
 import * as jwtPayloadBuilder from 'src/auth/strategies/jwt-payload.builder';
@@ -38,6 +43,15 @@ const mockUsers: User[] = [
     displayName: 'User Two',
   } as User,
 ];
+
+/** 另一位管理員（與 mockUser id 不同，用於角色變更測試的操作者） */
+const mockAdminActor: User = {
+  ...mockUser,
+  id: 2,
+  email: 'admin@example.com',
+  displayName: 'Admin Actor',
+  role: UserRole.ADMIN,
+} as User;
 
 /**
  * ============================
@@ -135,6 +149,87 @@ describe('UsersService', () => {
       expect(entityManager.persistAndFlush).toHaveBeenCalledWith(mockUser);
       expect(result).toEqual(expectedPayload);
       expect(spy).toHaveBeenCalledWith(mockUser);
+    });
+  });
+
+  /**
+   * ============================
+   * updateUserRoleById
+   * ============================
+   */
+  describe('updateUserRoleById', () => {
+    it('成功將一般使用者升級為管理員', async () => {
+      const target = { ...mockUser, role: UserRole.USER } as User;
+      const dto: UpdateUserRoleDto = { role: UserRole.ADMIN };
+
+      userRepository.findOne.mockResolvedValue(target);
+      userRepository.count.mockResolvedValue(1);
+
+      const result = await service.updateUserRoleById(1, dto, mockAdminActor);
+
+      expect(target.role).toBe(UserRole.ADMIN);
+      expect(entityManager.persistAndFlush).toHaveBeenCalledWith(target);
+      expect(result).toBe(target);
+    });
+
+    it('角色未變更時不寫入資料庫', async () => {
+      const target = { ...mockUser, role: UserRole.USER } as User;
+      const dto: UpdateUserRoleDto = { role: UserRole.USER };
+
+      userRepository.findOne.mockResolvedValue(target);
+
+      const result = await service.updateUserRoleById(1, dto, mockAdminActor);
+
+      expect(entityManager.persistAndFlush).not.toHaveBeenCalled();
+      expect(result).toBe(target);
+    });
+
+    it('有多位管理員時可將其中一位降級為一般使用者', async () => {
+      const target = { ...mockUser, role: UserRole.ADMIN } as User;
+      const dto: UpdateUserRoleDto = { role: UserRole.USER };
+
+      userRepository.findOne.mockResolvedValue(target);
+      userRepository.count.mockResolvedValue(2);
+
+      const result = await service.updateUserRoleById(1, dto, mockAdminActor);
+
+      expect(target.role).toBe(UserRole.USER);
+      expect(entityManager.persistAndFlush).toHaveBeenCalledWith(target);
+      expect(result).toBe(target);
+    });
+
+    it('管理員不可變更自己的角色', async () => {
+      const target = { ...mockUser, id: 1, role: UserRole.ADMIN } as User;
+      const actor = { ...mockUser, id: 1, role: UserRole.ADMIN } as User;
+      const dto: UpdateUserRoleDto = { role: UserRole.USER };
+
+      userRepository.findOne.mockResolvedValue(target);
+
+      await expect(service.updateUserRoleById(1, dto, actor)).rejects.toThrow(
+        ForbiddenException,
+      );
+      expect(entityManager.persistAndFlush).not.toHaveBeenCalled();
+    });
+
+    it('僅剩一位管理員時不可降級', async () => {
+      const target = { ...mockUser, role: UserRole.ADMIN } as User;
+      const dto: UpdateUserRoleDto = { role: UserRole.USER };
+
+      userRepository.findOne.mockResolvedValue(target);
+      userRepository.count.mockResolvedValue(1);
+
+      await expect(
+        service.updateUserRoleById(1, dto, mockAdminActor),
+      ).rejects.toThrow(BadRequestException);
+      expect(entityManager.persistAndFlush).not.toHaveBeenCalled();
+    });
+
+    it('找不到使用者時拋出 NotFoundException', async () => {
+      userRepository.findOne.mockResolvedValue(null);
+
+      await expect(
+        service.updateUserRoleById(999, { role: UserRole.ADMIN }, mockAdminActor),
+      ).rejects.toThrow(NotFoundException);
     });
   });
 

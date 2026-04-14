@@ -1,7 +1,14 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  ForbiddenException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { JwtPayload } from 'src/auth/strategies/jwt-payload.interface';
 import { User } from './entities/user.entity';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { UpdateUserRoleDto } from './dto/update-user-role.dto';
+import { UserRole } from './enum/auth.role';
 import { buildJwtPayload } from 'src/auth/strategies/jwt-payload.builder';
 import { GetUsersQueryDto } from './dto/get-users-query.dto';
 import { InjectRepository } from '@mikro-orm/nestjs';
@@ -50,6 +57,66 @@ export class UsersService {
     // 建立並回傳更新後的 Payload
     const payload = buildJwtPayload(user);
     return Promise.resolve(payload);
+  }
+
+  /**
+   * 管理員依 ID 更新使用者角色
+   *
+   * @param {number} id 使用者主鍵
+   * @param {UpdateUserRoleDto} updateUserRoleDto 新角色
+   * @returns {Promise<User>} 更新後的使用者實體
+   * @throws {NotFoundException} 找不到指定 id 時
+   * @throws {BadRequestException} 若會導致系統沒有任何管理員時
+   * @throws {ForbiddenException} 管理員嘗試變更自己的角色時
+   */
+  async updateUserRoleById(
+    id: number,
+    updateUserRoleDto: UpdateUserRoleDto,
+    actor: User,
+  ): Promise<User> {
+    const user = await this.userRepository.findOne({ id });
+
+    // 檢查使用者是否存在
+    if (!user) {
+      throw new NotFoundException({
+        message: `User with id ${id} not found.`,
+        code: ErrorCode.NOT_FOUND,
+      });
+    }
+
+    // 取得更新後的角色
+    const { role: newRole } = updateUserRoleDto;
+
+    // 檢查角色是否已經是最新
+    if (newRole === user.role) {
+      return user;
+    }
+
+    // 檢查使用者是否為管理員且嘗試變更自己的角色
+    if (actor.id === id) {
+      throw new ForbiddenException({
+        message: 'Administrators cannot change their own role.',
+        code: ErrorCode.FORBIDDEN,
+      });
+    }
+
+    // 檢查使用者是否為管理員且嘗試將最後一位管理員降級為一般使用者
+    if (
+      user.role === UserRole.ADMIN &&
+      newRole === UserRole.USER &&
+      (await this.userRepository.count({ role: UserRole.ADMIN })) <= 1
+    ) {
+      throw new BadRequestException({
+        message: 'Cannot demote the last administrator.',
+        code: ErrorCode.BAD_REQUEST,
+      });
+    }
+
+    // 更新使用者角色
+    user.role = newRole;
+    await this.entityManager.persistAndFlush(user);
+
+    return user;
   }
 
   /**

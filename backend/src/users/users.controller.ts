@@ -13,6 +13,7 @@ import { User } from './entities/user.entity';
 import { JwtPayload } from '../auth/strategies/jwt-payload.interface';
 import { GetUser } from '../auth/decorator/get-user.decorator';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { UpdateUserRoleDto } from './dto/update-user-role.dto';
 import { GetUsersQueryDto } from './dto/get-users-query.dto';
 import { Roles } from 'src/common/decorators/roles.decorator';
 
@@ -88,6 +89,28 @@ export class UsersController {
   })
   getUserById(@Param('id', ParseIntPipe) id: number): Promise<User> {
     return this.usersService.getUserById(id);
+  }
+
+  /**
+   * 管理員依 ID 更新使用者角色
+   *
+   * @param {number} id 使用者主鍵
+   * @param {UpdateUserRoleDto} updateUserRoleDto 新角色
+   * @returns {Promise<User>} 更新後的使用者資料
+   */
+  @Patch(':id/role')
+  @Roles('admin')
+  @ApiOperation({
+    summary: '管理員更新指定使用者角色',
+    description:
+      '依使用者 ID 更新 role（user / admin）。不可將最後一位管理員降級為一般使用者；管理員不可變更自己的角色。',
+  })
+  updateUserRoleById(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() updateUserRoleDto: UpdateUserRoleDto,
+    @GetUser() actor: User,
+  ): Promise<User> {
+    return this.usersService.updateUserRoleById(id, updateUserRoleDto, actor);
   }
 
   /**

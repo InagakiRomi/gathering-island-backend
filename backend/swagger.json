@@ -1145,6 +1145,46 @@
           "Users"
         ]
       }
+    },
+    "/users/{id}/role": {
+      "patch": {
+        "description": "依使用者 ID 更新 role（user / admin）。不可將最後一位管理員降級為一般使用者；管理員不可變更自己的角色。",
+        "operationId": "UsersController_updateUserRoleById",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateUserRoleDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "access-token": []
+          }
+        ],
+        "summary": "管理員更新指定使用者角色",
+        "tags": [
+          "Users"
+        ]
+      }
     }
   },
   "info": {
@@ -1325,6 +1365,22 @@
             "description": "使用者名稱"
           }
         }
+      },
+      "UpdateUserRoleDto": {
+        "type": "object",
+        "properties": {
+          "role": {
+            "type": "string",
+            "enum": [
+              "user",
+              "admin"
+            ],
+            "description": "使用者角色"
+          }
+        },
+        "required": [
+          "role"
+        ]
       }
     }
   }
