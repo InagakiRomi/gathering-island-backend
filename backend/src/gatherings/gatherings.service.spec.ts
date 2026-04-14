@@ -630,7 +630,7 @@ describe('GatheringsService', () => {
           location: 'Taipei',
           participantNumbers: 5,
           price: 0,
-          startTime: new Date(),
+          startTime: new Date(Date.now() + 60_000),
           tags: ['music'],
         } as any,
         mockUser as any,
@@ -649,7 +649,7 @@ describe('GatheringsService', () => {
           title: 'New Gathering',
           location: 'Taipei',
           participantNumbers: 5,
-          startTime: new Date(),
+          startTime: new Date(Date.now() + 60_000),
           tags: [],
         } as any,
         mockUser as any,
@@ -667,7 +667,7 @@ describe('GatheringsService', () => {
           title: 'New Gathering',
           location: 'Taipei',
           participantNumbers: 5,
-          startTime: new Date(),
+          startTime: new Date(Date.now() + 60_000),
         } as any,
         mockUser as any,
       );
@@ -721,6 +721,31 @@ describe('GatheringsService', () => {
       ).rejects.toThrow(
         new BadRequestException({
           message: 'Dead line cannot be earlier than the start time.',
+          code: ErrorCode.BAD_REQUEST,
+        }),
+      );
+    });
+
+    it('deadline 早於現在時間時拋出 BadRequestException', async () => {
+      const now = new Date();
+      const startTime = new Date(now.getTime() + 1000 * 60 * 60 * 24); // 一天後
+      const deadline = new Date(now.getTime() - 1000 * 60 * 60); // 一小時前
+      await expect(
+        service.createGathering(
+          {
+            title: 'Past Deadline',
+            location: 'Taipei',
+            participantNumbers: 5,
+            startTime,
+            deadline,
+            tags: ['music'],
+          } as any,
+          mockUser as any,
+        ),
+      ).rejects.toThrow(
+        new BadRequestException({
+          message:
+            'The registration deadline cannot be earlier than the current time.',
           code: ErrorCode.BAD_REQUEST,
         }),
       );
@@ -856,15 +881,15 @@ describe('GatheringsService', () => {
     });
 
     it('更新 deadline 且新 deadline 大於 startTime 時拋出 BadRequestException', async () => {
-      const startTime = new Date('2025-06-01T12:00:00Z');
+      const startTime = new Date(Date.now() + 1000 * 60 * 60 * 48); // 兩天後
       const gathering = mockGathering({
         startTime,
-        deadline: new Date('2025-05-01T12:00:00Z'),
+        deadline: new Date(Date.now() + 1000 * 60 * 60 * 24),
       });
 
       entityManager.findOne.mockResolvedValue(gathering);
 
-      const newDeadline = new Date('2025-07-01T12:00:00Z'); // 晚於 startTime
+      const newDeadline = new Date(startTime.getTime() + 1000 * 60 * 60); // 晚於 startTime
 
       await expect(
         service.updateGathering(
@@ -875,6 +900,32 @@ describe('GatheringsService', () => {
       ).rejects.toThrow(
         new BadRequestException({
           message: 'The deadline time cannot be earlier than the start time.',
+          code: ErrorCode.BAD_REQUEST,
+        }),
+      );
+    });
+
+    it('更新 deadline 且新 deadline 早於現在時間時拋出 BadRequestException', async () => {
+      const startTime = new Date(Date.now() + 1000 * 60 * 60 * 24);
+      const gathering = mockGathering({
+        startTime,
+        deadline: new Date(Date.now() + 1000 * 60 * 60 * 12),
+      });
+
+      entityManager.findOne.mockResolvedValue(gathering);
+
+      const newDeadline = new Date(Date.now() - 1000 * 60 * 60);
+
+      await expect(
+        service.updateGathering(
+          1,
+          { deadline: newDeadline } as any,
+          mockUser as any,
+        ),
+      ).rejects.toThrow(
+        new BadRequestException({
+          message:
+            'The registration deadline cannot be earlier than the current time.',
           code: ErrorCode.BAD_REQUEST,
         }),
       );
@@ -1693,6 +1744,8 @@ describe('GatheringsService', () => {
     });
 
     it('資料驗證通過時回傳 total 與 data', async () => {
+      const t = Date.now();
+      const day = 86400000;
       const validRecord = {
         id: 1,
         userId: 1,
@@ -1703,11 +1756,11 @@ describe('GatheringsService', () => {
         price: 0,
         status: GatheringStatus.OPEN,
         type: GatheringType.PARTY,
-        startTime: new Date('2025-01-03'),
-        deadline: new Date('2025-01-02'),
+        startTime: new Date(t + 7 * day),
+        deadline: new Date(t + 3 * day),
         isArchived: false,
-        createdAt: new Date('2025-01-01'),
-        updatedAt: new Date('2025-01-04'),
+        createdAt: new Date(t - day),
+        updatedAt: new Date(t + 8 * day),
       };
       const workbook = {
         SheetNames: ['Sheet1'],
@@ -1747,7 +1800,9 @@ describe('GatheringsService', () => {
       ).rejects.toThrow(BadRequestException);
     });
 
-    it('自訂驗證：createdAt 晚於其他時間時收集錯誤並拋出 BadRequestException', async () => {
+    it('自訂驗證：deadline 早於現在時間時收集錯誤並拋出 BadRequestException', async () => {
+      const t = Date.now();
+      const day = 86400000;
       const invalidRecord = {
         id: 1,
         userId: 1,
@@ -1757,11 +1812,40 @@ describe('GatheringsService', () => {
         price: 0,
         status: GatheringStatus.OPEN,
         type: GatheringType.PARTY,
-        startTime: new Date('2025-01-01'),
-        deadline: new Date('2025-01-01'),
+        startTime: new Date(t + 10 * day),
+        deadline: new Date(t - day),
         isArchived: false,
-        createdAt: new Date('2025-01-02'), // 晚於 startTime / deadline
-        updatedAt: new Date('2025-01-01'),
+        createdAt: new Date(t - 2 * day),
+        updatedAt: new Date(t + 11 * day),
+      };
+      const workbook = {
+        SheetNames: ['Sheet1'],
+        Sheets: { Sheet1: {} },
+      };
+      jest.spyOn(XLSX.utils, 'sheet_to_json').mockReturnValue([invalidRecord]);
+
+      await expect(
+        service.checkExcelGathering(workbook as any),
+      ).rejects.toThrow(BadRequestException);
+    });
+
+    it('自訂驗證：createdAt 晚於其他時間時收集錯誤並拋出 BadRequestException', async () => {
+      const t = Date.now();
+      const day = 86400000;
+      const invalidRecord = {
+        id: 1,
+        userId: 1,
+        title: 'Test',
+        location: 'Taipei',
+        participantNumbers: 5,
+        price: 0,
+        status: GatheringStatus.OPEN,
+        type: GatheringType.PARTY,
+        startTime: new Date(t + 5 * day),
+        deadline: new Date(t + 4 * day),
+        isArchived: false,
+        createdAt: new Date(t + 10 * day), // 晚於 startTime / deadline
+        updatedAt: new Date(t + 6 * day),
       };
       const workbook = {
         SheetNames: ['Sheet1'],

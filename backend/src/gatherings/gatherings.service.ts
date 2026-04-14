@@ -339,6 +339,15 @@ export class GatheringsService {
       });
     }
 
+    // 驗證報名截止日期不能早於現在
+    if (deadline != null && new Date(deadline) < now) {
+      throw new BadRequestException({
+        message:
+          'The registration deadline cannot be earlier than the current time.',
+        code: ErrorCode.BAD_REQUEST,
+      });
+    }
+
     // 驗證 deadline 不能大於 startTime
     if (new Date(deadline) > new Date(startTime)) {
       throw new BadRequestException({
@@ -455,7 +464,15 @@ export class GatheringsService {
         } else if (gatheringDto === 'deadline') {
           // 若有更改 deadline 檢查是否超過 startTime
           const newDeadline = new Date(gatheringValue);
+          const updateNow = new Date();
           const startTime = new Date(gatheringData.startTime);
+          if (newDeadline < updateNow) {
+            throw new BadRequestException({
+              message:
+                'The registration deadline cannot be earlier than the current time.',
+              code: ErrorCode.BAD_REQUEST,
+            });
+          }
           if (newDeadline > startTime) {
             throw new BadRequestException({
               message:
@@ -890,6 +907,8 @@ export class GatheringsService {
       fields: { field: string; message: string }[];
     }[] = [];
 
+    const importNow = new Date();
+
     // 逐筆驗證 Excel 轉出來的資料
     for (let i = 0; i < gatheringRecords.length; i++) {
       const record = gatheringRecords[i];
@@ -930,6 +949,15 @@ export class GatheringsService {
         rowErrors.push({
           field: 'createdAt',
           message: 'The createdAt time cannot be later than the other time.',
+        });
+      }
+
+      // 驗證報名截止日期不得早於檢查當下（與 createGathering 一致）
+      if (new Date(dto.deadline) < importNow) {
+        rowErrors.push({
+          field: 'deadline',
+          message:
+            'The registration deadline cannot be earlier than the current time.',
         });
       }
 
