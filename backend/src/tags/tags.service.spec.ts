@@ -2,6 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { NotFoundException } from '@nestjs/common';
 import { EntityManager } from '@mikro-orm/core';
 
+import { Gathering } from 'src/gatherings/entities/gathering.entity';
 import { TagsService } from './tags.service';
 import { Tag } from './entities/tag.entity';
 import { CreateTagDto } from './dto/create-tag.dto';
@@ -31,28 +32,48 @@ const mockTag = (tagName: string): Tag => {
  * TagsService
  * ============================
  */
+type MockEntityManager = {
+  findOne: jest.Mock;
+  find: jest.Mock;
+  create: jest.Mock;
+  persistAndFlush: jest.Mock;
+  createQueryBuilder: jest.Mock;
+};
+
 describe('TagsService', () => {
   let service: TagsService;
-  let entityManager: jest.Mocked<EntityManager>;
+  let entityManager: MockEntityManager;
+  let usageCountQbExecute: jest.Mock;
 
   beforeEach(async () => {
+    usageCountQbExecute = jest.fn();
+    const usageCountQb = {
+      select: jest.fn().mockReturnThis(),
+      join: jest.fn().mockReturnThis(),
+      groupBy: jest.fn().mockReturnThis(),
+      execute: usageCountQbExecute,
+    };
+
+    const mockEntityManager: MockEntityManager = {
+      findOne: jest.fn(),
+      find: jest.fn(),
+      create: jest.fn(),
+      persistAndFlush: jest.fn(),
+      createQueryBuilder: jest.fn(() => usageCountQb),
+    };
+
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         TagsService,
         {
           provide: EntityManager,
-          useValue: {
-            findOne: jest.fn(),
-            find: jest.fn(),
-            create: jest.fn(),
-            persistAndFlush: jest.fn(),
-          },
+          useValue: mockEntityManager as unknown as EntityManager,
         },
       ],
     }).compile();
 
     service = module.get(TagsService);
-    entityManager = module.get(EntityManager);
+    entityManager = mockEntityManager;
   });
 
   /**
@@ -113,7 +134,7 @@ describe('TagsService', () => {
       const newTag = mockTag('new');
       entityManager.findOne.mockResolvedValue(null);
       entityManager.create.mockReturnValue(newTag);
-      entityManager.persistAndFlush.mockResolvedValue();
+      entityManager.persistAndFlush.mockResolvedValue(undefined);
 
       const dto: CreateTagDto = { tagName: 'new' };
       const result = await service.findOrCreateTag(dto);
@@ -132,15 +153,43 @@ describe('TagsService', () => {
    * ============================
    */
   describe('findAllTags', () => {
-    it('應依 id 遞增回傳所有標籤', async () => {
+    it('應依 id 遞增回傳所有標籤並附帶 usageCount', async () => {
       const t1 = mockTag('a');
+      t1.id = 1;
       const t2 = mockTag('b');
+      t2.id = 2;
       entityManager.find.mockResolvedValue([t1, t2]);
+      usageCountQbExecute.mockResolvedValue([{ tag: 1, cnt: 3 }]);
 
       const result = await service.findAllTags();
 
-      expect(result).toEqual([t1, t2]);
-      expect(entityManager.find).toHaveBeenCalledWith(Tag, {}, { orderBy: { id: 'ASC' } });
+      expect(result).toEqual([
+        { id: 1, tagName: 'a', usageCount: 3 },
+        { id: 2, tagName: 'b', usageCount: 0 },
+      ]);
+      expect(entityManager.find).toHaveBeenCalledWith(
+        Tag,
+        {},
+        {
+          orderBy: { id: 'ASC' },
+        },
+      );
+      expect(entityManager.createQueryBuilder).toHaveBeenCalledWith(
+        Gathering,
+        'g',
+      );
+      expect(usageCountQbExecute).toHaveBeenCalledWith('all', false);
+    });
+
+    it('無關聯列時 usageCount 應為 0', async () => {
+      const t1 = mockTag('solo');
+      t1.id = 10;
+      entityManager.find.mockResolvedValue([t1]);
+      usageCountQbExecute.mockResolvedValue([]);
+
+      const result = await service.findAllTags();
+
+      expect(result).toEqual([{ id: 10, tagName: 'solo', usageCount: 0 }]);
     });
   });
 });

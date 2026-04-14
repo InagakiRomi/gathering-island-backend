@@ -1,5 +1,6 @@
 import { Body, Controller, Get, Post, Query } from '@nestjs/common';
 import { TagsService } from './tags.service';
+import { TagWithUsageCount } from './types/tag-list.types';
 import { CreateTagDto } from './dto/create-tag.dto';
 import { Tag } from './entities/tag.entity';
 import { ApiBearerAuth, ApiOperation } from '@nestjs/swagger';
@@ -14,15 +15,15 @@ export class TagsController {
   /**
    * 列出所有標籤（管理後台用）
    *
-   * @returns {Promise<{ tagData: Tag[] }>} 標籤清單（物件包一層，避免成功攔截器將陣列展開成數字鍵）
+   * @returns {Promise<{ tagData: TagWithUsageCount[] }>} 標籤清單
    */
   @Get()
   @Roles('admin')
   @ApiOperation({
     summary: '列出所有標籤',
-    description: '回傳資料庫中所有標籤，依 id 遞增排序；僅管理員可用。',
+    description: '回傳資料庫中所有標籤，被聚會引用次數。僅管理員可用。',
   })
-  async listTags(): Promise<{ tagData: Tag[] }> {
+  async listTags(): Promise<{ tagData: TagWithUsageCount[] }> {
     const tagData = await this.tagsService.findAllTags();
     return { tagData };
   }

@@ -1,12 +1,39 @@
-import { EntityManager } from '@mikro-orm/core';
+import { EntityManager, raw } from '@mikro-orm/core';
+import { SqlEntityManager } from '@mikro-orm/sqlite';
 import { Injectable, NotFoundException } from '@nestjs/common';
+import { Gathering } from 'src/gatherings/entities/gathering.entity';
 import { CreateTagDto } from './dto/create-tag.dto';
 import { Tag } from './entities/tag.entity';
 import { ErrorCode } from 'src/common/enum/error-code.enum';
+import { TagWithUsageCount } from './types/tag-list.types';
 
 @Injectable()
 export class TagsService {
   constructor(private readonly entityManager: EntityManager) {}
+
+  /**
+   * 列出所有標籤（管理後台用）
+   *
+   * @returns {Promise<TagWithUsageCount[]>} 標籤清單
+   */
+  async findAllTags(): Promise<TagWithUsageCount[]> {
+    // 從 Tag 表中查詢所有標籤
+    const tags = await this.entityManager.find(
+      Tag,
+      {},
+      { orderBy: { id: 'ASC' } },
+    );
+
+    // 從 Gathering 表中查詢各個 Tag 被聚會引用的次數
+    const usageCountByTagId = await this.loadTagUsageCountByTagId();
+
+    // 將標籤資料與被聚會引用的次數組合回傳
+    return tags.map((tag) => ({
+      id: tag.id,
+      tagName: tag.tagName,
+      usageCount: usageCountByTagId.get(tag.id) ?? 0,
+    }));
+  }
 
   /**
    * 根據標籤名稱查詢標籤 ID
@@ -51,12 +78,19 @@ export class TagsService {
     return tag;
   }
 
-  /**
-   * 列出所有標籤（依 id 遞增）
-   *
-   * @returns {Promise<Tag[]>} 標籤清單
-   */
-  async findAllTags(): Promise<Tag[]> {
-    return this.entityManager.find(Tag, {}, { orderBy: { id: 'ASC' } });
+  /** 從 Gathering↔Tag 多對多關聯彙總各標籤被聚會引用的次數 */
+  private async loadTagUsageCountByTagId(): Promise<Map<number, number>> {
+    type Row = { tag: number; cnt: number | string };
+    const em = this.entityManager as SqlEntityManager;
+
+    // 從 Gathering 表中查詢各個 Tag 被聚會引用的次數
+    const rows = await em
+      .createQueryBuilder(Gathering, 'g')
+      .select([raw('t.id as tag'), raw('count(*) as cnt')])
+      .join('g.tags', 't')
+      .groupBy('t.id')
+      .execute<Row[]>('all', false);
+
+    return new Map(rows.map((row) => [Number(row.tag), Number(row.cnt)]));
   }
 }

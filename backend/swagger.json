@@ -753,7 +753,7 @@
     },
     "/tags": {
       "get": {
-        "description": "回傳資料庫中所有標籤，依 id 遞增排序；僅管理員可用。",
+        "description": "回傳資料庫中所有標籤，被聚會引用次數。僅管理員可用。",
         "operationId": "TagsController_listTags",
         "parameters": [],
         "responses": {
