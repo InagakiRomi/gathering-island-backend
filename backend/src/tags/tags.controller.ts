@@ -1,4 +1,13 @@
-import { Body, Controller, Get, Post, Query } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  ParseIntPipe,
+  Post,
+  Query,
+} from '@nestjs/common';
 import { TagsService } from './tags.service';
 import { TagWithUsageCount } from './types/tag-list.types';
 import { CreateTagDto } from './dto/create-tag.dto';
@@ -60,5 +69,21 @@ export class TagsController {
   })
   createTag(@Body() createTagDto: CreateTagDto): Promise<Tag> {
     return this.tagsService.findOrCreateTag(createTagDto);
+  }
+
+  /**
+   * 刪除標籤（僅使用次數為 0 者可刪）
+   *
+   * @param {number} id 標籤 ID
+   */
+  @Delete(':id')
+  @Roles('admin')
+  @ApiOperation({
+    summary: '刪除標籤',
+    description:
+      '依標籤 ID 刪除；若仍有聚會引用該標籤（使用次數大於 0）則無法刪除。僅管理員可用。',
+  })
+  async removeTag(@Param('id', ParseIntPipe) id: number): Promise<void> {
+    await this.tagsService.removeTagById(id);
   }
 }

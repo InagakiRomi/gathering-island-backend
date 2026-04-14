@@ -831,6 +831,36 @@
         ]
       }
     },
+    "/tags/{id}": {
+      "delete": {
+        "description": "依標籤 ID 刪除；若仍有聚會引用該標籤（使用次數大於 0）則無法刪除。僅管理員可用。",
+        "operationId": "TagsController_removeTag",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "access-token": []
+          }
+        ],
+        "summary": "刪除標籤",
+        "tags": [
+          "Tags"
+        ]
+      }
+    },
     "/auth/register": {
       "post": {
         "description": "接收使用者註冊資料（包含 email、密碼、顯示名稱），經由雜湊密碼後建立新帳號，並回傳建立成功的使用者資訊",

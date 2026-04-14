@@ -1,6 +1,10 @@
 import { EntityManager, raw } from '@mikro-orm/core';
 import { SqlEntityManager } from '@mikro-orm/sqlite';
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  ConflictException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { Gathering } from 'src/gatherings/entities/gathering.entity';
 import { CreateTagDto } from './dto/create-tag.dto';
 import { Tag } from './entities/tag.entity';
@@ -76,6 +80,37 @@ export class TagsService {
     }
 
     return tag;
+  }
+
+  /**
+   * 刪除標籤（僅未被任何聚會引用者可刪）
+   *
+   * @param {number} id 標籤 ID
+   * @throws {NotFoundException} 找不到指定標籤
+   * @throws {ConflictException} 標籤仍被聚會引用
+   */
+  async removeTagById(id: number): Promise<void> {
+    const tag = await this.entityManager.findOne(Tag, { id });
+
+    if (!tag) {
+      throw new NotFoundException({
+        message: `Tag with id "${id}" not found.`,
+        code: ErrorCode.NOT_FOUND,
+      });
+    }
+
+    const usageCountByTagId = await this.loadTagUsageCountByTagId();
+    const usageCount = usageCountByTagId.get(id) ?? 0;
+
+    // 檢查標籤目前是否有被其他聚會引用
+    if (usageCount > 0) {
+      throw new ConflictException({
+        message: `Tag cannot be deleted because it is used by ${usageCount} gathering(s).`,
+        code: ErrorCode.CONFLICT,
+      });
+    }
+
+    await this.entityManager.removeAndFlush(tag);
   }
 
   /** 從 Gathering↔Tag 多對多關聯彙總各標籤被聚會引用的次數 */

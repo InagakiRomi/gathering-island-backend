@@ -1,5 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { NotFoundException } from '@nestjs/common';
+import { ConflictException, NotFoundException } from '@nestjs/common';
 import { EntityManager } from '@mikro-orm/core';
 
 import { Gathering } from 'src/gatherings/entities/gathering.entity';
@@ -37,6 +37,7 @@ type MockEntityManager = {
   find: jest.Mock;
   create: jest.Mock;
   persistAndFlush: jest.Mock;
+  removeAndFlush: jest.Mock;
   createQueryBuilder: jest.Mock;
 };
 
@@ -59,6 +60,7 @@ describe('TagsService', () => {
       find: jest.fn(),
       create: jest.fn(),
       persistAndFlush: jest.fn(),
+      removeAndFlush: jest.fn(),
       createQueryBuilder: jest.fn(() => usageCountQb),
     };
 
@@ -190,6 +192,53 @@ describe('TagsService', () => {
       const result = await service.findAllTags();
 
       expect(result).toEqual([{ id: 10, tagName: 'solo', usageCount: 0 }]);
+    });
+  });
+
+  /**
+   * ============================
+   * removeTagById
+   * ============================
+   */
+  describe('removeTagById', () => {
+    it('找不到標籤時應拋出 NotFoundException', async () => {
+      entityManager.findOne.mockResolvedValue(null);
+
+      const err = await service.removeTagById(99).catch((e) => e);
+      expect(err).toBeInstanceOf(NotFoundException);
+      expect(err.getResponse()).toMatchObject({
+        message: 'Tag with id "99" not found.',
+        code: ErrorCode.NOT_FOUND,
+      });
+      expect(entityManager.removeAndFlush).not.toHaveBeenCalled();
+    });
+
+    it('使用次數大於 0 時應拋出 ConflictException', async () => {
+      const tag = mockTag('used');
+      tag.id = 7;
+      entityManager.findOne.mockResolvedValue(tag);
+      usageCountQbExecute.mockResolvedValue([{ tag: 7, cnt: 2 }]);
+
+      const err = await service.removeTagById(7).catch((e) => e);
+      expect(err).toBeInstanceOf(ConflictException);
+      expect(err.getResponse()).toMatchObject({
+        message:
+          'Tag cannot be deleted because it is used by 2 gathering(s).',
+        code: ErrorCode.CONFLICT,
+      });
+      expect(entityManager.removeAndFlush).not.toHaveBeenCalled();
+    });
+
+    it('使用次數為 0 時應刪除標籤', async () => {
+      const tag = mockTag('unused');
+      tag.id = 3;
+      entityManager.findOne.mockResolvedValue(tag);
+      usageCountQbExecute.mockResolvedValue([]);
+      entityManager.removeAndFlush.mockResolvedValue(undefined);
+
+      await service.removeTagById(3);
+
+      expect(entityManager.removeAndFlush).toHaveBeenCalledWith(tag);
     });
   });
 });
