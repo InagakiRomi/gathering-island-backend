@@ -46,7 +46,7 @@ export class GatheringsService {
    * @param {any} baseQuery 基礎查詢條件
    * @returns {Promise<{ gatheringData: Gathering[]; page: number; limit: number; total: number }>} 回傳搜尋結果
    */
-  private async queryAndFilterGatherings(
+  async queryAndFilterGatherings(
     queryDto: GetGatheringsQueryDto,
     baseQuery: any = {},
   ): Promise<{

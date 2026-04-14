@@ -15,5 +15,6 @@ import { TagsModule } from '../tags/tags.module';
   ],
   controllers: [GatheringsController],
   providers: [GatheringsService, GatheringsSchedulerService, TagsService],
+  exports: [GatheringsService],
 })
 export class GatheringsModule {}

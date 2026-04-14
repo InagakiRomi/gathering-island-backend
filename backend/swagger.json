@@ -1078,6 +1078,294 @@
         ]
       }
     },
+    "/users/user/{id}/gatherings/created": {
+      "get": {
+        "description": "本人可查自己的資料；管理員可查任何使用者。查詢參數與「查詢聚會列表」相同。",
+        "operationId": "UsersController_getUserCreatedGatherings",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "description": "頁數",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "description": "每頁筆數",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "sortBy",
+            "required": false,
+            "in": "query",
+            "description": "排序欄位",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "id",
+                "participantNumbers",
+                "price",
+                "status",
+                "type",
+                "startTime",
+                "deadline",
+                "createdAt"
+              ]
+            }
+          },
+          {
+            "name": "sortOrder",
+            "required": false,
+            "in": "query",
+            "description": "排序方式（升冪 ASC / 降冪 DESC）",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "ASC",
+                "DESC"
+              ]
+            }
+          },
+          {
+            "name": "status",
+            "required": false,
+            "in": "query",
+            "description": "結束狀態",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "OPEN",
+                "UPCOMING",
+                "CLOSED"
+              ]
+            }
+          },
+          {
+            "name": "type",
+            "required": false,
+            "in": "query",
+            "description": "聚會分類",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "PARTY",
+                "MUSIC",
+                "LEARNING",
+                "EXHIBITION",
+                "TRAVEL",
+                "SPORTS",
+                "GAME",
+                "FOOD",
+                "OTHER"
+              ]
+            }
+          },
+          {
+            "name": "isArchived",
+            "required": false,
+            "in": "query",
+            "description": "是否封存",
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "search",
+            "required": false,
+            "in": "query",
+            "description": "模糊搜尋關鍵字",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "tags",
+            "required": false,
+            "in": "query",
+            "description": "標籤（可以傳多個）",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "access-token": []
+          }
+        ],
+        "summary": "查詢指定使用者建立的聚會",
+        "tags": [
+          "Users"
+        ]
+      }
+    },
+    "/users/user/{id}/gatherings/participated": {
+      "get": {
+        "description": "本人可查自己的資料；管理員可查任何使用者。查詢參數與「查詢聚會列表」相同。",
+        "operationId": "UsersController_getUserParticipatedGatherings",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "description": "頁數",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "description": "每頁筆數",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "sortBy",
+            "required": false,
+            "in": "query",
+            "description": "排序欄位",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "id",
+                "participantNumbers",
+                "price",
+                "status",
+                "type",
+                "startTime",
+                "deadline",
+                "createdAt"
+              ]
+            }
+          },
+          {
+            "name": "sortOrder",
+            "required": false,
+            "in": "query",
+            "description": "排序方式（升冪 ASC / 降冪 DESC）",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "ASC",
+                "DESC"
+              ]
+            }
+          },
+          {
+            "name": "status",
+            "required": false,
+            "in": "query",
+            "description": "結束狀態",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "OPEN",
+                "UPCOMING",
+                "CLOSED"
+              ]
+            }
+          },
+          {
+            "name": "type",
+            "required": false,
+            "in": "query",
+            "description": "聚會分類",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "PARTY",
+                "MUSIC",
+                "LEARNING",
+                "EXHIBITION",
+                "TRAVEL",
+                "SPORTS",
+                "GAME",
+                "FOOD",
+                "OTHER"
+              ]
+            }
+          },
+          {
+            "name": "isArchived",
+            "required": false,
+            "in": "query",
+            "description": "是否封存",
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "search",
+            "required": false,
+            "in": "query",
+            "description": "模糊搜尋關鍵字",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "tags",
+            "required": false,
+            "in": "query",
+            "description": "標籤（可以傳多個）",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "access-token": []
+          }
+        ],
+        "summary": "查詢指定使用者已參加的聚會",
+        "tags": [
+          "Users"
+        ]
+      }
+    },
     "/users/{id}": {
       "get": {
         "description": "依使用者 ID 取得基本資料，僅管理員可用。",

@@ -16,6 +16,8 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { UpdateUserRoleDto } from './dto/update-user-role.dto';
 import { GetUsersQueryDto } from './dto/get-users-query.dto';
 import { Roles } from 'src/common/decorators/roles.decorator';
+import { GetGatheringsQueryDto } from '../gatherings/dto/get-gatherings-query.dto';
+import { Gathering } from '../gatherings/entities/gathering.entity';
 
 /** 使用者 Controller */
 @ApiBearerAuth('access-token')
@@ -73,6 +75,62 @@ export class UsersController {
     @Query() queryDto: GetUsersQueryDto,
   ): Promise<{ items: User[]; page: number; limit: number; total: number }> {
     return this.usersService.getUsers(queryDto);
+  }
+
+  /**
+   * 查詢指定使用者建立的聚會（本人或管理員）
+   *
+   * @param id 使用者主鍵
+   * @param queryDto 與聚會列表相同的篩選、排序、分頁參數
+   * @param actor 目前登入使用者
+   */
+  @Get('user/:id/gatherings/created')
+  @ApiOperation({
+    summary: '查詢指定使用者建立的聚會',
+    description:
+      '本人可查自己的資料；管理員可查任何使用者。查詢參數與「查詢聚會列表」相同。',
+  })
+  getUserCreatedGatherings(
+    @Param('id', ParseIntPipe) id: number,
+    @Query() queryDto: GetGatheringsQueryDto,
+    @GetUser() actor: User,
+  ): Promise<{
+    gatheringData: Gathering[];
+    page: number;
+    limit: number;
+    total: number;
+  }> {
+    return this.usersService.getGatheringsCreatedByUser(queryDto, id, actor);
+  }
+
+  /**
+   * 查詢指定使用者已報名參加的聚會（本人或管理員）
+   *
+   * @param id 使用者主鍵
+   * @param queryDto 與聚會列表相同的篩選、排序、分頁參數
+   * @param actor 目前登入使用者
+   */
+  @Get('user/:id/gatherings/participated')
+  @ApiOperation({
+    summary: '查詢指定使用者已參加的聚會',
+    description:
+      '本人可查自己的資料；管理員可查任何使用者。查詢參數與「查詢聚會列表」相同。',
+  })
+  getUserParticipatedGatherings(
+    @Param('id', ParseIntPipe) id: number,
+    @Query() queryDto: GetGatheringsQueryDto,
+    @GetUser() actor: User,
+  ): Promise<{
+    gatheringData: Gathering[];
+    page: number;
+    limit: number;
+    total: number;
+  }> {
+    return this.usersService.getGatheringsParticipatedByUser(
+      queryDto,
+      id,
+      actor,
+    );
   }
 
   /**

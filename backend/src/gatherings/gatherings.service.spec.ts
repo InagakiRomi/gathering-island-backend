@@ -595,7 +595,10 @@ describe('GatheringsService', () => {
       });
       entityManager.find.mockResolvedValue([]);
 
-      const result = await service.getGatheringParticipants(1, mockAdmin as any);
+      const result = await service.getGatheringParticipants(
+        1,
+        mockAdmin as any,
+      );
 
       expect(result.userData).toEqual([]);
     });

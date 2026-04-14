@@ -14,6 +14,10 @@ import { GetUsersQueryDto } from './dto/get-users-query.dto';
 import { InjectRepository } from '@mikro-orm/nestjs';
 import { EntityManager, EntityRepository } from '@mikro-orm/core';
 import { ErrorCode } from 'src/common/enum/error-code.enum';
+import { GatheringsService } from 'src/gatherings/gatherings.service';
+import { GetGatheringsQueryDto } from 'src/gatherings/dto/get-gatherings-query.dto';
+import { Gathering } from 'src/gatherings/entities/gathering.entity';
+import { Participant } from 'src/gatherings/entities/participant.entity';
 
 @Injectable()
 export class UsersService {
@@ -21,6 +25,7 @@ export class UsersService {
     @InjectRepository(User)
     private readonly userRepository: EntityRepository<User>,
     private readonly entityManager: EntityManager,
+    private readonly gatheringsService: GatheringsService,
   ) {}
 
   /**
@@ -193,5 +198,118 @@ export class UsersService {
     const total = await this.userRepository.count(query);
 
     return { items: users, page, limit, total };
+  }
+
+  /**
+   * 本人或管理員可查詢指定使用者的聚會相關資料
+   *
+   * @param actor 目前登入使用者
+   * @param targetUserId 欲查詢的使用者 ID
+   */
+  private assertCanViewUserGatherings(actor: User, targetUserId: number): void {
+    // 檢查使用者是否為本人或管理員
+    if (actor.id !== targetUserId && actor.role !== UserRole.ADMIN) {
+      throw new ForbiddenException({
+        message: "You are not authorized to view this user's gatherings.",
+        code: ErrorCode.FORBIDDEN,
+      });
+    }
+    return;
+  }
+
+  /**
+   * 查詢指定使用者建立的聚會（本人或管理員）
+   *
+   * @param queryDto 查詢參數 DTO
+   * @param targetUserId 使用者 ID
+   * @param actor 目前登入使用者
+   */
+  async getGatheringsCreatedByUser(
+    queryDto: GetGatheringsQueryDto,
+    targetUserId: number,
+    actor: User,
+  ): Promise<{
+    gatheringData: Gathering[];
+    page: number;
+    limit: number;
+    total: number;
+  }> {
+    this.assertCanViewUserGatherings(actor, targetUserId);
+
+    // 檢查使用者是否存在
+    const targetUser = await this.entityManager.findOne(User, {
+      id: targetUserId,
+    });
+    if (!targetUser) {
+      throw new NotFoundException({
+        message: `User with ID "${targetUserId}" not found.`,
+        code: ErrorCode.NOT_FOUND,
+      });
+    }
+
+    // 查詢指定使用者建立的聚會
+    return this.gatheringsService.queryAndFilterGatherings(queryDto, {
+      userId: targetUser,
+    });
+  }
+
+  /**
+   * 查詢指定使用者已報名參加的活動（本人或管理員）
+   *
+   * @param gatheringsQuery 查詢參數 DTO
+   * @param requestedUserId 目標使用者 ID
+   * @param currentUser 目前登入使用者
+   */
+  async getGatheringsParticipatedByUser(
+    gatheringsQuery: GetGatheringsQueryDto,
+    requestedUserId: number,
+    currentUser: User,
+  ): Promise<{
+    gatheringData: Gathering[];
+    page: number;
+    limit: number;
+    total: number;
+  }> {
+    this.assertCanViewUserGatherings(currentUser, requestedUserId);
+
+    // 檢查使用者是否存在
+    const requestedUser = await this.entityManager.findOne(User, {
+      id: requestedUserId,
+    });
+    if (!requestedUser) {
+      throw new NotFoundException({
+        message: `User with ID "${requestedUserId}" not found.`,
+        code: ErrorCode.NOT_FOUND,
+      });
+    }
+
+    // 查詢指定使用者已報名參加的活動
+    const participationRecords = await this.entityManager.find(
+      Participant,
+      { user: requestedUserId },
+      { populate: ['gathering'] },
+    );
+
+    // 取得指定使用者已報名參加的活動 ID
+    const participatedGatheringIds = participationRecords.map(
+      (record) => record.gathering.id,
+    );
+
+    // 如果沒有已報名參加的活動，直接回傳空結果
+    if (participatedGatheringIds.length === 0) {
+      const { page, limit } = gatheringsQuery;
+      return { gatheringData: [], page, limit, total: 0 };
+    }
+
+    // 建立基礎查詢條件
+    const participatedGatheringsFilter: any = {
+      id: { $in: participatedGatheringIds },
+    };
+
+    // 查詢指定使用者已報名參加的活動
+    return this.gatheringsService.queryAndFilterGatherings(
+      gatheringsQuery,
+      participatedGatheringsFilter,
+    );
   }
 }
