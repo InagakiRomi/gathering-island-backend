@@ -7,18 +7,33 @@ import cookieParser from 'cookie-parser';
 import { HttpExceptionFilter } from './common/filters/http-exception.filter';
 import { SuccessResponseInterceptor } from './common/interceptors/success-response.interceptor';
 
-async function bootstrap() {
-  const logger = new Logger();
-  const app = await NestFactory.create(AppModule);
-  app.use(cookieParser(process.env.JWT_COOKIE_SECRET));
+/** 解析 CORS 來源白名單 */
+function resolveCorsOrigins(): string[] {
+  return (
+    process.env.CORS_ORIGINS ??
+    'http://localhost:8080,http://localhost:5173,https://inagakiromi.github.io'
+  )
+    .split(',')
+    .map((origin) => origin.trim())
+    .filter(Boolean);
+}
 
+/** 註冊中介軟體（Middleware） */
+function setupMiddleware(app: Awaited<ReturnType<typeof NestFactory.create>>) {
+  app.use(cookieParser(process.env.JWT_COOKIE_SECRET));
+}
+
+/** 設定全域功能（Filter、Interceptor、CORS、ValidationPipe） */
+function setupGlobalFeatures(
+  app: Awaited<ReturnType<typeof NestFactory.create>>,
+) {
   // 註冊全域例外過濾器
   app.useGlobalFilters(new HttpExceptionFilter());
   app.useGlobalInterceptors(new SuccessResponseInterceptor());
 
   // 開啟 CORS 讓前端連接
   app.enableCors({
-    origin: 'http://localhost:8080', // 允許的來源
+    origin: resolveCorsOrigins(), // 允許的來源白名單
     credentials: true, // 允許帶 cookie/headers 等認證資訊
   });
 
@@ -30,8 +45,10 @@ async function bootstrap() {
       transform: true, //自動轉換請求參數到 DTO 定義的類型
     }),
   );
+}
 
-  // 設定Swagger
+/** 設定 Swagger 文件與輸出 swagger.json */
+function setupSwagger(app: Awaited<ReturnType<typeof NestFactory.create>>) {
   const config = new DocumentBuilder()
     .setTitle('Gathering List')
     .setDescription('The Gathering List API description')
@@ -54,12 +71,19 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document);
   fs.writeFileSync('swagger.json', JSON.stringify(document, null, 2));
+}
 
-  app.use(cookieParser('my-secret-key'));
+/** 啟動應用程式 */
+async function bootstrap() {
+  const logger = new Logger();
+  const app = await NestFactory.create(AppModule);
+  setupMiddleware(app);
+  setupGlobalFeatures(app);
+  setupSwagger(app);
 
   const port = process.env.PORT ?? 3000;
   await app.listen(port);
   logger.log(`Application listening on port ${port}`);
   logger.log(`前往Swagger： http://localhost:${port}/api`);
 }
-bootstrap();
+void bootstrap();
