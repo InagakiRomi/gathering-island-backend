@@ -827,22 +827,27 @@ export class GatheringsService {
    */
   async updateGatheringStatuses(
     em?: EntityManager,
+    fullScan = false,
   ): Promise<{ updatedCount: number }> {
+    this.logger.log(`開始批量更新聚會狀態，fullScan: ${fullScan}`);
     const now = new Date();
     const entityManager = em || this.entityManager;
     const gatheringRepository = em
       ? em.getRepository(Gathering)
       : this.gatheringRepository;
 
-    // 只查詢「可能跨越狀態邊界」的聚會，避免每次排程都全表掃描
-    const gatherings = await gatheringRepository.find({
-      isArchived: false,
-      $or: [
-        { status: GatheringStatus.OPEN, deadline: { $lte: now } },
-        { status: GatheringStatus.OPEN, startTime: { $lt: now } },
-        { status: GatheringStatus.UPCOMING, startTime: { $lt: now } },
-      ],
-    });
+    const query = fullScan
+      ? { isArchived: false }
+      : {
+          // 只查詢「可能跨越狀態邊界」的聚會，避免每次排程都全表掃描
+          isArchived: false,
+          $or: [
+            { status: GatheringStatus.OPEN, deadline: { $lte: now } },
+            { status: GatheringStatus.OPEN, startTime: { $lt: now } },
+            { status: GatheringStatus.UPCOMING, startTime: { $lt: now } },
+          ],
+        };
+    const gatherings = await gatheringRepository.find(query);
 
     let updatedCount = 0;
 

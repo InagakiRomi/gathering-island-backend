@@ -19,7 +19,8 @@
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
-    "init:db": "ts-node scripts/init-db.ts"
+    "init:db": "ts-node scripts/init-db.ts",
+    "check:gathering-status:all": "cross-env STAGE=dev ts-node -r tsconfig-paths/register scripts/update-gathering-status-all.ts"
   },
   "dependencies": {
     "@fastify/cookie": "^11.0.2",

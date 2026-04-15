@@ -48,6 +48,12 @@ npx mikro-orm migration:up
 npm run init:db
 ```
 
+### 6. 手動全量更新聚會狀態
+
+```bash
+npm run check:gathering-status:all
+```
+
 ---
 
 ## 更新資料庫

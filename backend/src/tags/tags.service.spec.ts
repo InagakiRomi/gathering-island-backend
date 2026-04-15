@@ -222,8 +222,7 @@ describe('TagsService', () => {
       const err = await service.removeTagById(7).catch((e) => e);
       expect(err).toBeInstanceOf(ConflictException);
       expect(err.getResponse()).toMatchObject({
-        message:
-          'Tag cannot be deleted because it is used by 2 gathering(s).',
+        message: 'Tag cannot be deleted because it is used by 2 gathering(s).',
         code: ErrorCode.CONFLICT,
       });
       expect(entityManager.removeAndFlush).not.toHaveBeenCalled();

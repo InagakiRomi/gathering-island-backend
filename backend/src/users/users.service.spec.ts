@@ -243,7 +243,11 @@ describe('UsersService', () => {
       userRepository.findOne.mockResolvedValue(null);
 
       await expect(
-        service.updateUserRoleById(999, { role: UserRole.ADMIN }, mockAdminActor),
+        service.updateUserRoleById(
+          999,
+          { role: UserRole.ADMIN },
+          mockAdminActor,
+        ),
       ).rejects.toThrow(NotFoundException);
     });
   });
@@ -271,9 +275,9 @@ describe('UsersService', () => {
     it('找不到使用者時拋出 NotFoundException', async () => {
       userRepository.findOne.mockResolvedValue(null);
 
-      await expect(service.updateUserById(999, { displayName: 'x' })).rejects.toThrow(
-        NotFoundException,
-      );
+      await expect(
+        service.updateUserById(999, { displayName: 'x' }),
+      ).rejects.toThrow(NotFoundException);
     });
   });
 

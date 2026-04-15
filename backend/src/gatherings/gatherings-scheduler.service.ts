@@ -20,8 +20,12 @@ export class GatheringsSchedulerService implements OnApplicationBootstrap {
    * 應用程式啟動時執行一次，立即更新聚會狀態
    */
   async onApplicationBootstrap() {
-    this.logger.log('伺服器啟動：開始執行聚會狀態批量更新任務...');
-    await this.updateGatheringStatus();
+    if (process.env.SKIP_GATHERING_BOOTSTRAP_UPDATE === 'true') {
+      this.logger.log('略過啟動時聚會狀態檢查（CLI 手動執行模式）');
+      return;
+    }
+    this.logger.log('伺服器啟動：開始執行聚會狀態全量檢查任務...');
+    await this.updateGatheringStatus(true);
   }
 
   /**
@@ -30,19 +34,26 @@ export class GatheringsSchedulerService implements OnApplicationBootstrap {
    */
   @Cron('*/10 * * * *')
   async handleGatheringStatusUpdate() {
-    await this.updateGatheringStatus();
+    await this.updateGatheringStatus(false);
+  }
+
+  /**
+   * 手動觸發：全量檢查所有未封存聚會狀態
+   */
+  async runFullGatheringStatusUpdate() {
+    await this.updateGatheringStatus(true);
   }
 
   /**
    * 統一的狀態更新邏輯
    */
-  private async updateGatheringStatus() {
+  private async updateGatheringStatus(fullScan: boolean) {
     this.logger.log('開始執行聚會狀態批量更新任務...');
     try {
       // 使用 fork() 創建新的 EntityManager 上下文，避免使用全域實例
       const em = this.entityManager.fork();
       const { updatedCount } =
-        await this.gatheringsService.updateGatheringStatuses(em);
+        await this.gatheringsService.updateGatheringStatuses(em, fullScan);
       this.logger.log(`聚會狀態批量更新完成，共更新 ${updatedCount} 筆資料`);
     } catch (error) {
       this.logger.error(`聚會狀態批量更新失敗: ${error.message}`, error.stack);
