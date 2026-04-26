@@ -988,6 +988,27 @@
         ]
       }
     },
+    "/auth/start-server": {
+      "post": {
+        "description": "提供前端按鈕觸發的簡單 API，回傳伺服器啟動成功提示",
+        "operationId": "AuthController_startServer",
+        "parameters": [],
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "access-token": []
+          }
+        ],
+        "summary": "啟動後端伺服器",
+        "tags": [
+          "Auth"
+        ]
+      }
+    },
     "/users/me": {
       "get": {
         "description": "根據登入帳號查詢對應的帳戶資訊，成功後回傳帳號基本資料。",

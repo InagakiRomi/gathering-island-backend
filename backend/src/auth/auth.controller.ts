@@ -152,6 +152,21 @@ export class AuthController {
   }
 
   /**
+   * 模擬啟動後端伺服器
+   *
+   * @returns {{ message: string }} 回傳啟動成功提示文字
+   */
+  @Post('/start-server')
+  @Public()
+  @ApiOperation({
+    summary: '啟動後端伺服器',
+    description: '提供前端按鈕觸發的簡單 API，回傳伺服器啟動成功提示',
+  })
+  startServer(): { message: string } {
+    return { message: '後端伺服器啟動成功' };
+  }
+
+  /**
    * 將 Refresh Token 設定到使用者的 Cookie 中。
    *
    * @param {Response} res HTTP 回應物件，用於設定新的 refresh token 到 cookie
