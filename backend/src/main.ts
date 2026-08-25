@@ -11,7 +11,7 @@ import { SuccessResponseInterceptor } from './common/interceptors/success-respon
 function resolveCorsOrigins(): string[] {
   return (
     process.env.CORS_ORIGINS ??
-    'http://localhost:5173,https://inagakiromi.github.io,https://meriser.github.io'
+    'http://localhost:5172,https://inagakiromi.github.io'
   )
     .split(',')
     .map((origin) => origin.trim())
